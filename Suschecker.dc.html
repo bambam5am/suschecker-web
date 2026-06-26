@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&amp;family=Oswald:wght@400;500;600;700&amp;family=Saira:wght@400;500;600;700;800&amp;family=Barlow+Semi+Condensed:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'ABC Diatype';src:url('assets/abc-diatype-thin.otf') format('opentype');font-weight:100 300;font-style:normal;font-display:swap;}
+@font-face{font-family:'ABC Diatype';src:url('assets/abc-diatype-regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'ABC Diatype';src:url('assets/abc-diatype-medium.otf') format('opentype');font-weight:500 600;font-style:normal;font-display:swap;}
+@font-face{font-family:'ABC Diatype';src:url('assets/abc-diatype-bold.otf') format('opentype');font-weight:700 900;font-style:normal;font-display:swap;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);}
+@keyframes susspin{to{transform:rotate(360deg)}}
+@keyframes susfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes suspop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes susmarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+input::placeholder{color:var(--g3);}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+select{cursor:pointer;}
+button{font-family:inherit;color:inherit;}
+button,input,select,textarea{border:none;}
+button,input,select,textarea{border-radius:9px;}
+@media (max-width:760px){
+  .result-grid{grid-template-columns:1fr !important;}
+  .hero-lists{grid-template-columns:1fr !important;gap:30px !important;}
+  .filter-bar{display:grid !important;grid-template-columns:1fr 1fr !important;gap:10px !important;}
+  .filter-search{grid-column:1 / -1 !important;max-width:none !important;flex:none !important;}
+  .filter-ctrl{max-width:none !important;width:100% !important;min-width:0 !important;}
+}
+</style>
+</helmet>
+<div style="{{ rootStyle }} min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--font,'Archivo',system-ui,sans-serif);-webkit-font-smoothing:antialiased;">
+
+<!-- ================= HERO ================= -->
+<sc-if value="{{ isHero }}" hint-placeholder-val="{{ true }}">
+<div style="position:relative;min-height:100vh;display:flex;flex-direction:column;">
+  <div style="display:flex;justify-content:flex-end;align-items:center;gap:22px;padding:28px clamp(20px,5vw,40px) 18px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);white-space:nowrap;flex:none;">Home</button>
+    <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Dashboard</button>
+    <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">How it works</button>
+    <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">About</button>
+    <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">FAQ</button>
+    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
+      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
+      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
+    </button>
+  </div>
+  <sc-if value="{{ hasMarquee }}" hint-placeholder-val="{{ false }}">
+    <div style="overflow:hidden;width:100%;background:transparent;padding:11px 0;" aria-label="Recent scores">
+      <div style="display:inline-flex;align-items:center;white-space:nowrap;animation:susmarquee 38s linear infinite;will-change:transform;" style-hover="animation-play-state:paused;">
+        <sc-for list="{{ marqueeItems }}" as="it" hint-placeholder-count="10">
+          <button onClick="{{ it.open }}" style="display:inline-flex;align-items:center;gap:10px;padding:0 22px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--g2);">
+            <span style="font-weight:500;">{{ it.brand }}</span>
+            <span style="color:var(--g3);">{{ it.scoreText }}/100</span>
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;font-weight:800;font-size:12px;color:#fff;background:{{ it.gradeColor }};border-radius:6px;">{{ it.grade }}</span>
+            <span style="opacity:0.35;margin-left:12px;">/</span>
+          </button>
+        </sc-for>
+        <sc-for list="{{ marqueeItems }}" as="it" hint-placeholder-count="10">
+          <button onClick="{{ it.open }}" aria-hidden="true" style="display:inline-flex;align-items:center;gap:10px;padding:0 22px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--g2);">
+            <span style="font-weight:500;">{{ it.brand }}</span>
+            <span style="color:var(--g3);">{{ it.scoreText }}/100</span>
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;font-weight:800;font-size:12px;color:#fff;background:{{ it.gradeColor }};border-radius:6px;">{{ it.grade }}</span>
+            <span style="opacity:0.35;margin-left:12px;">/</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,7vh,96px) clamp(20px,8vw,8vw) clamp(48px,10vh,120px);max-width:1100px;margin:0 auto;width:100%;">
+    <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(16px,3vh,28px);">Independent fashion sustainability scores</div>
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+      <h1 style="font-family:var(--title);font-size:clamp(48px,10vw,128px);line-height:0.88;font-weight:500;letter-spacing:-0.025em;margin:0;">Suschecker</h1>
+      <img src="assets/mascot.png" alt="Suschecker mascot" style="height:clamp(60px,9vw,116px);image-rendering:pixelated;">
+    </div>
+    <div style="margin-top:18px;display:flex;align-items:stretch;background:var(--accent-soft,#cfebd3);width:100%;border-radius:12px;overflow:hidden;">
+      <input value="{{ urlInput }}" onChange="{{ onUrlInput }}" onKeyDown="{{ onUrlKey }}" placeholder="paste a product url" style="flex:1;min-width:0;border:none;background:transparent;padding:20px 24px;font-family:var(--font,'Archivo',sans-serif);font-size:19px;color:var(--ink);">
+      <button onClick="{{ submitUrl }}" style="border:none;background:transparent;padding:0 30px;font-family:var(--font,'Archivo',sans-serif);font-weight:700;font-size:19px;cursor:pointer;color:var(--ink);white-space:nowrap;">{{ submitLabel }}</button>
+    </div>
+
+    <button onClick="{{ toggleHowTo }}" style="margin-top:18px;align-self:flex-start;display:inline-flex;align-items:center;gap:9px;background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink);">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:2px solid var(--ink);border-radius:50%;font-size:12px;font-weight:800;">?</span>
+      How it works
+      <span style="font-size:11px;transform:{{ howToCaret }};transition:transform .2s;">▾</span>
+    </button>
+    <sc-if value="{{ howToOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:16px;max-width:620px;display:flex;gap:16px;align-items:flex-start;animation:susfade .28s ease both;">
+        <div style="flex:none;width:96px;background:var(--accent-soft,#cfebd3);border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:center;align-self:stretch;">
+          <img src="assets/mascot.png" alt="" style="image-rendering: pixelated; object-fit: fill; width: 100%; display: none">
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;">
+          <div style="display:flex;gap:13px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line);">
+            <span style="flex:none;font-weight:800;font-size:13px;color:#5FBE71;width:18px;">01</span>
+            <div style="font-size:15px;line-height:1.45;color:var(--m6);"><strong style="color:var(--ink);">Paste a product link</strong> from any clothing retailer.</div>
+          </div>
+          <div style="display:flex;gap:13px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line);">
+            <span style="flex:none;font-weight:800;font-size:13px;color:#5FBE71;width:18px;">02</span>
+            <div style="font-size:15px;line-height:1.45;color:var(--m6);"><strong style="color:var(--ink);">We analyse it</strong> — materials, labour &amp; a 16-category life-cycle. ~30–60s.</div>
+          </div>
+          <div style="display:flex;gap:13px;align-items:baseline;padding:11px 0;">
+            <span style="flex:none;font-weight:800;font-size:13px;color:#5FBE71;width:18px;">03</span>
+            <div style="font-size:15px;line-height:1.45;color:var(--m6);"><strong style="color:var(--ink);">Get a 0–100 SustainScore</strong> with a full breakdown of why.</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+    <p style="font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--m5);margin:22px 0 0;max-width:640px;">Paste any clothing product link and get an honest 0–100 SustainScore — built from materials, labour and a full 16-category life-cycle assessment.</p>
+    <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:18px;max-width:620px;border:2px solid var(--ink);border-radius:16px;overflow:hidden;animation:susfade .3s ease both;">
+        <div style="display:flex;align-items:center;gap:13px;padding:15px 18px;background:{{ pendingHeadBg }};">
+          <sc-if value="{{ pendingSpinner }}" hint-placeholder-val="{{ true }}">
+            <span style="width:18px;height:18px;border:2px solid rgba(20,20,20,0.2);border-top-color:var(--ink);border-radius:50%;animation:susspin .8s linear infinite;display:inline-block;flex:none;"></span>
+          </sc-if>
+          <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
+            <span style="width:22px;height:22px;border-radius:50%;background:#141414;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none;">✓</span>
+          </sc-if>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:15px;line-height:1.25;">{{ pendingTitle }}</div>
+            <div style="font-size:13px;color:var(--g3);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ pendingSub }}</div>
+          </div>
+          <button onClick="{{ dismissPending }}" aria-label="Dismiss" style="flex:none;background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:var(--g2);padding:4px;">✕</button>
+        </div>
+        <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openPending }}" style="width:100%;text-align:left;background:none;border:none;border-radius:0;cursor:pointer;padding:18px;display:flex;flex-direction:column;gap:13px;animation:susfade .35s ease both;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+              <div style="min-width:0;">
+                <div style="font-weight:500;font-size:22px;line-height:1.04;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ pending.brand }}</div>
+                <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;">{{ pending.category }}</div>
+              </div>
+              <div style="width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;color:#fff;border-radius:6px;background:{{ pending.gradeColor }};">{{ pending.grade }}</div>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:7px;">
+              <span style="font-size:36px;font-weight:500;line-height:1;">{{ pending.scoreText }}</span>
+              <span style="color:var(--m1);font-size:14px;">/100</span>
+            </div>
+            <div style="height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ pending.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+            <div style="margin-top:2px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;">View full breakdown →</div>
+          </button>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ---- hero lists : recent + highest ---- -->
+    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
+      <div class="hero-lists" style="margin-top:clamp(48px,7vh,80px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);width:100%;">
+        <div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px;border-top:1.5px solid var(--ink);padding-top:13px;">
+            <div style="font-family:var(--title);font-weight:700;text-transform:uppercase;letter-spacing:0.12em;font-size:13px;color:var(--g1);">Recent scans</div>
+            <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--m2);">All →</button>
+          </div>
+          <sc-for list="{{ heroRecent }}" as="it" hint-placeholder-count="5">
+            <button onClick="{{ it.open }}" style="width:100%;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:11px 0;border:none;border-bottom:1px solid var(--line);background:none;cursor:pointer;text-align:left;">
+              <span style="flex:1;min-width:0;">
+                <span style="display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.brand }}</span>
+                <span style="display:block;font-size:11px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:2px;">{{ it.category }}</span>
+              </span>
+              <span style="display:flex;align-items:center;gap:9px;flex:none;">
+                <span style="font-weight:700;font-size:15px;">{{ it.scoreText }}</span>
+                <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;background:{{ it.gradeColor }};border-radius:6px;">{{ it.grade }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+        <div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px;border-top:1.5px solid var(--ink);padding-top:13px;">
+            <div style="font-family:var(--title);font-weight:700;text-transform:uppercase;letter-spacing:0.12em;font-size:13px;color:var(--g1);">Highest scoring</div>
+            <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--m2);">All →</button>
+          </div>
+          <sc-for list="{{ heroTop }}" as="it" hint-placeholder-count="5">
+            <button onClick="{{ it.open }}" style="width:100%;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:11px 0;border:none;border-bottom:1px solid var(--line);background:none;cursor:pointer;text-align:left;">
+              <span style="flex:1;min-width:0;">
+                <span style="display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.brand }}</span>
+                <span style="display:block;font-size:11px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:2px;">{{ it.category }}</span>
+              </span>
+              <span style="display:flex;align-items:center;gap:9px;flex:none;">
+                <span style="font-weight:700;font-size:15px;">{{ it.scoreText }}</span>
+                <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;background:{{ it.gradeColor }};border-radius:6px;">{{ it.grade }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <footer style="padding:44px clamp(20px,5vw,40px) 40px;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;align-items:flex-start;">
+      <div style="max-width:300px;">
+        <div style="display:flex;align-items:center;gap:11px;"><span style="font-family:var(--title);font-size:24px;font-weight:500;">Suschecker</span><img src="assets/mascot.png" alt="" style="height:24px;image-rendering:pixelated;"></div>
+        <p style="font-size:14px;color:var(--m3);line-height:1.5;margin:12px 0 0;">Independent sustainability scores for the clothes you're about to buy.</p>
+      </div>
+      <div style="display:flex;gap:56px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Product</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Home</button>
+            <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Dashboard</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Company</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">How it works</button>
+            <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">About</button>
+            <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">FAQ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1100px;margin:30px auto 0;font-size:12px;color:var(--m9);line-height:1.5;">© Suschecker · Scores are indicative, modelled from public product data and EF 3.1 life-cycle assessment.</div>
+  </footer>
+</div>
+</sc-if>
+
+<!-- ================= DASHBOARD ================= -->
+<sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;flex-direction:column;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
+    <div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap;">
+      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Home</button>
+      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);">Dashboard</button>
+      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">How it works</button>
+      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">About</button>
+      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">FAQ</button>
+    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
+      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
+      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
+    </button>
+    </div>
+  </div>
+
+  <div style="padding:8px clamp(20px,5vw,64px) 80px;">
+    <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin:clamp(10px,2vh,22px) 0 clamp(16px,3vh,26px);">Dashboard</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;border-bottom:1.5px solid var(--ink);padding-bottom:clamp(16px,2.6vh,26px);">
+      <h1 style="font-family:var(--title);font-size:clamp(40px,6.5vw,84px);font-weight:500;letter-spacing:-0.025em;line-height:0.92;margin:0;max-width:14ch;color:var(--accent);">Every scan, ranked</h1>
+      <div style="font-family:var(--title);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--m2);white-space:nowrap;">{{ itemCount }} scans</div>
+    </div>
+
+  <!-- ---- RANKING CHART ---- -->
+  <sc-if value="{{ hasChart }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:clamp(36px,6vh,64px);">
+      <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);margin-bottom:14px;">The ranking</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1.5px solid var(--ink);padding-top:22px;">
+        <div style="font-family:var(--title);font-size:clamp(22px,2.6vw,32px);font-weight:500;letter-spacing:-0.015em;line-height:1.0;max-width:16ch;">Where every scan ranks</div>
+        <div style="font-size:14px;color:var(--m4);max-width:340px;line-height:1.45;">Each dot is one product, placed by SustainScore and coloured by grade. Tap a dot to open it.</div>
+      </div>
+
+      <!-- OVERALL : scatter plot, score on the 0–100 y-axis -->
+      <div style="margin-top:24px;">
+        <div style="display:flex;gap:12px;margin-top:28px;">
+          <div style="position:relative;width:32px;flex:none;height:340px;">
+            <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="5">
+              <div style="position:absolute;right:0;top:{{ t.topPct }};transform:translateY(-50%);font-size:11px;color:var(--m1);font-weight:700;">{{ t.label }}</div>
+            </sc-for>
+          </div>
+          <div style="position:relative;flex:1;height:340px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);">
+            <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="5">
+              <div style="position:absolute;left:0;right:0;top:{{ t.topPct }};height:1px;background:var(--surface);"></div>
+            </sc-for>
+            <sc-for list="{{ chart.axisDots }}" as="d" hint-placeholder-count="0">
+              <button onClick="{{ d.open }}" title="{{ d.brand }} — {{ d.scoreText }}/100" style="position:absolute;left:{{ d.leftPct }};top:{{ d.topPct }};transform:translate(-50%,-50%);width:15px;height:15px;border:1.5px solid var(--paper);border-radius:50%;cursor:pointer;background:{{ d.gradeColor }};box-shadow:0 1px 2px rgba(0,0,0,0.18);padding:0;" style-hover="outline:2px solid var(--ink);outline-offset:1px;z-index:6;width:20px;height:20px;">&nbsp;</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--m1);margin-top:9px;margin-left:44px;text-align:center;text-transform:uppercase;letter-spacing:0.04em;">scans · earliest → latest</div>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:14px;">
+          <sc-for list="{{ chart.gradeCols }}" as="g" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--m4);font-weight:600;">
+              <span style="width:12px;height:12px;border-radius:50%;background:{{ g.color }};"></span>{{ g.grade }}<span style="color:var(--mb);">· {{ g.count }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ---- MAIN : filters + grid ---- -->
+  <main style="margin-top:34px;">
+      <div class="filter-bar" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;align-items:center;">
+        <input class="filter-search" value="{{ search }}" onChange="{{ onSearch }}" placeholder="search brand…" style="border:2px solid var(--ink);background:var(--paper);border-radius:9px;padding:11px 15px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;min-width:170px;flex:1;max-width:260px;">
+        <select class="filter-ctrl" value="{{ fCategory }}" onChange="{{ onCategory }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+          <option value="all">All categories</option>
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><option value="{{ c }}">{{ c }}</option></sc-for>
+        </select>
+        <select class="filter-ctrl" value="{{ fBrand }}" onChange="{{ onBrand }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+          <option value="all">All brands</option>
+          <sc-for list="{{ brands }}" as="b" hint-placeholder-count="5"><option value="{{ b }}">{{ b }}</option></sc-for>
+        </select>
+        <select class="filter-ctrl" value="{{ fMaterial }}" onChange="{{ onMaterial }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+          <option value="all">All materials</option>
+          <sc-for list="{{ materials }}" as="m" hint-placeholder-count="5"><option value="{{ m }}">{{ m }}</option></sc-for>
+        </select>
+        <select class="filter-ctrl" value="{{ fGrade }}" onChange="{{ onGrade }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+          <option value="all">All grades</option>
+          <sc-for list="{{ grades }}" as="g" hint-placeholder-count="6"><option value="{{ g }}">Grade {{ g }}</option></sc-for>
+        </select>
+        <select class="filter-ctrl" value="{{ sort }}" onChange="{{ onSort }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+          <option value="recent">Most recent</option>
+          <option value="scoreHigh">Score: high → low</option>
+          <option value="scoreLow">Score: low → high</option>
+        </select>
+      </div>
+
+      <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}"><div style="padding:40px 0;color:var(--m1);font-size:16px;">Loading scans…</div></sc-if>
+      <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}"><div style="padding:40px 0;color:#c0392b;font-size:15px;">Couldn't reach the sheet — check the sheet ID / sharing.</div></sc-if>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line);">
+        <sc-for list="{{ dashItems }}" as="it" hint-placeholder-count="8">
+          <button onClick="{{ it.open }}" style="text-align:left;background:transparent;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:clamp(20px,2vw,30px);cursor:pointer;display:flex;flex-direction:column;min-height:clamp(216px,26vh,272px);animation:susfade .35s ease both;transition:background .15s ease;" style-hover="background:rgba(121,201,138,0.07);">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+              <div style="font-family:var(--title);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--g1);">{{ it.category }}</div>
+              <div style="flex:none;display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 8px;font-family:var(--title);font-weight:800;font-size:16px;color:#fff;background:{{ it.gradeColor }};border-radius:7px;">{{ it.grade }}</div>
+            </div>
+            <div style="flex:1;"></div>
+            <div style="font-family:var(--title);font-size:clamp(25px,2.3vw,35px);font-weight:600;line-height:1.08;letter-spacing:-0.02em;color:var(--ink);">{{ it.brand }}</div>
+            <div style="display:flex;align-items:baseline;gap:9px;margin-top:12px;">
+              <span style="font-family:var(--title);font-size:clamp(32px,3vw,46px);font-weight:600;line-height:0.9;letter-spacing:-0.02em;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
+              <span style="font-family:var(--title);color:var(--m9);font-size:14px;font-weight:500;">/100</span>
+            </div>
+            <div style="font-family:var(--title);font-size:13px;color:var(--mc);margin-top:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.materialsStr }}</div>
+            <sc-if value="{{ it.hasCerts }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;">
+                <sc-for list="{{ it.certShown }}" as="c" hint-placeholder-count="2"><span style="font-family:var(--title);font-size:10px;font-weight:700;color:var(--g1);border:1px solid var(--line-g);background:transparent;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.03em;">{{ c }}</span></sc-for>
+                <sc-if value="{{ it.hasCertExtra }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--title);font-size:10px;font-weight:700;color:var(--mc);letter-spacing:0.03em;">+{{ it.certExtra }}</span></sc-if>
+              </div>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ dashEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:56px 4px;border-top:none;color:var(--m2);font-size:16px;">No scans match these filters.<br><button onClick="{{ clearFilters }}" style="margin-top:14px;background:transparent;padding:9px 18px;font-weight:700;font-size:14px;cursor:pointer;">Clear filters</button></div>
+      </sc-if>
+    </main>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= RESULT ================= -->
+<sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;flex-direction:column;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
+    <div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap;">
+      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Home</button>
+      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Dashboard</button>
+      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">How it works</button>
+      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">About</button>
+      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">FAQ</button>
+    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
+      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
+      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
+    </button>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;width:100%;padding:6px clamp(20px,5vw,64px) 90px;">
+    <button onClick="{{ goBack }}" style="background:none;border:none;padding:0;margin:clamp(8px,2vh,18px) 0 24px;cursor:pointer;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m2);">← Back</button>
+
+  <div class="result-grid" style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,84px);max-width:1240px;animation:susfade .35s ease both;">
+    <div>
+      <sc-if value="{{ selected.hasImage }}" hint-placeholder-val="{{ false }}">
+        <div data-img-box="" style="width:clamp(160px,22vw,240px);background:var(--surface);aspect-ratio:1;overflow:hidden;margin-bottom:22px;border-radius:14px;">
+          <img ref="{{ setSelImg }}" alt="{{ selected.brand }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+      </sc-if>
+      <div style="margin-bottom:18px;">
+        <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);margin-bottom:11px;">{{ selected.brand }} · {{ selected.category }}</div>
+        <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
+          <span style="font-family:var(--title);font-size:clamp(46px,6.2vw,90px);font-weight:500;line-height:0.88;letter-spacing:-0.025em;color:var(--accent);">{{ selected.scoreText }}<span style="color:var(--m2);font-size:0.4em;font-weight:500;">/100</span></span>
+          <span style="font-family:var(--title);font-size:clamp(20px,2.3vw,30px);font-weight:500;letter-spacing:-0.01em;">Grade {{ selected.grade }}</span>
+        </div>
+        <div style="height:20px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-top:18px;"><div style="height:100%;width:{{ selected.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+      </div>
+
+      <div style="font-size:clamp(15px,1.5vw,18px);line-height:1.55;text-transform:uppercase;letter-spacing:0.02em;margin:24px 0 30px;">
+        <div><span style="color:var(--m1);">Brand:</span> <strong>{{ selected.brand }}</strong></div>
+        <div><span style="color:var(--m1);">Category:</span> <strong>{{ selected.category }}</strong></div>
+        <div><span style="color:var(--m1);">Country:</span> <strong>{{ selected.country }}</strong></div>
+        <div><span style="color:var(--m1);">Price:</span> <strong>{{ selected.priceStr }}</strong></div>
+        <div><span style="color:var(--m1);">Data confidence:</span> <strong>{{ selected.confidence }}</strong></div>
+      </div>
+
+      <sc-if value="{{ selected.hasUnverified }}" hint-placeholder-val="{{ false }}">
+        <div style="font-weight:600;font-size:18px;margin:0 0 10px;">Could not verify</div>
+        <ul style="margin:0 0 30px;padding:0;list-style:none;font-size:16px;line-height:1.5;color:var(--m4);">
+          <sc-for list="{{ selected.unverified }}" as="u" hint-placeholder-count="1"><li style="display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;"><span style="color:#c0573a;font-weight:700;flex:none;line-height:1.5;">✗</span><span>{{ u }}</span></li></sc-for>
+        </ul>
+      </sc-if>
+
+      <div style="font-weight:600;font-size:18px;margin:0 0 10px;">Analysis</div>
+      <sc-if value="{{ selectedAnalysisLoading }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;color:var(--m6);font-size:15px;background:var(--accent-soft);padding:18px 20px;margin-bottom:30px;border-radius:12px;"><span style="width:16px;height:16px;border:2px solid rgba(20,20,20,0.25);border-top-color:var(--ink);border-radius:50%;animation:susspin .8s linear infinite;display:inline-block;"></span> Generating analysis…</div>
+      </sc-if>
+      <sc-if value="{{ selectedAnalysisText }}" hint-placeholder-val="">
+        <div style="white-space:pre-wrap;font-size:16px;line-height:1.55;background:var(--accent-soft);color:var(--ink);padding:20px 22px;margin-bottom:30px;border-radius:12px;">{{ selectedAnalysisText }}</div>
+      </sc-if>
+
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+        <div style="font-weight:600;font-size:18px;">Score breakdown</div>
+        <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;">tap a row for the why</div>
+      </div>
+      <div style="border-top:none;margin-bottom:30px;">
+        <sc-for list="{{ selectedProvenance }}" as="p" hint-placeholder-count="4">
+          <div style="border-bottom:none;">
+            <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:14px 0;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:16px;gap:12px;">
+                <span style="display:flex;align-items:center;gap:9px;font-weight:600;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:transparent;font-size:13px;font-weight:800;line-height:1;flex:none;">{{ p.toggleIcon }}</span>{{ p.label }}</span>
+                <span style="font-weight:600;white-space:nowrap;">{{ p.valText }} / {{ p.max }}</span>
+              </div>
+              <div style="height:8px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ p.pctStr }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+            </button>
+            <sc-if value="{{ p.isOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:2px 0 18px;font-size:14px;line-height:1.55;animation:susfade .25s ease both;">
+                <div style="color:var(--m5);margin-bottom:12px;">{{ p.def }}</div>
+                <div style="text-transform:uppercase;letter-spacing:0.05em;font-size:11px;font-weight:600;color:var(--m1);margin-bottom:7px;">Source · {{ p.source }}</div>
+                <ul style="margin:0;padding-left:18px;">
+                  <sc-for list="{{ p.reasons }}" as="r" hint-placeholder-count="2"><li style="margin-bottom:4px;">{{ r }}</li></sc-for>
+                </ul>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="font-weight:600;font-size:18px;margin:0 0 10px;">Verified</div>
+      <ul style="margin:0;padding:0;list-style:none;font-size:16px;line-height:1.5;">
+        <sc-for list="{{ selected.verified }}" as="v" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;"><span style="color:var(--g1);font-weight:700;flex:none;line-height:1.5;">✓</span><span>{{ v }}</span></li></sc-for>
+      </ul>
+
+      <sc-if value="{{ selected.hasPenalties }}" hint-placeholder-val="{{ false }}">
+        <div style="font-weight:600;font-size:18px;margin:26px 0 10px;">Penalties</div>
+        <ul style="margin:0;padding-left:22px;font-size:16px;line-height:1.6;">
+          <sc-for list="{{ selected.penalties }}" as="pen" hint-placeholder-count="1"><li>{{ pen.label }} <strong>{{ pen.text }}</strong></li></sc-for>
+        </ul>
+      </sc-if>
+    </div>
+
+    <div>
+      <h2 style="font-family:var(--title);font-size:clamp(28px,3vw,40px);font-weight:500;letter-spacing:-0.01em;margin:0 0 4px;">Impact Profile</h2>
+
+      <sc-if value="{{ selected.hasImpact }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:14px;color:var(--m4);line-height:1.45;margin-bottom:18px;">Where this product's modelled environmental cost ({{ selected.ecsText }}) comes from, and how it stacks up against a typical {{ selected.category }} (EF 3.1, normalised &amp; weighted).</div>
+
+        <sc-if value="{{ selected.hasConfNote }}" hint-placeholder-val="">
+          <div style="font-size:12.5px;color:#9a7b2e;background:#fbf3df;border-radius:8px;padding:9px 12px;margin-bottom:20px;line-height:1.45;">⚠ {{ selected.confNote }}</div>
+        </sc-if>
+
+        <!-- ---- benchmark strip : footprint vs typical ---- -->
+        <sc-if value="{{ selectedFp.hasBench }}" hint-placeholder-val="{{ false }}">
+          <div style="background:transparent;padding:16px 18px;margin-bottom:26px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:18px;">
+              <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Total footprint vs {{ selectedFp.cohortLabel }}</span>
+              <span style="font-weight:600;font-size:15px;color:{{ selectedFp.ecsDeltaColor }};white-space:nowrap;">{{ selectedFp.ecsDeltaText }}</span>
+            </div>
+            <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;margin:0 0 10px;">
+              <div style="position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--ink);left:{{ selectedFp.ecsMedLeft }};"></div>
+              <div style="position:absolute;top:50%;left:{{ selectedFp.ecsDotLeft }};width:20px;height:20px;background:var(--ink);border-radius:50%;transform:translate(-50%,-50%);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--m1);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:12px;"><span style="white-space:nowrap;">{{ selectedFp.ecsLoText }}</span><span style="white-space:nowrap;">{{ selectedFp.ecsHiText }}</span></div>
+            <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--m5);align-items:center;">
+              <span style="display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;background:var(--ink);border-radius:50%;flex:none;"></span> this product · <strong>{{ selected.ecsText }}</strong></span>
+              <span style="display:flex;align-items:center;gap:6px;"><span style="width:3px;height:15px;background:var(--ink);flex:none;"></span> typical · <strong>{{ selectedFp.ecsMedText }}</strong></span>
+              <span style="color:var(--m1);">{{ selectedFp.cohortN }} comparable scans</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ---- themed breakdown ---- -->
+        <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;border-bottom:none;padding-bottom:8px;margin-bottom:2px;">Where the impact lands</div>
+        <sc-for list="{{ selectedFp.themes }}" as="t" hint-placeholder-count="4">
+          <div style="padding:16px 0;border-bottom:none;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;">
+              <span style="font-weight:600;font-size:16px;">{{ t.name }}</span>
+              <span style="font-weight:500;font-size:23px;line-height:1;">{{ t.shareLabel }}</span>
+            </div>
+            <div style="position:relative;height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-bottom:6px;">
+              <div style="height:100%;width:{{ t.barWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div>
+              <sc-if value="{{ t.showStrip }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);left:{{ t.medLeft }};"></div>
+              </sc-if>
+            </div>
+            <sc-if value="{{ t.showStrip }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:11px;color:var(--m1);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.03em;">{{ t.benchText }}</div>
+            </sc-if>
+            <sc-for list="{{ t.cats }}" as="c" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;">
+                <span style="flex:1;min-width:0;font-size:13px;color:var(--m6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ c.name }}</span>
+                <div style="flex:0 0 96px;height:6px;background:var(--track,#d8efdc);border-radius:999px;"><div style="height:100%;width:{{ c.width }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+                <span style="flex:0 0 42px;text-align:right;font-size:12px;font-weight:700;">{{ c.shareLabel }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+
+      </sc-if>
+
+      <sc-if value="{{ selectedNoImpact }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:14px;color:var(--m4);line-height:1.45;margin:8px 0 16px;">A full life-cycle breakdown isn't available for this scan — showing the four-pillar profile instead.</div>
+        <svg viewBox="-46 -8 292 216" style="width:100%;max-width:380px;height:auto;display:block;overflow:visible;">
+          <polygon points="100,20 156.6,43.4 180,100 156.6,156.6 100,180 43.4,156.6 20,100 43.4,43.4" fill="var(--accent-soft,#cfebd3)"></polygon>
+          <polygon points="{{ selected.radarPoints }}" fill="var(--accent,#79c98a)" fill-opacity="0.62" style="stroke:var(--ink)" stroke-width="2" stroke-linejoin="round"></polygon>
+          <sc-for list="{{ selected.radarDots }}" as="d" hint-placeholder-count="4"><circle cx="{{ d.x }}" cy="{{ d.y }}" r="4.5" style="fill:var(--ink)"></circle></sc-for>
+          <text x="100" y="12" text-anchor="middle" font-size="9" font-weight="700" style="fill:var(--ink)">MATERIAL</text>
+          <text x="186" y="103" text-anchor="start" font-size="9" font-weight="700" style="fill:var(--ink)">CIRCULARITY</text>
+          <text x="100" y="195" text-anchor="middle" font-size="9" font-weight="700" style="fill:var(--ink)">LABOUR</text>
+          <text x="14" y="103" text-anchor="end" font-size="9" font-weight="700" style="fill:var(--ink)">ENVIRON.</text>
+        </svg>
+      </sc-if>
+
+    </div>
+  </div>
+  </div>
+
+</div>
+</sc-if>
+
+<!-- ================= ABOUT ================= -->
+<sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;flex-direction:column;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
+    <div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap;">
+      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Home</button>
+      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Dashboard</button>
+      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">How it works</button>
+      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);">About</button>
+      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">FAQ</button>
+    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
+      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
+      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
+    </button>
+    </div>
+  </div>
+
+  <div style="flex:1;max-width:1180px;margin:0 auto;width:100%;padding:30px clamp(20px,5vw,40px) 80px;">
+    <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(20px,4vh,40px);">About</div>
+    <h1 style="font-family:var(--title);font-size:clamp(44px,7vw,92px);font-weight:500;letter-spacing:-0.025em;line-height:0.92;margin:0;max-width:13ch;color:var(--accent);">An honest number for what you wear</h1>
+    <p style="font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--m7);margin:26px 0 0;max-width:680px;">Suschecker is an independent tool that scores the environmental and ethical footprint of clothing — before you buy it. Paste a product link and get a clear 0–100 SustainScore in under a minute.</p>
+
+    <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);margin-top:clamp(48px,7vh,84px);padding-top:26px;border-top:1.5px solid var(--ink);flex-wrap:wrap;">
+      <h2 style="flex:0 0 220px;font-family:var(--title);font-size:clamp(20px,2.1vw,28px);font-weight:500;letter-spacing:-0.01em;margin:0;">Why we built it</h2>
+      <p style="flex:1 1 420px;font-size:clamp(18px,2vw,24px);line-height:1.45;color:var(--m8);margin:0;max-width:720px;">Fashion is one of the most polluting industries on earth, yet the “sustainable” and “eco” labels stitched onto product pages are mostly unverifiable marketing. We wanted a single honest number — grounded in real life-cycle data, not brand promises — that anyone can read at a glance.</p>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);margin-top:clamp(48px,7vh,84px);padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;">
+      <h2 style="flex:0 0 220px;font-family:var(--title);font-size:clamp(20px,2.1vw,28px);font-weight:500;letter-spacing:-0.01em;margin:0;">What it does</h2>
+      <div style="flex:1 1 420px;max-width:720px;">
+        <p style="font-size:clamp(18px,2vw,24px);line-height:1.45;color:var(--m8);margin:0;">We read what a product page actually says — materials, country of manufacture, certifications and circularity signals — and combine it with a full 16-category life-cycle assessment to produce a grade from A to F, plus a breakdown of exactly why.</p>
+        <button onClick="{{ goMethodology }}" style="margin-top:18px;background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:0.04em;color:var(--ink);border-bottom:2px solid var(--ink);">See the full methodology →</button>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);margin-top:clamp(48px,7vh,84px);padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;">
+      <h2 style="flex:0 0 220px;font-family:var(--title);font-size:clamp(20px,2.1vw,28px);font-weight:500;letter-spacing:-0.01em;margin:0;">Independent by design</h2>
+      <p style="flex:1 1 420px;font-size:clamp(18px,2vw,24px);line-height:1.45;color:var(--m8);margin:0;max-width:720px;">Brands can’t pay to raise their score. Every scan uses the same public data and the same model. When we can’t verify a claim, we say so rather than giving credit for it.</p>
+    </div>
+
+    <div style="margin-top:clamp(56px,8vh,96px);background:var(--accent-soft,#cfebd3);border-radius:16px;padding:clamp(28px,4vw,44px) clamp(28px,4vw,46px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;">
+      <div style="font-family:var(--title);font-size:clamp(24px,3vw,40px);font-weight:500;max-width:540px;line-height:1.05;letter-spacing:-0.015em;">Ready to check something in your basket?</div>
+      <button onClick="{{ goHero }}" style="background:#141414;color:#fff;border:none;border-radius:10px;padding:15px 28px;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;white-space:nowrap;">Scan a product →</button>
+    </div>
+  </div>
+
+  <footer style="padding:44px clamp(20px,5vw,40px) 40px;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;align-items:flex-start;">
+      <div style="max-width:300px;">
+        <div style="display:flex;align-items:center;gap:11px;"><span style="font-family:var(--title);font-size:24px;font-weight:500;">Suschecker</span><img src="assets/mascot.png" alt="" style="height:24px;image-rendering:pixelated;"></div>
+        <p style="font-size:14px;color:var(--m3);line-height:1.5;margin:12px 0 0;">Independent sustainability scores for the clothes you're about to buy.</p>
+      </div>
+      <div style="display:flex;gap:56px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Product</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Home</button>
+            <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Dashboard</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Company</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">How it works</button>
+            <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">About</button>
+            <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">FAQ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1100px;margin:30px auto 0;font-size:12px;color:var(--m9);line-height:1.5;">© Suschecker · Scores are indicative, modelled from public product data and EF 3.1 life-cycle assessment.</div>
+  </footer>
+</div>
+</sc-if>
+
+<!-- ================= METHODOLOGY ================= -->
+<sc-if value="{{ isMethodology }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;flex-direction:column;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
+    <div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap;">
+      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Home</button>
+      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Dashboard</button>
+      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);">How it works</button>
+      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">About</button>
+      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">FAQ</button>
+    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
+      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
+      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
+    </button>
+    </div>
+  </div>
+
+  <div style="flex:1;max-width:1180px;margin:0 auto;width:100%;padding:30px clamp(20px,5vw,40px) 80px;">
+    <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(20px,4vh,40px);">Methodology</div>
+    <h1 style="font-family:var(--title);font-size:clamp(44px,7vw,92px);font-weight:500;letter-spacing:-0.025em;line-height:0.92;margin:0;max-width:14ch;color:var(--accent);">How the score is built</h1>
+    <p style="font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--m7);margin:26px 0 0;max-width:680px;">Every product gets a single 0–100 SustainScore, built from four weighted pillars and adjusted by penalties and transparency boosts. Here’s exactly what goes into it.</p>
+
+    <!-- 01 · THE FOUR PILLARS -->
+    <h2 style="font-family:var(--title);font-size:clamp(22px,2.6vw,34px);font-weight:500;letter-spacing:-0.015em;margin:clamp(56px,9vh,104px) 0 0;">The four pillars</h2>
+
+    <div style="margin-top:18px;border-top:1.5px solid var(--ink);">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(16px,3vw,48px);padding:clamp(22px,3.2vw,40px) clamp(4px,1.5vw,18px);border-bottom:1px solid var(--line);">
+        <div style="flex:1 1 320px;min-width:0;font-family:var(--title);font-size:clamp(34px,5.2vw,72px);font-weight:500;line-height:0.98;letter-spacing:-0.025em;">Material Footprint</div>
+        <div style="flex:0 1 248px;min-width:178px;">
+          <div style="font-family:var(--title);font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--g1);text-transform:uppercase;margin-bottom:9px;">Up to 30 pts</div>
+          <p style="font-size:14px;line-height:1.5;color:var(--m5);margin:0;">The impact of the fibres themselves — how the raw materials are grown or produced. Natural, recycled and certified fibres score higher; virgin synthetics and blends score lower.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(16px,3vw,48px);padding:clamp(22px,3.2vw,40px) clamp(4px,1.5vw,18px);border-bottom:1px solid var(--line);">
+        <div style="flex:1 1 320px;min-width:0;font-family:var(--title);font-size:clamp(34px,5.2vw,72px);font-weight:500;line-height:0.98;letter-spacing:-0.025em;">Product Circularity</div>
+        <div style="flex:0 1 248px;min-width:178px;">
+          <div style="font-family:var(--title);font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--g1);text-transform:uppercase;margin-bottom:9px;">Up to 20 pts</div>
+          <p style="font-size:14px;line-height:1.5;color:var(--m5);margin:0;">Whether the product is built to last and stay out of landfill — repair services, resale and take-back schemes, and lifetime guarantees.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(16px,3vw,48px);padding:clamp(22px,3.2vw,40px) clamp(4px,1.5vw,18px);border-bottom:1px solid var(--line);">
+        <div style="flex:1 1 320px;min-width:0;font-family:var(--title);font-size:clamp(34px,5.2vw,72px);font-weight:500;line-height:0.98;letter-spacing:-0.025em;">Supply Chain &amp; Labour</div>
+        <div style="flex:0 1 248px;min-width:178px;">
+          <div style="font-family:var(--title);font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--g1);text-transform:uppercase;margin-bottom:9px;">Up to 20 pts</div>
+          <p style="font-size:14px;line-height:1.5;color:var(--m5);margin:0;">Labour conditions and transparency — named factories, audit reports, published supplier lists and credible third-party certifications.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(16px,3vw,48px);padding:clamp(22px,3.2vw,40px) clamp(4px,1.5vw,18px);border-bottom:1.5px solid var(--ink);">
+        <div style="flex:1 1 320px;min-width:0;font-family:var(--title);font-size:clamp(34px,5.2vw,72px);font-weight:500;line-height:0.98;letter-spacing:-0.025em;">Environmental Cost</div>
+        <div style="flex:0 1 248px;min-width:178px;">
+          <div style="font-family:var(--title);font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--g1);text-transform:uppercase;margin-bottom:9px;">Up to 15 pts</div>
+          <p style="font-size:14px;line-height:1.5;color:var(--m5);margin:0;">A modelled cradle-to-gate environmental cost from a full 16-category life-cycle assessment (EF 3.1, via Ecobalyse).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 · PENALTIES & BOOSTS -->
+    <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);margin-top:clamp(48px,7vh,84px);padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;">
+      <h2 style="flex:0 0 220px;font-family:var(--title);font-size:clamp(20px,2.1vw,28px);font-weight:500;letter-spacing:-0.01em;margin:0;">Penalties &amp; boosts</h2>
+      <p style="flex:1 1 420px;font-size:clamp(18px,2vw,24px);line-height:1.45;color:var(--m8);margin:0;max-width:720px;">Fast-fashion business models, fibre blends that can’t be recycled, and high synthetic content reduce the score. Verified circularity and supply-chain transparency add to it. The breakdown on every result shows which adjustments were applied.</p>
+    </div>
+
+    <!-- 03 · GRADES -->
+    <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);margin-top:clamp(48px,7vh,84px);padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;">
+      <h2 style="flex:0 0 220px;font-family:var(--title);font-size:clamp(20px,2.1vw,28px);font-weight:500;letter-spacing:-0.01em;margin:0;">Grades</h2>
+      <div style="flex:1 1 420px;display:flex;flex-direction:column;gap:0;max-width:560px;">
+        <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);"><span style="flex:none;width:34px;height:34px;border-radius:7px;background:#5FBE71;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">A</span><span style="font-family:var(--title);font-size:22px;font-weight:500;">Leading</span><span style="margin-left:auto;font-family:var(--title);font-size:13px;font-weight:500;color:var(--m1);">85–100</span></div>
+        <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);"><span style="flex:none;width:34px;height:34px;border-radius:7px;background:#8FCE5C;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">B</span><span style="font-family:var(--title);font-size:22px;font-weight:500;">Good</span><span style="margin-left:auto;font-family:var(--title);font-size:13px;font-weight:500;color:var(--m1);">70–84</span></div>
+        <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);"><span style="flex:none;width:34px;height:34px;border-radius:7px;background:#E6C84B;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">C</span><span style="font-family:var(--title);font-size:22px;font-weight:500;">Average</span><span style="margin-left:auto;font-family:var(--title);font-size:13px;font-weight:500;color:var(--m1);">55–69</span></div>
+        <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);"><span style="flex:none;width:34px;height:34px;border-radius:7px;background:#E59A45;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">D</span><span style="font-family:var(--title);font-size:22px;font-weight:500;">Below par</span><span style="margin-left:auto;font-family:var(--title);font-size:13px;font-weight:500;color:var(--m1);">40–54</span></div>
+        <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);"><span style="flex:none;width:34px;height:34px;border-radius:7px;background:#E2713F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">E</span><span style="font-family:var(--title);font-size:22px;font-weight:500;">Poor</span><span style="margin-left:auto;font-family:var(--title);font-size:13px;font-weight:500;color:var(--m1);">25–39</span></div>
+        <div style="display:flex;align-items:center;gap:14px;padding:11px 0;"><span style="flex:none;width:34px;height:34px;border-radius:7px;background:#DB4F39;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">F</span><span style="font-family:var(--title);font-size:22px;font-weight:500;">Failing</span><span style="margin-left:auto;font-family:var(--title);font-size:13px;font-weight:500;color:var(--m1);">0–24</span></div>
+      </div>
+    </div>
+
+    <!-- 04 · THE IMPACT PROFILE -->
+    <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);margin-top:clamp(48px,7vh,84px);padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;">
+      <h2 style="flex:0 0 220px;font-family:var(--title);font-size:clamp(20px,2.1vw,28px);font-weight:500;letter-spacing:-0.01em;margin:0;">The Impact Profile</h2>
+      <p style="flex:1 1 420px;font-size:clamp(18px,2vw,24px);line-height:1.45;color:var(--m8);margin:0;max-width:720px;">Beyond the headline score, every result shows where a product’s environmental cost actually lands across 16 impact categories — climate, toxicity, resources and water — normalised and weighted under the EU’s EF 3.1 method, and compared against a typical item in the same category.</p>
+    </div>
+
+    <!-- 05 · DATA CONFIDENCE -->
+    <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);margin-top:clamp(48px,7vh,84px);padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;">
+      <h2 style="flex:0 0 220px;font-family:var(--title);font-size:clamp(20px,2.1vw,28px);font-weight:500;letter-spacing:-0.01em;margin:0;">Data Confidence</h2>
+      <p style="flex:1 1 420px;font-size:clamp(18px,2vw,24px);line-height:1.45;color:var(--m8);margin:0;max-width:720px;">Some product pages are richer than others. When key details are missing we estimate from category and material defaults, and flag the result as lower-confidence — so you always know how much to trust it.</p>
+    </div>
+  </div>
+
+  <footer style="padding:44px clamp(20px,5vw,40px) 40px;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;align-items:flex-start;">
+      <div style="max-width:300px;">
+        <div style="display:flex;align-items:center;gap:11px;"><span style="font-family:var(--title);font-size:24px;font-weight:500;">Suschecker</span><img src="assets/mascot.png" alt="" style="height:24px;image-rendering:pixelated;"></div>
+        <p style="font-size:14px;color:var(--m3);line-height:1.5;margin:12px 0 0;">Independent sustainability scores for the clothes you're about to buy.</p>
+      </div>
+      <div style="display:flex;gap:56px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Product</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Home</button>
+            <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Dashboard</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Company</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">How it works</button>
+            <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">About</button>
+            <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">FAQ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1100px;margin:30px auto 0;font-size:12px;color:var(--m9);line-height:1.5;">© Suschecker · Scores are indicative, modelled from public product data and EF 3.1 life-cycle assessment.</div>
+  </footer>
+</div>
+</sc-if>
+
+<!-- ================= FAQ ================= -->
+<sc-if value="{{ isFaq }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;flex-direction:column;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
+    <div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap;">
+      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Home</button>
+      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">Dashboard</button>
+      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">How it works</button>
+      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);">About</button>
+      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);">FAQ</button>
+    </div>
+  </div>
+
+  <div style="flex:1;max-width:1180px;margin:0 auto;width:100%;padding:30px clamp(20px,5vw,40px) 80px;">
+    <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(20px,4vh,40px);">FAQ</div>
+    <h1 style="font-family:var(--title);font-size:clamp(44px,7vw,92px);font-weight:500;letter-spacing:-0.025em;line-height:0.92;margin:0 0 clamp(44px,7vh,80px);max-width:13ch;color:var(--accent);">Questions, answered</h1>
+
+    <div style="border-top:1.5px solid var(--ink);">
+      <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);padding:clamp(24px,3.4vw,40px) 0;border-bottom:1px solid var(--line);flex-wrap:wrap;">
+        <h2 style="flex:1 1 280px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-0.01em;line-height:1.08;margin:0;max-width:420px;">Where does the data come from?</h2>
+        <p style="flex:2 1 380px;font-size:clamp(16px,1.5vw,18px);line-height:1.55;color:var(--m6);margin:0;max-width:640px;">From the public product page you submit plus the brand’s own published information, combined with the Ecobalyse life-cycle database. We don’t treat marketing claims as fact unless they’re verifiable.</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);padding:clamp(24px,3.4vw,40px) 0;border-bottom:1px solid var(--line);flex-wrap:wrap;">
+        <h2 style="flex:1 1 280px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-0.01em;line-height:1.08;margin:0;max-width:420px;">How accurate are the scores?</h2>
+        <p style="flex:2 1 380px;font-size:clamp(16px,1.5vw,18px);line-height:1.55;color:var(--m6);margin:0;max-width:640px;">They’re a well-grounded estimate, not a lab measurement. The score reflects what can be verified from available data; where information is missing we flag the result as lower-confidence.</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);padding:clamp(24px,3.4vw,40px) 0;border-bottom:1px solid var(--line);flex-wrap:wrap;">
+        <h2 style="flex:1 1 280px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-0.01em;line-height:1.08;margin:0;max-width:420px;">What is the “environmental cost”?</h2>
+        <p style="flex:2 1 380px;font-size:clamp(16px,1.5vw,18px);line-height:1.55;color:var(--m6);margin:0;max-width:640px;">A single modelled figure (in mPt) summarising a product’s impact across 16 categories — from climate change to water use — using the EU’s EF 3.1 method.</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);padding:clamp(24px,3.4vw,40px) 0;border-bottom:1px solid var(--line);flex-wrap:wrap;">
+        <h2 style="flex:1 1 280px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-0.01em;line-height:1.08;margin:0;max-width:420px;">Why did a product I like score low?</h2>
+        <p style="flex:2 1 380px;font-size:clamp(16px,1.5vw,18px);line-height:1.55;color:var(--m6);margin:0;max-width:640px;">Often it’s a lack of verifiable information, a fibre blend that can’t be recycled, or a high-impact material — not necessarily bad intent. Open the score breakdown to see exactly why.</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);padding:clamp(24px,3.4vw,40px) 0;border-bottom:1px solid var(--line);flex-wrap:wrap;">
+        <h2 style="flex:1 1 280px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-0.01em;line-height:1.08;margin:0;max-width:420px;">Can brands pay to improve their score?</h2>
+        <p style="flex:2 1 380px;font-size:clamp(16px,1.5vw,18px);line-height:1.55;color:var(--m6);margin:0;max-width:640px;">No. Scoring is automatic and identical for every product. There’s no paid placement and no way to opt out.</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);padding:clamp(24px,3.4vw,40px) 0;border-bottom:1px solid var(--line);flex-wrap:wrap;">
+        <h2 style="flex:1 1 280px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-0.01em;line-height:1.08;margin:0;max-width:420px;">How do I scan a product?</h2>
+        <p style="flex:2 1 380px;font-size:clamp(16px,1.5vw,18px);line-height:1.55;color:var(--m6);margin:0;max-width:640px;">Paste the product URL on the home page. The scan usually takes 30–60 seconds and the result appears right there, then joins the dashboard.</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:clamp(16px,4vw,64px);padding:clamp(24px,3.4vw,40px) 0;border-bottom:1.5px solid var(--ink);flex-wrap:wrap;">
+        <h2 style="flex:1 1 280px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-0.01em;line-height:1.08;margin:0;max-width:420px;">What does it cover?</h2>
+        <p style="flex:2 1 380px;font-size:clamp(16px,1.5vw,18px);line-height:1.55;color:var(--m6);margin:0;max-width:640px;">Clothing and apparel for now. Other categories may follow.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(40px,6vh,72px);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span style="font-size:clamp(17px,1.8vw,21px);color:var(--m8);font-family:var(--title);font-weight:500;">Still curious how the score is built?</span>
+      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:0.04em;color:var(--ink);border-bottom:2px solid var(--ink);">Read the methodology →</button>
+    </div>
+  </div>
+
+  <footer style="padding:44px clamp(20px,5vw,40px) 40px;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;align-items:flex-start;">
+      <div style="max-width:300px;">
+        <div style="display:flex;align-items:center;gap:11px;"><span style="font-family:var(--title);font-size:24px;font-weight:500;">Suschecker</span><img src="assets/mascot.png" alt="" style="height:24px;image-rendering:pixelated;"></div>
+        <p style="font-size:14px;color:var(--m3);line-height:1.5;margin:12px 0 0;">Independent sustainability scores for the clothes you're about to buy.</p>
+      </div>
+      <div style="display:flex;gap:56px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Product</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Home</button>
+            <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">Dashboard</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m1);font-weight:600;margin-bottom:13px;">Company</div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">How it works</button>
+            <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">About</button>
+            <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:14px;color:var(--ink);text-align:left;">FAQ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1100px;margin:30px auto 0;font-size:12px;color:var(--m9);line-height:1.5;">© Suschecker · Scores are indicative, modelled from public product data and EF 3.1 life-cycle assessment.</div>
+  </footer>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;headingFont&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Archivo&quot;,&quot;Oswald&quot;,&quot;Saira&quot;,&quot;Barlow Semi Condensed&quot;],&quot;default&quot;:&quot;Archivo&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#79C98A&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;sheetId&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;1q4MqSkfLaoljDVZ9NtLo9Ry4B2EeeetPULkxh7rhUPk&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;webhookUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://n8n-production-9085e.up.railway.app/webhook/suschecker-test&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view:'hero', lastView:'hero', menuOpen:false, dark:false,
+    items:[], loading:true, error:'',
+    urlInput:'', submitStatus:'', howToOpen:false,
+    pendingUrl:'', pendingStatus:'', pendingKey:null,
+    selectedId:null, openWhy:{},
+    analysis:{}, analysisLoading:false,
+    fCategory:'all', fGrade:'all', fBrand:'all', fMaterial:'all', search:'', sort:'recent',
+    chartMode:'axis',
+  };
+
+  EF = {
+    CCH:{n:'Climate change', nf:0.0001235, w:0.2106},
+    OZD:{n:'Ozone depletion', nf:18.64, w:0.0631},
+    IOR:{n:'Ionising radiation', nf:0.0002370, w:0.0501},
+    PCO:{n:'Photochemical ozone', nf:0.02463, w:0.0478},
+    PMA:{n:'Particulate matter', nf:1680, w:0.0896},
+    HTN:{n:'Human toxicity, non-cancer', nf:4354, w:0.0184},
+    HTC:{n:'Human toxicity, cancer', nf:59173, w:0.0213},
+    FWE:{n:'Eutrophication, freshwater', nf:0.6223, w:0.028},
+    SWE:{n:'Eutrophication, marine', nf:0.05116, w:0.0296},
+    TRE:{n:'Eutrophication, terrestrial', nf:0.005658, w:0.0371},
+    ETF:{n:'Ecotoxicity, freshwater', nf:0.00002343, w:0.0192},
+    LDU:{n:'Land use', nf:0.000001220, w:0.0794},
+    WTU:{n:'Water use', nf:0.00008719, w:0.0851},
+    FRU:{n:'Resource use, fossils', nf:0.00001538, w:0.0832},
+    MRU:{n:'Resource use, minerals & metals', nf:15.71, w:0.0755},
+  };
+
+  THEMES = [
+    { key:'climate', name:'Climate & air', codes:['CCH','PMA','PCO','OZD','IOR'] },
+    { key:'tox', name:'Toxicity & health', codes:['HTC','HTN','ETF'] },
+    { key:'resources', name:'Resources & land', codes:['FRU','MRU','LDU'] },
+    { key:'water', name:'Water & nutrients', codes:['WTU','FWE','SWE','TRE'] },
+  ];
+
+  componentDidMount(){
+    try{ if(localStorage.getItem('sus-theme')==='dark'){ this.setState({dark:true}); this.applyThemeBg(true); } }catch(_){}
+    const r = this.parseHash();
+    if(r.view !== 'hero') this.setState({ view:r.view, selectedId:r.selectedId, lastView:'dashboard' });
+    this._onHash = () => this.onHashChange();
+    window.addEventListener('hashchange', this._onHash);
+    this.load();
+  }
+  componentWillUnmount(){ if(this._onHash) window.removeEventListener('hashchange', this._onHash); this.stopPoll(); }
+  parseHash(){
+    try{
+      const h = (location.hash || '').replace(/^#/, '');
+      if(h.indexOf('result=') === 0) return { view:'result', selectedId: decodeURIComponent(h.slice(7)) };
+      if(h === 'dashboard') return { view:'dashboard', selectedId:null };
+      if(h === 'about' || h === 'methodology' || h === 'faq') return { view:h, selectedId:null };
+    }catch(e){}
+    return { view:'hero', selectedId:null };
+  }
+  onHashChange(){
+    const r = this.parseHash();
+    this.setState(st => (st.view===r.view && st.selectedId===r.selectedId) ? null : { view:r.view, selectedId:r.selectedId, menuOpen:false }, () => {
+      if(r.view==='result' && r.selectedId){ const it = this.state.items.find(i=>i.key===r.selectedId); if(it) this.ensureAnalysis(it); }
+    });
+  }
+  navHash(view, key){
+    let h = '';
+    if(view==='result' && key) h = '#result='+encodeURIComponent(key);
+    else if(view==='dashboard' || view==='about' || view==='methodology' || view==='faq') h = '#'+view;
+    try{
+      if(h==='' && history && history.replaceState){ history.replaceState(null, '', location.pathname + location.search); return; }
+      if((location.hash||'') !== h) location.hash = h;
+    }catch(e){}
+  }
+
+  IMG_OVERRIDES = {
+    'https://eu.patagonia.com/gb/en/product/mens-r1-air-fleece-midlayer-crewneck/40236.html?dwvar_40236_color=BCBN':
+      'https://eu.patagonia.com/dw/image/v2/BDJB_PRD/on/demandware.static/-/Sites-patagonia-master/default/dw5ace66d0/images/hi-res/40236_BCBN.jpg?sw=600&sh=600&sfrm=png&q=95&bgcolor=f3f4ef',
+  };
+
+  pj(s,fb){ if(s==null) return fb; if(typeof s!=='string') return s; try{ return JSON.parse(s); }catch(e){ return fb; } }
+  num(x){ const n=Number(x); return isFinite(n)?n:0; }
+  r1(x){ const n=this.num(x); return (Math.round(n*10)/10).toString(); }
+  fmtPct(x){ const n=this.num(x); return (n>=1 ? n.toFixed(0) : n.toFixed(1))+'%'; }
+  median(arr){ const a=arr.slice().filter(x=>isFinite(x)).sort((x,y)=>x-y); if(!a.length) return 0; const m=Math.floor(a.length/2); return a.length%2 ? a[m] : (a[m-1]+a[m])/2; }
+  strip(val, arr){
+    const a=arr.slice().filter(x=>isFinite(x)).sort((x,y)=>x-y);
+    if(a.length<2) return { ok:false, dotLeft:'50%', medLeft:'50%', med:val, lo:val, hi:val, n:a.length };
+    const lo=a[0], hi=a[a.length-1];
+    const m=Math.floor(a.length/2);
+    const med = a.length%2 ? a[m] : (a[m-1]+a[m])/2;
+    const span=(hi-lo)||1;
+    const pos=x=>(((Math.max(lo,Math.min(hi,x))-lo)/span)*100);
+    return { ok:true, dotLeft:pos(val).toFixed(1)+'%', medLeft:pos(med).toFixed(1)+'%', med, lo, hi, n:a.length };
+  }
+  gradeColor(g){ return ({A:'#5FBE71',B:'#8FCE5C',C:'#E6C84B',D:'#E59A45',E:'#E2713F',F:'#DB4F39'})[(g||'').toUpperCase()] || '#9aa0a6'; }
+
+  async fetchItems(){
+    const sheetId = this.props.sheetId || '1q4MqSkfLaoljDVZ9NtLo9Ry4B2EeeetPULkxh7rhUPk';
+    const url = 'https://docs.google.com/spreadsheets/d/'+sheetId+'/gviz/tq?tqx=out:json&gid=0&_cb='+Date.now();
+    const res = await fetch(url, { cache:'no-store' });
+    const txt = await res.text();
+    const json = JSON.parse(txt.replace(/^[^{]*/,'').replace(/[^}]*$/,''));
+    const cols = (json.table && json.table.cols) || [];
+    this._imgIdx = cols.findIndex(c => /image/i.test((c && c.label) || ''));
+    const rows = (json.table && json.table.rows) || [];
+    const mapped = [];
+    rows.forEach((row, idx) => {
+      const c = row.c || [];
+      const v = i => (c[i] && c[i].v != null) ? c[i].v : null;
+      const u = v(2); const brand = v(3);
+      if(!u || !brand) return;
+      mapped.push(this.mapItem(v, idx, u, brand));
+    });
+    const byUrl = new Map();
+    mapped.forEach(it => byUrl.set(it.url, it));
+    return Array.from(byUrl.values());
+  }
+
+  async load(){
+    try{
+      const items = await this.fetchItems();
+      this.setState({ items, loading:false }, () => {
+        if(this.state.view==='result' && this.state.selectedId){ const it = items.find(i=>i.key===this.state.selectedId); if(it) this.ensureAnalysis(it); }
+      });
+    }catch(e){ this.setState({ error:String(e), loading:false }); }
+  }
+
+  startPoll(url){
+    this.stopPoll();
+    this._pollN = 0;
+    this._poll = setInterval(async () => {
+      this._pollN++;
+      let items;
+      try{ items = await this.fetchItems(); }catch(e){ return; }
+      this.setState({ items });
+      const found = items.find(i => i.url === url && (this._pendBaseline == null || i.scanId !== this._pendBaseline));
+      if(found){
+        this.stopPoll();
+        this.setState({ pendingStatus:'done', pendingKey:found.key });
+        this.ensureAnalysis(found);
+      } else if(this._pollN >= 40){
+        this.stopPoll();
+        this.setState({ pendingStatus:'timeout' });
+      }
+    }, 4000);
+  }
+  stopPoll(){ if(this._poll){ clearInterval(this._poll); this._poll = null; } }
+
+  mapItem(v, idx, u, brand){
+    const breakdown = this.pj(v(40), {}) || {};
+    const materials = this.pj(v(8), {}) || {};
+    const certsRaw = this.pj(v(9), []) || [];
+    const verifiedRaw = this.pj(v(37), []) || [];
+    const unverifiedRaw = this.pj(v(38), []) || [];
+    const score = this.num(v(11));
+    const grade = (v(12)||'?').toString().trim().toUpperCase();
+    const country = v(5) || '—';
+    const price = v(6); const currency = (v(7)||'').toString();
+    const confidence = (v(13) || v(10) || '—').toString();
+
+    const sheetImage = (this._imgIdx!=null && this._imgIdx>=0) ? v(this._imgIdx) : null;
+    const image = (sheetImage && /^https?:\/\//i.test(String(sheetImage))) ? sheetImage : (this.IMG_OVERRIDES[u] || null);
+    const hasImage = !!(image && /^https?:\/\//i.test(String(image)));
+
+    const matEntries = (materials && typeof materials==='object') ? Object.entries(materials) : [];
+    const materialsStr = matEntries.length ? matEntries.map(([k,val]) => this.r1(val)+'% '+k).join(', ') : '—';
+    const certList = Array.isArray(certsRaw) ? certsRaw.filter(Boolean) : [];
+
+    const pillarDefs = [
+      ['Material Footprint','materialFootprint',30],
+      ['Product Circularity','productCircularity',20],
+      ['Supply Chain & Labour','supplyChainLabor',20],
+      ['Environmental Cost','environmentalCost',15],
+    ];
+    const pillars = pillarDefs.map(([label,key,max]) => {
+      const val = this.num(breakdown[key]);
+      const pct = Math.max(0, Math.min(100, val/max*100));
+      return { label, max, val, valText:this.r1(val), pct, pctStr: pct.toFixed(1)+'%' };
+    });
+
+    const penDefs = [['fastFashionPenalty','Fast fashion penalty'],['blendPenalty','Blend penalty'],['syntheticPenalty','Synthetic penalty']];
+    const penalties = penDefs.map(([k,label]) => ({ label, val:this.num(breakdown[k]) }))
+      .filter(p => p.val > 0).map(p => ({ label:p.label, text:'−'+this.r1(p.val)+' pt' }));
+
+    let priceStr = '—';
+    if(price != null && price !== ''){ const isAlpha = /[A-Za-z]/.test(currency); priceStr = isAlpha ? (currency+' '+price) : ((currency||'')+price); }
+
+    const cx=100, cy=100, R=80;
+    const angs = [-90,0,90,180].map(d => d*Math.PI/180);
+    const pts = pillars.map((p,i) => { const r = R*(p.pct/100); return { x: cx+r*Math.cos(angs[i]), y: cy+r*Math.sin(angs[i]) }; });
+    const radarPoints = pts.map(p => p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+    const radarDots = pts.map(p => ({ x:p.x.toFixed(1), y:p.y.toFixed(1) }));
+
+    const verified = Array.isArray(verifiedRaw) ? verifiedRaw : [];
+    const unverified = Array.isArray(unverifiedRaw) ? unverifiedRaw : [];
+
+    // ---- Ecobalyse 16-category decomposition (EF 3.1 normalise + weight) ----
+    const ecoCols = {CCH:22,ETF:23,FRU:24,FWE:25,HTC:26,HTN:27,IOR:28,LDU:29,MRU:30,OZD:31,PCO:32,PMA:33,SWE:34,TRE:35,WTU:36};
+    const ecsTotal = this.num(v(21));
+    const weighted = [];
+    for(const code in ecoCols){
+      const raw = v(ecoCols[code]);
+      if(raw == null) continue;
+      const def = this.EF[code];
+      const norm = Math.max(0, this.num(raw)) * def.nf;
+      weighted.push({ code, name:def.n, wv: norm * def.w });
+    }
+    const totalW = weighted.reduce((a,b)=>a+b.wv, 0);
+    const wvMap = {}; weighted.forEach(w => wvMap[w.code]=w.wv);
+    const hasImpact = weighted.length > 0 && totalW > 0;
+
+    // themed grouping
+    const themes = this.THEMES.map(t => {
+      const cats = t.codes
+        .filter(c => wvMap[c]!=null)
+        .map(c => ({ code:c, name:this.EF[c].n, share: totalW>0 ? wvMap[c]/totalW*100 : 0 }))
+        .sort((a,b)=>b.share-a.share);
+      const wv = t.codes.reduce((a,c)=> a + (wvMap[c]||0), 0);
+      const share = totalW>0 ? wv/totalW*100 : 0;
+      return { key:t.key, name:t.name, share, cats };
+    });
+    const themeShareByKey = {}; themes.forEach(t => themeShareByKey[t.key]=t.share);
+
+    // legacy top-impact (for analysis prompt + confidence note)
+    let impactTop = null;
+    if(hasImpact){
+      const flat = weighted.map(b=>({ name:b.name, pct: b.wv/totalW*100 })).sort((a,b)=>b.pct-a.pct);
+      impactTop = flat[0];
+    }
+    const envEstimated = (v(47)===true) || /true/i.test((v(47)||'').toString());
+    const parseConf = (v(10)||'').toString();
+
+    // ---- Deterministic provenance / "why" per pillar ----
+    const circ = this.pj(v(41), {}) || {};
+    const sct = this.pj(v(42), {}) || {};
+    const tick = (b,label)=> (b ? '✓ ' : '✗ ') + label;
+    const matReasons = [];
+    matEntries.forEach(([k,val]) => matReasons.push('Composition: ' + this.r1(val) + '% ' + k));
+    if(this.num(breakdown.blendPenalty) > 0) matReasons.push('Fibre blend lowers recyclability (−' + this.r1(breakdown.blendPenalty) + ')');
+    if(this.num(breakdown.syntheticPenalty) > 0) matReasons.push('Synthetic content penalty (−' + this.r1(breakdown.syntheticPenalty) + ')');
+    const circReasons = [
+      tick(circ.hasTakeBack, 'Take-back / recycling scheme'),
+      tick(circ.hasRepairService, 'Repair service'),
+      tick(circ.hasResaleProgram, 'Resale programme'),
+      tick(circ.hasLifetimeGuarantee, 'Lifetime guarantee'),
+    ];
+    if(this.num(breakdown.circularityBoost) > 0) circReasons.push('+' + this.r1(breakdown.circularityBoost) + ' circularity boost applied');
+    const laborReasons = [];
+    laborReasons.push(certList.length ? ('Certifications: ' + certList.join(', ')) : 'No third-party certifications found');
+    laborReasons.push(tick(sct.factoryNameMentioned, 'Factory named'));
+    laborReasons.push(tick(sct.auditReportMentioned, 'Audit report referenced'));
+    laborReasons.push(tick(sct.supplierListMentioned, 'Supplier list published'));
+    if(this.num(breakdown.supplyChainBoost) > 0) laborReasons.push('+' + this.r1(breakdown.supplyChainBoost) + ' transparency boost applied');
+    const envReasons = [];
+    if(ecsTotal > 0) envReasons.push('Ecobalyse environmental cost: ' + Math.round(ecsTotal).toLocaleString() + ' mPt');
+    envReasons.push(envEstimated ? 'Estimated from material / category defaults (no exact match)' : 'Modelled from product material, category & country');
+    if(impactTop) envReasons.push('Largest single impact: ' + impactTop.name);
+
+    const provenance = [
+      { label:'Material Footprint', valText:pillars[0].valText, max:30, pctStr:pillars[0].pctStr, source:'Material composition → MAT_SCORES', def:'The impact of the fibres themselves — how the raw materials are grown or produced.', reasons:matReasons },
+      { label:'Product Circularity', valText:pillars[1].valText, max:20, pctStr:pillars[1].pctStr, source:'Circularity signals on the product page', def:'Whether the product is built to last and stay out of landfill — repair, resale, take-back, guarantees.', reasons:circReasons },
+      { label:'Supply Chain & Labour', valText:pillars[2].valText, max:20, pctStr:pillars[2].pctStr, source:'Brand profile + product certifications', def:'Labour conditions and transparency across the supply chain — audits, named factories, credible certifications.', reasons:laborReasons },
+      { label:'Environmental Cost', valText:pillars[3].valText, max:15, pctStr:pillars[3].pctStr, source: envEstimated ? 'Ecobalyse LCA (estimated)' : 'Ecobalyse LCA', def:'Modelled cradle-to-gate environmental cost from a full 16-category life-cycle assessment.', reasons:envReasons },
+    ];
+    const confNote = envEstimated
+      ? 'Environmental cost estimated from material defaults — treat the breakdown as indicative.'
+      : (/medium/i.test(parseConf) ? 'Some product details were inferred (medium parse confidence).' : '');
+
+    return {
+      key:u, url:u, scanId:(v(0)!=null?String(v(0)):null), brand, category:(v(4)||'').toString(), country, price, currency, priceStr, confidence,
+      image, hasImage,
+      score, scoreText:this.r1(score), scoreWidth: Math.max(0,Math.min(100,score)).toFixed(1)+'%',
+      grade, gradeColor:this.gradeColor(grade),
+      materials, materialsStr, certList, certStr: certList.length?certList.join(', '):'None listed', hasCerts:certList.length>0,
+      verified, unverified, hasUnverified:unverified.length>0,
+      pillars, penalties, hasPenalties:penalties.length>0,
+      radarPoints, radarDots, rowIdx:idx,
+      themes, themeShareByKey, hasImpact, ecsTotal, ecsText: ecsTotal>0 ? Math.round(ecsTotal).toLocaleString()+' mPt' : '—',
+      envEstimated, parseConf, provenance, confNote, hasConfNote: !!confNote,
+    };
+  }
+
+  decorate(it){ return Object.assign({}, it, { open: () => this.openResult(it) }); }
+
+  buildChart(base){
+    const items = base.filter(i => isFinite(i.score));
+    const dec = it => this.decorate(it);
+    const clampL = sc => Math.max(2.5, Math.min(97.5, sc));
+
+    // ---- Overall : scatter plot, score on the 0–100 y-axis ----
+    const clampT = sc => Math.max(0, Math.min(100, sc));
+    const yTicks = [0,25,50,75,100].map(v => ({ label:String(v), topPct:(100-v)+'%' }));
+    const n = items.length;
+    const axisDots = items.map((it, i) => {
+      const x = n > 1 ? (i/(n-1))*95 + 2.5 : 50;
+      return Object.assign({}, dec(it), {
+        leftPct: x.toFixed(2)+'%',
+        topPct: (100 - clampT(it.score)).toFixed(2)+'%',
+      });
+    });
+
+    // ---- By category : one row per category ----
+    const catMap = {};
+    items.forEach(it => { const k = it.category || '—'; (catMap[k] = catMap[k] || []).push(it); });
+    const catRows = Object.keys(catMap).sort().map(name => {
+      const arr = catMap[name];
+      const med = this.median(arr.map(i => i.score));
+      return {
+        name, n: arr.length, medLeft: clampL(med).toFixed(2)+'%',
+        dots: arr.slice().sort((a,b)=>a.score-b.score).map(it => Object.assign({}, dec(it), { leftPct: clampL(it.score).toFixed(2)+'%' })),
+      };
+    });
+
+    // ---- By grade : distribution columns ----
+    const order = ['A','B','C','D','E','F'];
+    const gradeMap = {}; order.forEach(g => gradeMap[g] = []);
+    items.forEach(it => { const g = (it.grade||'').toUpperCase(); if(gradeMap[g]) gradeMap[g].push(it); });
+    const gradeCols = order.map(g => ({
+      grade:g, color:this.gradeColor(g), count:gradeMap[g].length,
+      dots: gradeMap[g].slice().sort((a,b)=>b.score-a.score).map(dec),
+    }));
+
+    return { yTicks, axisDots, catRows, gradeCols, count:items.length };
+  }
+
+  openResult(it){
+    this.setState(st => ({ view:'result', selectedId:it.key, menuOpen:false, openWhy:{}, lastView: st.view==='result'?st.lastView:st.view }));
+    this.navHash('result', it.key);
+    this.ensureAnalysis(it);
+  }
+
+  ensureAnalysis(it){
+    if(!it || this.state.analysis[it.key] != null) return;
+    if(!(window.claude && window.claude.complete)){
+      this.setState(s => ({ analysis: Object.assign({}, s.analysis, { [it.key]: '' }) }));
+      return;
+    }
+    this.setState({ analysisLoading:true });
+    const p = it.pillars;
+    const prompt =
+      'You are a sustainability analyst writing a short, plain-English verdict for an everyday shopper deciding whether to buy this clothing item. '+
+      'Product: '+it.brand+' '+it.category+'. SustainScore '+it.scoreText+'/100, grade '+it.grade+'. '+
+      'Materials: '+it.materialsStr+'. Made in: '+it.country+'. Certifications: '+it.certStr+'. '+
+      'Pillar scores — Material Footprint '+p[0].valText+'/30, Product Circularity '+p[1].valText+'/20, Supply Chain & Labour '+p[2].valText+'/20, Environmental Cost '+p[3].valText+'/15. '+
+      'Write a one-line verdict, then a short paragraph explaining why, then one line of practical advice. Keep it under 85 words total. Plain text only — no markdown, no headings.';
+    window.claude.complete(prompt).then(text => {
+      this.setState(s => ({ analysis: Object.assign({}, s.analysis, { [it.key]: text }), analysisLoading:false }));
+    }).catch(() => {
+      this.setState(s => ({ analysis: Object.assign({}, s.analysis, { [it.key]: 'Analysis is unavailable right now. Try reopening this result.' }), analysisLoading:false }));
+    });
+  }
+
+  submitUrl(){
+    const url = (this.state.urlInput||'').trim();
+    if(!url){ this.setState({ submitStatus:'empty' }); return; }
+    const existing = this.state.items.find(i => i.url === url);
+    this._pendBaseline = existing ? existing.scanId : null;
+    const hook = this.props.webhookUrl || 'https://n8n-production-9085e.up.railway.app/webhook/suschecker-test';
+    this.setState({ submitStatus:'sending', urlInput:'', pendingUrl:url, pendingStatus:'sending', pendingKey:null });
+    const begin = () => { this.setState({ pendingStatus:'waiting', submitStatus:'' }); this.startPoll(url); };
+    if(!hook){ this.setState({ pendingStatus:'nohook', submitStatus:'' }); return; }
+    fetch(hook, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url }) })
+      .then(begin).catch(begin);
+  }
+
+  dismissPending(){ this.stopPoll(); this.setState({ pendingUrl:'', pendingStatus:'', pendingKey:null, submitStatus:'' }); }
+
+  applyThemeBg(d){ try{ const on = (d==null) ? this.state.dark : d; const c = on ? '#1b1f21' : ''; document.body.style.background=c; document.documentElement.style.background=c; }catch(_){} }
+  componentDidUpdate(_, ps){ if(ps && ps.dark !== this.state.dark) this.applyThemeBg(); }
+
+  rootStyle(){
+    const font = this.props.headingFont || 'Archivo';
+    const accent = this.props.accentColor || '#79C98A';
+    const fontStack = "'ABC Diatype', '"+font+"', 'Archivo', system-ui, -apple-system, sans-serif";
+    const soft = 'color-mix(in srgb, '+accent+' 30%, #ffffff)';
+    const track = 'color-mix(in srgb, '+accent+' 20%, #ffffff)';
+    const dark = !!this.state.dark;
+    const T = dark ? {
+      paper:'#1b1f21', surface:'#262b2d', ink:'#ece9e3', line:'#34393b', lineG:'#2f4a39',
+      m1:'#8f8f8a', m2:'#9a9a95', m3:'#a6a6a0', m4:'#b2b2ac', m5:'#bdbdb7', m6:'#c9c9c3', m7:'#d5d5cf', m8:'#e0e0da', m9:'#7d7d78', mb:'#74746f', mc:'#86867f',
+      g1:'#74cf8a', g2:'#8fd2a2', g3:'#7cc892'
+    } : {
+      paper:'#ffffff', surface:'#f3f3f0', ink:'#141414', line:'#e2e2dc', lineG:'#cfe6d5',
+      m1:'#999999', m2:'#888888', m3:'#777777', m4:'#666666', m5:'#555555', m6:'#444444', m7:'#333333', m8:'#222222', m9:'#aaaaaa', mb:'#bbbbbb', mc:'#9a9a96',
+      g1:'#3a8f4e', g2:'#1f3a26', g3:'#3a6b44'
+    };
+    let v = '--font:'+fontStack+';--title:'+fontStack+';--accent:'+accent+';--accent-soft:'+soft+';--track:'+track+';';
+    v += '--paper:'+T.paper+';--surface:'+T.surface+';--ink:'+T.ink+';--line:'+T.line+';--line-g:'+T.lineG+';';
+    v += '--m1:'+T.m1+';--m2:'+T.m2+';--m3:'+T.m3+';--m4:'+T.m4+';--m5:'+T.m5+';--m6:'+T.m6+';--m7:'+T.m7+';--m8:'+T.m8+';--m9:'+T.m9+';--mb:'+T.mb+';--mc:'+T.mc+';';
+    v += '--g1:'+T.g1+';--g2:'+T.g2+';--g3:'+T.g3+';';
+    return v;
+  }
+
+  renderVals(){
+    const s = this.state;
+    const base = s.items;
+    const dec = it => this.decorate(it);
+
+    const recentItems = base.slice().reverse().slice(0,6).map(dec);
+    const heroRecent = base.slice().reverse().slice(0,5).map(dec);
+    const marqueeItems = base.slice().reverse().slice(0,14).map(dec);
+    const topItems = base.slice().sort((a,b) => b.score-a.score).slice(0,6).map(dec);
+    const heroTop = base.slice().sort((a,b) => b.score-a.score).slice(0,5).map(dec);
+    const cats = Array.from(new Set(base.map(i => i.category).filter(Boolean))).sort();
+    const brands = Array.from(new Set(base.map(i => i.brand).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+    const materials = Array.from(new Set(base.flatMap(i => (i.materials && typeof i.materials==='object') ? Object.keys(i.materials) : []).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+
+    let d = base.slice();
+    if(s.fCategory !== 'all') d = d.filter(i => i.category === s.fCategory);
+    if(s.fGrade !== 'all') d = d.filter(i => i.grade === s.fGrade);
+    if(s.fBrand !== 'all') d = d.filter(i => i.brand === s.fBrand);
+    if(s.fMaterial !== 'all') d = d.filter(i => i.materials && typeof i.materials==='object' && Object.keys(i.materials).includes(s.fMaterial));
+    const q = (s.search||'').trim().toLowerCase();
+    if(q) d = d.filter(i => (i.brand||'').toLowerCase().includes(q));
+    if(s.sort === 'scoreHigh') d.sort((a,b) => b.score-a.score);
+    else if(s.sort === 'scoreLow') d.sort((a,b) => a.score-b.score);
+    else d.reverse();
+    const dashItems = d.map(it => {
+      const certs = Array.isArray(it.certList) ? it.certList : [];
+      return Object.assign({}, dec(it), {
+        certShown: certs.slice(0,3),
+        certExtra: certs.length - 3,
+        hasCertExtra: certs.length > 3,
+      });
+    });
+
+    const chartMode = s.chartMode || 'axis';
+    const chart = (s.view==='dashboard') ? this.buildChart(base) : { yTicks:[], axisDots:[], catRows:[], gradeCols:[], count:0 };
+    const segBg = on => on ? '#141414' : 'transparent';
+    const segFg = on => on ? '#ffffff' : '#555';
+
+    const selectedBase = base.find(i => i.key === s.selectedId) || null;
+    const selected = selectedBase ? dec(selectedBase) : null;
+    let selectedProvenance = [];
+    if(selected){
+      selectedProvenance = selected.provenance.map((p,i) => Object.assign({}, p, {
+        isOpen: !!s.openWhy[i],
+        toggleIcon: s.openWhy[i] ? '−' : '+',
+        onToggle: () => this.setState(st => ({ openWhy: Object.assign({}, st.openWhy, { [i]: !st.openWhy[i] }) })),
+      }));
+    }
+    const selectedNoImpact = !!(selected && !selected.hasImpact);
+
+    // ---- Impact Profile : benchmark strip + themed groups ----
+    let selectedFp = { hasBench:false, themes:[] };
+    if(selected && selected.hasImpact){
+      const pool = base.filter(i => i.hasImpact);
+      const sameCat = pool.filter(i => i.category === selected.category);
+      const cohort = sameCat.length >= 4 ? sameCat : pool;
+      const cohortLabel = sameCat.length >= 4 ? ('a typical '+(selected.category||'item')) : 'a typical item';
+
+      const ecsArr = cohort.map(i => i.ecsTotal).filter(x => x > 0);
+      const eb = this.strip(selected.ecsTotal, ecsArr);
+      const hasBench = eb.ok;
+      const dPct = eb.med > 0 ? (selected.ecsTotal - eb.med) / eb.med * 100 : 0;
+      const ad = Math.abs(dPct);
+      let ecsDeltaText = '', ecsDeltaColor = '#888';
+      if(hasBench){
+        if(ad < 3){ ecsDeltaText = 'about typical'; ecsDeltaColor = '#888'; }
+        else if(dPct < 0){ ecsDeltaText = ad.toFixed(0)+'% lower'; ecsDeltaColor = '#3a8f4e'; }
+        else { ecsDeltaText = ad.toFixed(0)+'% higher'; ecsDeltaColor = '#c0573a'; }
+      }
+      const fmtN = x => Math.round(x).toLocaleString();
+
+      let maxCat = 0;
+      selected.themes.forEach(t => t.cats.forEach(c => { if(c.share > maxCat) maxCat = c.share; }));
+      if(maxCat <= 0) maxCat = 1;
+
+      const themes = selected.themes.map(t => {
+        const arr = cohort.map(i => (i.themeShareByKey[t.key] || 0));
+        const med = this.median(arr);
+        return {
+          name: t.name,
+          shareLabel: this.fmtPct(t.share),
+          barWidth: Math.max(0.5, Math.min(100, t.share)).toFixed(1)+'%',
+          medLeft: Math.max(0, Math.min(100, med)).toFixed(1)+'%',
+          showStrip: hasBench,
+          benchText: 'typical ' + this.fmtPct(med),
+          cats: t.cats.map(c => ({ name:c.name, shareLabel:this.fmtPct(c.share), width: Math.max(2, c.share/maxCat*100).toFixed(1)+'%' })),
+        };
+      });
+
+      selectedFp = {
+        hasBench, cohortLabel, cohortN: cohort.length,
+        ecsDotLeft: eb.dotLeft, ecsMedLeft: eb.medLeft,
+        ecsLoText: fmtN(eb.lo)+' mPt', ecsHiText: fmtN(eb.hi)+' mPt', ecsMedText: fmtN(eb.med)+' mPt',
+        ecsDeltaText, ecsDeltaColor,
+        themes,
+      };
+    }
+
+    const submitLabels = { '':'Check', sending:'Sending…', empty:'Check', nohook:'Check' };
+    const pendingItem = s.pendingKey ? (base.find(i => i.key === s.pendingKey) || null) : null;
+    const pend = pendingItem ? dec(pendingItem) : null;
+    const ps = s.pendingStatus;
+    const pendTitles = {
+      sending: 'Sending to the scanner…',
+      waiting: 'Analysing your product…',
+      done: 'Scan complete',
+      timeout: 'Still processing',
+      nohook: 'Can’t start the scan',
+    };
+    const pendSubs = {
+      sending: 'Triggering the analysis',
+      waiting: 'Usually 30–60 seconds · updating live',
+      done: pend ? (pend.brand + ' · ' + pend.category) : 'Result ready',
+      timeout: 'Taking longer than usual — it’ll appear on the dashboard when ready.',
+      nohook: 'No webhook configured — add the n8n endpoint in Tweaks.',
+    };
+
+    return {
+      rootStyle: this.rootStyle(),
+      isHero: s.view==='hero', isDashboard: s.view==='dashboard', isResult: s.view==='result' && !!selected,
+      isAbout: s.view==='about', isMethodology: s.view==='methodology', isFaq: s.view==='faq',
+      menuOpen: s.menuOpen,
+      loading: s.loading, hasError: !!s.error, itemCount: base.length,
+      recentItems, topItems, dashItems, cats, brands, materials, grades:['A','B','C','D','E','F'],
+      heroRecent, heroTop, hasItems: base.length > 0,
+      marqueeItems, hasMarquee: marqueeItems.length > 0,
+
+      chart, chartMode,
+      hasChart: chart.count > 0,
+      chartIsAxis: chartMode==='axis', chartIsCategory: chartMode==='category', chartIsGrade: chartMode==='grade',
+      setChartAxis: () => this.setState({ chartMode:'axis' }),
+      setChartCategory: () => this.setState({ chartMode:'category' }),
+      setChartGrade: () => this.setState({ chartMode:'grade' }),
+      chartAxisBg: segBg(chartMode==='axis'), chartAxisFg: segFg(chartMode==='axis'),
+      chartCatBg: segBg(chartMode==='category'), chartCatFg: segFg(chartMode==='category'),
+      chartGradeBg: segBg(chartMode==='grade'), chartGradeFg: segFg(chartMode==='grade'),
+
+      urlInput: s.urlInput,
+      onUrlInput: e => this.setState({ urlInput:e.target.value }),
+      onUrlKey: e => { if(e.key==='Enter') this.submitUrl(); },
+      submitUrl: () => this.submitUrl(),
+      submitLabel: submitLabels[s.submitStatus] || 'Check',
+      howToOpen: s.howToOpen, howToCaret: s.howToOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleHowTo: () => this.setState(st => ({ howToOpen:!st.howToOpen })),
+
+      hasPending: !!s.pendingUrl,
+      pendingSpinner: ps==='sending' || ps==='waiting',
+      pendingDone: ps==='done' && !!pend,
+      pendingTitle: pendTitles[ps] || 'Working…',
+      pendingSub: pendSubs[ps] || '',
+      pendingHeadBg: (ps==='done') ? 'var(--accent-soft,#cfebd3)' : (ps==='timeout'||ps==='nohook') ? '#f4efe2' : 'var(--accent-soft,#cfebd3)',
+      pending: pend,
+      openPending: () => { if(pend) pend.open(); },
+      dismissPending: () => this.dismissPending(),
+      showBrowse: !s.pendingUrl,
+
+      toggleMenu: () => this.setState(st => ({ menuOpen:!st.menuOpen })),
+      dark: s.dark, themeLight: !s.dark,
+      toggleTheme: () => this.setState(st => { const d = !st.dark; try{ localStorage.setItem('sus-theme', d ? 'dark' : 'light'); }catch(_){} return { dark:d }; }),
+      goHero: () => { this.navHash('hero'); this.setState({ view:'hero', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
+      goDashboard: () => { this.navHash('dashboard'); this.setState({ view:'dashboard', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
+      goAbout: () => { this.navHash('about'); this.setState({ view:'about', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
+      goMethodology: () => { this.navHash('methodology'); this.setState({ view:'methodology', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
+      goFaq: () => { this.navHash('faq'); this.setState({ view:'faq', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
+      goBack: () => this.setState(st => { const v = st.lastView || 'dashboard'; this.navHash(v); return { view:v }; }),
+
+      fCategory: s.fCategory, fGrade: s.fGrade, fBrand: s.fBrand, fMaterial: s.fMaterial, search: s.search, sort: s.sort,
+      onCategory: e => this.setState({ fCategory:e.target.value }),
+      onGrade: e => this.setState({ fGrade:e.target.value }),
+      onBrand: e => this.setState({ fBrand:e.target.value }),
+      onMaterial: e => this.setState({ fMaterial:e.target.value }),
+      onSearch: e => this.setState({ search:e.target.value }),
+      onSort: e => this.setState({ sort:e.target.value }),
+      clearFilters: () => this.setState({ fCategory:'all', fGrade:'all', fBrand:'all', fMaterial:'all', search:'', sort:'recent' }),
+      dashEmpty: !s.loading && !s.error && dashItems.length===0,
+
+      selected,
+      setSelImg: (el) => { if(el){ if(selected && selected.hasImage){ el.src = selected.image; } else { el.removeAttribute('src'); } } },
+      selectedFp,
+      selectedAnalysisText: selected ? (s.analysis[selected.key] || '') : '',
+      selectedAnalysisLoading: s.analysisLoading,
+      selectedProvenance, selectedNoImpact,
+    };
+  }
+}
+</script>
+</body>
+</html>
