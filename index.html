@@ -28,6 +28,19 @@ select{cursor:pointer;}
 button{font-family:inherit;color:inherit;}
 button,input,select,textarea{border:none;}
 button,input,select,textarea{border-radius:9px;}
+.ss-sidebar{position:fixed;top:0;left:0;bottom:0;width:232px;display:flex;flex-direction:column;justify-content:space-between;padding:30px 24px;border-right:1px solid var(--line);background:var(--paper);z-index:60;overflow-y:auto;}
+.ss-topbar{display:none;}
+.ss-content{margin-left:232px;}
+.ss-navlink{background:none;border:none;border-radius:8px;padding:10px 12px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;text-align:left;width:100%;}
+.ss-drawer-backdrop{display:none;}
+@media (max-width:900px){
+  .ss-sidebar{display:none;}
+  .ss-content{margin-left:0;padding-top:68px;}
+  .ss-topbar{display:flex;position:fixed;top:0;left:0;right:0;height:68px;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,28px);background:var(--paper);border-bottom:1px solid var(--line);z-index:60;}
+  .ss-drawer-backdrop.open{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:70;}
+  .ss-drawer{position:fixed;top:0;bottom:0;left:0;width:min(78vw,300px);background:var(--paper);z-index:80;padding:26px 22px;transform:translateX(-100%);transition:transform .22s ease;display:flex;flex-direction:column;justify-content:space-between;}
+  .ss-drawer.open{transform:translateX(0);}
+}
 @media (max-width:760px){
   .result-grid{grid-template-columns:1fr !important;}
   .hero-lists{grid-template-columns:1fr !important;gap:30px !important;}
@@ -39,20 +52,54 @@ button,input,select,textarea{border-radius:9px;}
 </helmet>
 <div style="{{ rootStyle }} min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--font,'Archivo',system-ui,sans-serif);-webkit-font-smoothing:antialiased;">
 
+<!-- ================= PERSISTENT SIDEBAR NAV (desktop) ================= -->
+<div class="ss-sidebar">
+  <div>
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:24px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:23px;image-rendering:pixelated;"></button>
+    <nav style="margin-top:40px;display:flex;flex-direction:column;gap:4px;">
+      <button class="ss-navlink" onClick="{{ goHero }}" style="color:{{ navHomeColor }};">Home</button>
+      <button class="ss-navlink" onClick="{{ goDashboard }}" style="color:{{ navDashboardColor }};">Dashboard</button>
+      <button class="ss-navlink" onClick="{{ goMethodology }}" style="color:{{ navMethodologyColor }};">How it works</button>
+      <button class="ss-navlink" onClick="{{ goAbout }}" style="color:{{ navAboutColor }};">About</button>
+      <button class="ss-navlink" onClick="{{ goFaq }}" style="color:{{ navFaqColor }};">FAQ</button>
+    </nav>
+  </div>
+  <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
+    <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
+    <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
+  </button>
+</div>
+
+<!-- ================= MOBILE TOPBAR + DRAWER ================= -->
+<div class="ss-topbar">
+  <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:9px;font-family:var(--title);font-size:21px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:20px;image-rendering:pixelated;"></button>
+  <button onClick="{{ toggleMenu }}" aria-label="Open menu" style="background:none;border:1.5px solid var(--ink);border-radius:9px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);padding:0;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+  </button>
+</div>
+<div class="ss-drawer-backdrop {{ menuOpen ? 'open' : '' }}" onClick="{{ toggleMenu }}"></div>
+<div class="ss-drawer {{ menuOpen ? 'open' : '' }}">
+  <div>
+    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:22px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:21px;image-rendering:pixelated;"></button>
+    <nav style="margin-top:36px;display:flex;flex-direction:column;gap:4px;">
+      <button class="ss-navlink" onClick="{{ goHero }}" style="color:{{ navHomeColor }};">Home</button>
+      <button class="ss-navlink" onClick="{{ goDashboard }}" style="color:{{ navDashboardColor }};">Dashboard</button>
+      <button class="ss-navlink" onClick="{{ goMethodology }}" style="color:{{ navMethodologyColor }};">How it works</button>
+      <button class="ss-navlink" onClick="{{ goAbout }}" style="color:{{ navAboutColor }};">About</button>
+      <button class="ss-navlink" onClick="{{ goFaq }}" style="color:{{ navFaqColor }};">FAQ</button>
+    </nav>
+  </div>
+  <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;">
+    <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
+    <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
+  </button>
+</div>
+
+<div class="ss-content">
+
 <!-- ================= HERO ================= -->
 <sc-if value="{{ isHero }}" hint-placeholder-val="{{ true }}">
 <div style="position:relative;min-height:100vh;display:flex;flex-direction:column;">
-  <div style="display:flex;justify-content:flex-start;align-items:center;gap:22px;padding:28px clamp(20px,5vw,40px) 18px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;">
-    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);white-space:nowrap;flex:none;">Home</button>
-    <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Dashboard</button>
-    <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">How it works</button>
-    <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">About</button>
-    <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:4px 0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">FAQ</button>
-    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
-      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
-      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
-    </button>
-  </div>
   <sc-if value="{{ hasMarquee }}" hint-placeholder-val="{{ false }}">
     <div style="overflow:hidden;width:100%;background:transparent;padding:11px 0;" aria-label="Recent scores">
       <div style="display:inline-flex;align-items:center;white-space:nowrap;animation:susmarquee 38s linear infinite;will-change:transform;" style-hover="animation-play-state:paused;">
@@ -115,37 +162,64 @@ button,input,select,textarea{border-radius:9px;}
     </sc-if>
     <p style="font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--m5);margin:22px 0 0;max-width:640px;">Paste any clothing product link and get an honest 0–100 SustainScore — built from materials, labour and a full 16-category life-cycle assessment.</p>
     <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}">
-      <div style="margin-top:18px;max-width:620px;border:2px solid var(--ink);border-radius:16px;overflow:hidden;animation:susfade .3s ease both;">
-        <div style="display:flex;align-items:center;gap:13px;padding:15px 18px;background:{{ pendingHeadBg }};">
-          <sc-if value="{{ pendingSpinner }}" hint-placeholder-val="{{ true }}">
-            <span style="width:18px;height:18px;border:2px solid rgba(20,20,20,0.2);border-top-color:var(--ink);border-radius:50%;animation:susspin .8s linear infinite;display:inline-block;flex:none;"></span>
-          </sc-if>
-          <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
-            <span style="width:22px;height:22px;border-radius:50%;background:#141414;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none;">✓</span>
-          </sc-if>
-          <div style="flex:1;min-width:0;">
-            <div style="font-weight:600;font-size:15px;line-height:1.25;">{{ pendingTitle }}</div>
-            <div style="font-size:13px;color:var(--g3);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ pendingSub }}</div>
-          </div>
-          <button onClick="{{ dismissPending }}" aria-label="Dismiss" style="flex:none;background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:var(--g2);padding:4px;">✕</button>
-        </div>
-        <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ openPending }}" style="width:100%;text-align:left;background:none;border:none;border-radius:0;cursor:pointer;padding:18px;display:flex;flex-direction:column;gap:13px;animation:susfade .35s ease both;">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
-              <div style="min-width:0;">
-                <div style="font-weight:500;font-size:22px;line-height:1.04;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ pending.brand }}</div>
-                <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;">{{ pending.category }}</div>
+      <div style="margin:36px auto 0;max-width:980px;width:100%;animation:susfade .3s ease both;">
+        <div class="result-grid" style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(24px,4vw,48px);align-items:start;">
+          <div style="background:var(--surface);border-radius:22px;padding:clamp(28px,4vw,44px);">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+              <div style="display:flex;align-items:center;gap:16px;min-width:0;">
+                <sc-if value="{{ pendingSpinner }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:30px;height:30px;border:3px solid rgba(20,20,20,0.15);border-top-color:var(--accent);border-radius:50%;animation:susspin .8s linear infinite;display:inline-block;flex:none;"></span>
+                </sc-if>
+                <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex:none;">✓</span>
+                </sc-if>
+                <div style="font-weight:600;font-size:clamp(24px,3.4vw,32px);line-height:1.15;min-width:0;">{{ pendingTitle }}</div>
               </div>
-              <div style="width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;color:#fff;border-radius:6px;background:{{ pending.gradeColor }};">{{ pending.grade }}</div>
+              <button onClick="{{ dismissPending }}" aria-label="Dismiss" style="flex:none;background:none;border:none;cursor:pointer;font-size:20px;line-height:1;color:var(--g2);padding:4px;">✕</button>
             </div>
-            <div style="display:flex;align-items:baseline;gap:7px;">
-              <span style="font-size:36px;font-weight:500;line-height:1;">{{ pending.scoreText }}</span>
-              <span style="color:var(--m1);font-size:14px;">/100</span>
+            <div style="font-size:16px;color:var(--g3);line-height:1.4;margin-top:12px;">{{ pendingSub }}</div>
+
+            <sc-if value="{{ pendingTimeout }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ retryPending }}" style="margin-top:20px;background:var(--ink);color:var(--paper);border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;">Check again</button>
+            </sc-if>
+
+            <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ openPending }}" style="width:100%;text-align:left;background:none;border:none;border-radius:0;cursor:pointer;padding:22px 0 0;display:flex;flex-direction:column;gap:13px;animation:susfade .35s ease both;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+                  <div style="min-width:0;">
+                    <div style="font-weight:500;font-size:22px;line-height:1.04;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ pending.brand }}</div>
+                    <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;">{{ pending.category }}</div>
+                  </div>
+                  <div style="width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;color:#fff;border-radius:6px;background:{{ pending.gradeColor }};">{{ pending.grade }}</div>
+                </div>
+                <div style="display:flex;align-items:baseline;gap:7px;">
+                  <span style="font-size:36px;font-weight:500;line-height:1;">{{ pending.scoreText }}</span>
+                  <span style="color:var(--m1);font-size:14px;">/100</span>
+                </div>
+                <div style="height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ pending.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+                <div style="margin-top:2px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;">View full breakdown →</div>
+              </button>
+            </sc-if>
+          </div>
+
+          <sc-if value="{{ hasPendingAlternatives }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-family:var(--title);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;font-size:12px;color:var(--g1);margin-bottom:12px;border-top:1.5px solid var(--ink);padding-top:12px;">{{ pendingAltLabel }}</div>
+              <sc-for list="{{ pendingAlternatives }}" as="it" hint-placeholder-count="3">
+                <button onClick="{{ it.open }}" style="width:100%;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:11px 0;border:none;border-bottom:1px solid var(--line);background:none;cursor:pointer;text-align:left;">
+                  <span style="flex:1;min-width:0;">
+                    <span style="display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.brand }}</span>
+                    <span style="display:block;font-size:11px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:2px;">{{ it.category }}</span>
+                  </span>
+                  <span style="display:flex;align-items:center;gap:9px;flex:none;">
+                    <span style="font-weight:700;font-size:15px;">{{ it.scoreText }}</span>
+                    <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;background:{{ it.gradeColor }};border-radius:6px;">{{ it.grade }}</span>
+                  </span>
+                </button>
+              </sc-for>
             </div>
-            <div style="height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ pending.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
-            <div style="margin-top:2px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;">View full breakdown →</div>
-          </button>
-        </sc-if>
+          </sc-if>
+        </div>
       </div>
     </sc-if>
 
@@ -224,20 +298,6 @@ button,input,select,textarea{border-radius:9px;}
 <!-- ================= DASHBOARD ================= -->
 <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
 <div style="min-height:100vh;display:flex;flex-direction:column;">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
-    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
-    <div style="display:flex;gap:26px;align-items:center;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;">
-      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Home</button>
-      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);white-space:nowrap;flex:none;">Dashboard</button>
-      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">How it works</button>
-      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">About</button>
-      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">FAQ</button>
-    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
-      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
-      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
-    </button>
-    </div>
-  </div>
 
   <div style="padding:8px clamp(20px,5vw,64px) 80px;">
     <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin:clamp(10px,2vh,22px) 0 clamp(16px,3vh,26px);">Dashboard</div>
@@ -348,20 +408,6 @@ button,input,select,textarea{border-radius:9px;}
 <!-- ================= RESULT ================= -->
 <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
 <div style="min-height:100vh;display:flex;flex-direction:column;">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
-    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
-    <div style="display:flex;gap:26px;align-items:center;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;">
-      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Home</button>
-      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Dashboard</button>
-      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">How it works</button>
-      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">About</button>
-      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">FAQ</button>
-    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
-      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
-      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
-    </button>
-    </div>
-  </div>
 
   <div style="max-width:1240px;margin:0 auto;width:100%;padding:6px clamp(20px,5vw,64px) 90px;">
     <button onClick="{{ goBack }}" style="background:none;border:none;padding:0;margin:clamp(8px,2vh,18px) 0 24px;cursor:pointer;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m2);">← Back</button>
@@ -527,20 +573,6 @@ button,input,select,textarea{border-radius:9px;}
 <!-- ================= ABOUT ================= -->
 <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
 <div style="min-height:100vh;display:flex;flex-direction:column;">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
-    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
-    <div style="display:flex;gap:26px;align-items:center;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;">
-      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Home</button>
-      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Dashboard</button>
-      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">How it works</button>
-      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);white-space:nowrap;flex:none;">About</button>
-      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">FAQ</button>
-    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
-      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
-      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
-    </button>
-    </div>
-  </div>
 
   <div style="flex:1;max-width:1180px;margin:0 auto;width:100%;padding:30px clamp(20px,5vw,40px) 80px;">
     <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(20px,4vh,40px);">About</div>
@@ -603,20 +635,6 @@ button,input,select,textarea{border-radius:9px;}
 <!-- ================= METHODOLOGY ================= -->
 <sc-if value="{{ isMethodology }}" hint-placeholder-val="{{ false }}">
 <div style="min-height:100vh;display:flex;flex-direction:column;">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
-    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
-    <div style="display:flex;gap:26px;align-items:center;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;">
-      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Home</button>
-      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Dashboard</button>
-      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);white-space:nowrap;flex:none;">How it works</button>
-      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">About</button>
-      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">FAQ</button>
-    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
-      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
-      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
-    </button>
-    </div>
-  </div>
 
   <div style="flex:1;max-width:1180px;margin:0 auto;width:100%;padding:30px clamp(20px,5vw,40px) 80px;">
     <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(20px,4vh,40px);">Methodology</div>
@@ -721,16 +739,6 @@ button,input,select,textarea{border-radius:9px;}
 <!-- ================= FAQ ================= -->
 <sc-if value="{{ isFaq }}" hint-placeholder-val="{{ false }}">
 <div style="min-height:100vh;display:flex;flex-direction:column;">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px clamp(20px,5vw,40px);flex-wrap:wrap;">
-    <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:11px;font-family:var(--title);font-size:26px;font-weight:500;color:var(--ink);">Suschecker<img src="assets/mascot.png" alt="" style="height:25px;image-rendering:pixelated;"></button>
-    <div style="display:flex;gap:26px;align-items:center;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;">
-      <button onClick="{{ goHero }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Home</button>
-      <button onClick="{{ goDashboard }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">Dashboard</button>
-      <button onClick="{{ goMethodology }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">How it works</button>
-      <button onClick="{{ goAbout }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--m2);white-space:nowrap;flex:none;">About</button>
-      <button onClick="{{ goFaq }}" style="background:none;border:none;border-radius:0;padding:0;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:var(--ink);white-space:nowrap;flex:none;">FAQ</button>
-    </div>
-  </div>
 
   <div style="flex:1;max-width:1180px;margin:0 auto;width:100%;padding:30px clamp(20px,5vw,40px) 80px;">
     <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(20px,4vh,40px);">FAQ</div>
@@ -801,6 +809,9 @@ button,input,select,textarea{border-radius:9px;}
   </footer>
 </div>
 </sc-if>
+
+</div>
+<!-- /ss-content -->
 
 </div>
 </x-dc>
@@ -934,11 +945,12 @@ class Component extends DCLogic {
   startPoll(url){
     this.stopPoll();
     this._pollN = 0;
+    this.setState({ pollN:0 });
     this._poll = setInterval(async () => {
       this._pollN++;
       let items;
-      try{ items = await this.fetchItems(); }catch(e){ return; }
-      this.setState({ items });
+      try{ items = await this.fetchItems(); }catch(e){ this.setState({ pollN:this._pollN }); return; }
+      this.setState({ items, pollN:this._pollN });
       const found = items.find(i => i.url === url && !this._pendingScanIds.has(i.scanId));
       if(found){
         this.stopPoll();
@@ -1170,6 +1182,22 @@ class Component extends DCLogic {
 
   dismissPending(){ this.stopPoll(); this.setState({ pendingUrl:'', pendingStatus:'', pendingKey:null, submitStatus:'' }); }
 
+  retryPending(){
+    const url = this.state.pendingUrl;
+    if(!url) return;
+    this.setState({ pendingStatus:'waiting' });
+    this.fetchItems().then(items => {
+      this.setState({ items });
+      const found = items.find(i => i.url === url && !this._pendingScanIds.has(i.scanId));
+      if(found){
+        this.setState({ pendingStatus:'done', pendingKey:found.key });
+        this.ensureAnalysis(found);
+      } else {
+        this.startPoll(url);
+      }
+    }).catch(() => { this.startPoll(url); });
+  }
+
   applyThemeBg(d){ try{ const on = (d==null) ? this.state.dark : d; const c = on ? '#1b1f21' : ''; document.body.style.background=c; document.documentElement.style.background=c; }catch(_){} }
   componentDidUpdate(_, ps){ if(ps && ps.dark !== this.state.dark) this.applyThemeBg(); }
 
@@ -1298,25 +1326,46 @@ class Component extends DCLogic {
     const pendingItem = s.pendingKey ? (base.find(i => i.key === s.pendingKey) || null) : null;
     const pend = pendingItem ? dec(pendingItem) : null;
     const ps = s.pendingStatus;
+    const pollSecs = (s.pollN||0) * 4;
+    let waitingTitle = 'Analysing your product…';
+    let waitingSub = 'Reading the product page…';
+    if(pollSecs >= 55){ waitingTitle = 'Still crunching the numbers…'; waitingSub = 'Crunching the environmental impact…'; }
+    else if(pollSecs >= 20){ waitingTitle = 'Profiling the brand…'; waitingSub = 'Profiling brand & certifications — new brands take a bit longer…'; }
     const pendTitles = {
       sending: 'Sending to the scanner…',
-      waiting: 'Analysing your product…',
+      waiting: waitingTitle,
       done: 'Scan complete',
       timeout: 'Still processing',
       nohook: 'Can’t start the scan',
     };
     const pendSubs = {
       sending: 'Triggering the analysis',
-      waiting: 'Usually 30–60 seconds · updating live',
+      waiting: waitingSub,
       done: pend ? (pend.brand + ' · ' + pend.category) : 'Result ready',
-      timeout: 'Taking longer than usual — it’ll appear on the dashboard when ready.',
+      timeout: 'This is taking longer than usual. The scan may still finish in the background — refresh or check again in a minute.',
       nohook: 'No webhook configured — add the n8n endpoint in Tweaks.',
     };
+
+    // ---- Pending sidebar: comparable / better-scoring products ----
+    let pendingAlternatives = [];
+    if(s.pendingUrl){
+      const pool = base.filter(i => i.url !== s.pendingUrl).map(dec);
+      const sameCat = (pend && pend.category) ? pool.filter(i => i.category === pend.category) : [];
+      let candidates = sameCat.length >= 3 ? sameCat : pool;
+      if(pend) candidates = candidates.filter(i => i.score > pend.score);
+      pendingAlternatives = candidates.slice().sort((a,b) => b.score-a.score).slice(0,4);
+    }
+    const pendingAltLabel = (pend && pend.category) ? ('Better-scoring '+pend.category+'s') : 'Top-scoring picks while you wait';
 
     return {
       rootStyle: this.rootStyle(),
       isHero: s.view==='hero', isDashboard: s.view==='dashboard', isResult: s.view==='result' && !!selected,
       isAbout: s.view==='about', isMethodology: s.view==='methodology', isFaq: s.view==='faq',
+      navHomeColor: s.view==='hero' ? 'var(--ink)' : 'var(--m2)',
+      navDashboardColor: s.view==='dashboard' ? 'var(--ink)' : 'var(--m2)',
+      navMethodologyColor: s.view==='methodology' ? 'var(--ink)' : 'var(--m2)',
+      navAboutColor: s.view==='about' ? 'var(--ink)' : 'var(--m2)',
+      navFaqColor: s.view==='faq' ? 'var(--ink)' : 'var(--m2)',
       menuOpen: s.menuOpen,
       loading: s.loading, hasError: !!s.error, itemCount: base.length,
       recentItems, topItems, dashItems, cats, brands, materials, grades:['A','B','C','D','E','F'],
@@ -1344,13 +1393,18 @@ class Component extends DCLogic {
       hasPending: !!s.pendingUrl,
       pendingSpinner: ps==='sending' || ps==='waiting',
       pendingDone: ps==='done' && !!pend,
+      pendingTimeout: ps==='timeout',
       pendingTitle: pendTitles[ps] || 'Working…',
       pendingSub: pendSubs[ps] || '',
       pendingHeadBg: (ps==='done') ? 'var(--accent-soft,#cfebd3)' : (ps==='timeout'||ps==='nohook') ? '#f4efe2' : 'var(--accent-soft,#cfebd3)',
       pending: pend,
       openPending: () => { if(pend) pend.open(); },
       dismissPending: () => this.dismissPending(),
+      retryPending: () => this.retryPending(),
       showBrowse: !s.pendingUrl,
+      hasPendingAlternatives: pendingAlternatives.length > 0,
+      pendingAlternatives,
+      pendingAltLabel,
 
       toggleMenu: () => this.setState(st => ({ menuOpen:!st.menuOpen })),
       dark: s.dark, themeLight: !s.dark,
