@@ -328,11 +328,9 @@ button,input,select,textarea{border-radius:9px;}
 
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line);">
         <sc-for list="{{ dashItems }}" as="it" hint-placeholder-count="8">
-          <button onClick="{{ it.open }}" style="text-align:left;background:transparent;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:clamp(20px,2vw,30px);cursor:pointer;display:flex;flex-direction:column;min-height:clamp(216px,26vh,272px);animation:susfade .35s ease both;transition:background .15s ease;" style-hover="background:rgba(121,201,138,0.07);">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
-              <div style="font-family:var(--title);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--g1);">{{ it.category }}</div>
-              <div style="flex:none;display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 8px;font-family:var(--title);font-weight:800;font-size:16px;color:#fff;background:{{ it.gradeColor }};border-radius:7px;">{{ it.grade }}</div>
-            </div>
+          <button onClick="{{ it.open }}" style="position:relative;text-align:left;background:transparent;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:clamp(20px,2vw,30px);cursor:pointer;display:flex;flex-direction:column;min-height:clamp(216px,26vh,272px);animation:susfade .35s ease both;transition:background .15s ease;" style-hover="background:rgba(121,201,138,0.07);">
+            <div style="position:absolute;top:clamp(16px,1.8vw,24px);right:clamp(16px,1.8vw,24px);display:flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 8px;font-family:var(--title);font-weight:800;font-size:16px;color:#fff;background:{{ it.gradeColor }};border-radius:7px;">{{ it.grade }}</div>
+            <div style="font-family:var(--title);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--g1);">{{ it.category }}</div>
             <div style="flex:1;"></div>
             <div style="font-family:var(--title);font-size:clamp(25px,2.3vw,35px);font-weight:600;line-height:1.08;letter-spacing:-0.02em;color:var(--ink);">{{ it.brand }}</div>
             <div style="display:flex;align-items:baseline;gap:9px;margin-top:12px;">
