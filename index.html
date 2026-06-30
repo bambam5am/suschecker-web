@@ -1154,7 +1154,7 @@ class Component extends DCLogic {
     const accent = this.props.accentColor || '#79C98A';
     const fontStack = "'ABC Diatype', '"+font+"', 'Archivo', system-ui, -apple-system, sans-serif";
     const soft = 'color-mix(in srgb, '+accent+' 30%, #ffffff)';
-    const track = 'color-mix(in srgb, '+accent+' 20%, #ffffff)';
+    const track = '#DBEEDD';
     const T = { paper:'#ffffff', surface:'#f3f3f0', ink:'#141414', line:'#e2e2dc', lineG:'#cfe6d5', m1:'#999999', m2:'#888888', m3:'#777777', m4:'#666666', m5:'#555555', m6:'#444444', m7:'#333333', m8:'#222222', m9:'#aaaaaa', mb:'#bbbbbb', mc:'#9a9a96', g1:'#3a8f4e', g2:'#1f3a26', g3:'#3a6b44' };
     let v = '--font:'+fontStack+';--title:'+fontStack+';--accent:'+accent+';--accent-soft:'+soft+';--track:'+track+';';
     v += '--paper:'+T.paper+';--surface:'+T.surface+';--ink:'+T.ink+';--line:'+T.line+';--line-g:'+T.lineG+';';
