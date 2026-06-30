@@ -238,7 +238,7 @@ button,input,select,textarea{border-radius:9px;}
       </div>
       <div style="display:flex;gap:10px;height:clamp(220px,32vh,300px);width:100%;">
         <sc-for list="{{ dashTop }}" as="it" hint-placeholder-count="6">
-          <button class="top-card" onClick="{{ it.open }}" style="position:relative;overflow:hidden;border-radius:16px;border:1.5px solid var(--ink);background:var(--surface);flex-basis:0;flex-shrink:1;min-width:0;height:100%;padding:0;cursor:pointer;text-align:left;">
+          <button class="top-card" onClick="{{ it.open }}" style="position:relative;overflow:hidden;border-radius:16px;background:var(--surface);flex-basis:0;flex-shrink:1;min-width:0;height:100%;padding:0;cursor:pointer;text-align:left;">
             <div style="position:absolute;top:0;left:0;bottom:0;width:60px;background:{{ it.gradeColor }};display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 0;">
               <span style="font-weight:800;font-size:24px;color:#fff;line-height:1;">{{ it.grade }}</span>
               <span style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;font-family:var(--font);">{{ it.brand }}</span>
