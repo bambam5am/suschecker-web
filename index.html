@@ -310,25 +310,25 @@ button,input,select,textarea{border-radius:9px;}
 
   <!-- ---- MAIN : filters + grid ---- -->
   <main style="margin-top:34px;">
-      <div class="filter-bar" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;align-items:center;">
-        <input class="filter-search" value="{{ search }}" onChange="{{ onSearch }}" placeholder="search brand…" style="border:2px solid var(--ink);background:var(--paper);border-radius:9px;padding:11px 15px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;min-width:170px;flex:1;max-width:260px;">
-        <select class="filter-ctrl" value="{{ fCategory }}" onChange="{{ onCategory }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+      <div class="filter-bar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px;align-items:center;">
+        <input class="filter-search" value="{{ search }}" onChange="{{ onSearch }}" placeholder="search brand…" style="border:none;background:var(--accent-soft,#cfebd3);border-radius:9px;padding:11px 15px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;width:100%;min-width:0;color:var(--ink);">
+        <select class="filter-ctrl" value="{{ fCategory }}" onChange="{{ onCategory }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;width:100%;min-width:0;">
           <option value="all">All categories</option>
           <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><option value="{{ c }}">{{ c }}</option></sc-for>
         </select>
-        <select class="filter-ctrl" value="{{ fBrand }}" onChange="{{ onBrand }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+        <select class="filter-ctrl" value="{{ fBrand }}" onChange="{{ onBrand }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;width:100%;min-width:0;">
           <option value="all">All brands</option>
           <sc-for list="{{ brands }}" as="b" hint-placeholder-count="5"><option value="{{ b }}">{{ b }}</option></sc-for>
         </select>
-        <select class="filter-ctrl" value="{{ fMaterial }}" onChange="{{ onMaterial }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+        <select class="filter-ctrl" value="{{ fMaterial }}" onChange="{{ onMaterial }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;width:100%;min-width:0;">
           <option value="all">All materials</option>
           <sc-for list="{{ materials }}" as="m" hint-placeholder-count="5"><option value="{{ m }}">{{ m }}</option></sc-for>
         </select>
-        <select class="filter-ctrl" value="{{ fGrade }}" onChange="{{ onGrade }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+        <select class="filter-ctrl" value="{{ fGrade }}" onChange="{{ onGrade }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;width:100%;min-width:0;">
           <option value="all">All grades</option>
           <sc-for list="{{ grades }}" as="g" hint-placeholder-count="6"><option value="{{ g }}">Grade {{ g }}</option></sc-for>
         </select>
-        <select class="filter-ctrl" value="{{ sort }}" onChange="{{ onSort }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;">
+        <select class="filter-ctrl" value="{{ sort }}" onChange="{{ onSort }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;width:100%;min-width:0;">
           <option value="recent">Most recent</option>
           <option value="scoreHigh">Score: high → low</option>
           <option value="scoreLow">Score: low → high</option>
