@@ -905,15 +905,17 @@ class Component extends DCLogic {
     const txt = await res.text();
     const json = JSON.parse(txt.replace(/^[^{]*/,'').replace(/[^}]*$/,''));
     const cols = (json.table && json.table.cols) || [];
-    this._imgIdx = cols.findIndex(c => /image/i.test((c && c.label) || ''));
+    const map = {};
+    cols.forEach((c, i) => { const label = (c && c.label || '').toString().trim(); if(label) map[label] = i; });
+    this._imgIdx = (map.productImage != null) ? map.productImage : cols.findIndex(c => /image/i.test((c && c.label) || ''));
     const rows = (json.table && json.table.rows) || [];
     const mapped = [];
     rows.forEach((row, idx) => {
       const c = row.c || [];
-      const v = i => (c[i] && c[i].v != null) ? c[i].v : null;
-      const u = v(2); const brand = v(3);
+      const v = i => (i==null || i<0 || !c[i] || c[i].v == null) ? null : c[i].v;
+      const u = v(map.userUrl); const brand = v(map.brand);
       if(!u || !brand) return;
-      mapped.push(this.mapItem(v, idx, u, brand));
+      mapped.push(this.mapItem(v, idx, u, brand, map));
     });
     const byUrl = new Map();
     mapped.forEach(it => byUrl.set(it.url, it));
@@ -937,7 +939,7 @@ class Component extends DCLogic {
       let items;
       try{ items = await this.fetchItems(); }catch(e){ return; }
       this.setState({ items });
-      const found = items.find(i => i.url === url && (this._pendBaseline == null || i.scanId !== this._pendBaseline));
+      const found = items.find(i => i.url === url && !this._pendingScanIds.has(i.scanId));
       if(found){
         this.stopPoll();
         this.setState({ pendingStatus:'done', pendingKey:found.key });
@@ -950,17 +952,17 @@ class Component extends DCLogic {
   }
   stopPoll(){ if(this._poll){ clearInterval(this._poll); this._poll = null; } }
 
-  mapItem(v, idx, u, brand){
-    const breakdown = this.pj(v(40), {}) || {};
-    const materials = this.pj(v(8), {}) || {};
-    const certsRaw = this.pj(v(9), []) || [];
-    const verifiedRaw = this.pj(v(37), []) || [];
-    const unverifiedRaw = this.pj(v(38), []) || [];
-    const score = this.num(v(11));
-    const grade = (v(12)||'?').toString().trim().toUpperCase();
-    const country = v(5) || '—';
-    const price = v(6); const currency = (v(7)||'').toString();
-    const confidence = (v(13) || v(10) || '—').toString();
+  mapItem(v, idx, u, brand, map){
+    const breakdown = this.pj(v(map.scoreBreakdown), {}) || {};
+    const materials = this.pj(v(map.materials), {}) || {};
+    const certsRaw = this.pj(v(map.certifications), []) || [];
+    const verifiedRaw = this.pj(v(map.verified), []) || [];
+    const unverifiedRaw = this.pj(v(map.unverified), []) || [];
+    const score = this.num(v(map.score));
+    const grade = (v(map.grade)||'?').toString().trim().toUpperCase();
+    const country = v(map.country) || '—';
+    const price = v(map.price); const currency = (v(map.currency)||'').toString();
+    const confidence = (v(map.confidence) || v(map.parseConfidence) || '—').toString();
 
     const sheetImage = (this._imgIdx!=null && this._imgIdx>=0) ? v(this._imgIdx) : null;
     const image = (sheetImage && /^https?:\/\//i.test(String(sheetImage))) ? sheetImage : (this.IMG_OVERRIDES[u] || null);
@@ -999,11 +1001,11 @@ class Component extends DCLogic {
     const unverified = Array.isArray(unverifiedRaw) ? unverifiedRaw : [];
 
     // ---- Ecobalyse 16-category decomposition (EF 3.1 normalise + weight) ----
-    const ecoCols = {CCH:22,ETF:23,FRU:24,FWE:25,HTC:26,HTN:27,IOR:28,LDU:29,MRU:30,OZD:31,PCO:32,PMA:33,SWE:34,TRE:35,WTU:36};
-    const ecsTotal = this.num(v(21));
+    const ecoCols = {CCH:'ecoCCH',ETF:'ecoETF',FRU:'ecoFRU',FWE:'ecoFWE',HTC:'ecoHTC',HTN:'ecoHTN',IOR:'ecoIOR',LDU:'ecoLDU',MRU:'ecoMRU',OZD:'ecoOZD',PCO:'ecoPCO',PMA:'ecoPMA',SWE:'ecoSWE',TRE:'ecoTRE',WTU:'ecoWTU'};
+    const ecsTotal = this.num(v(map.ecoECS));
     const weighted = [];
     for(const code in ecoCols){
-      const raw = v(ecoCols[code]);
+      const raw = v(map[ecoCols[code]]);
       if(raw == null) continue;
       const def = this.EF[code];
       const norm = Math.max(0, this.num(raw)) * def.nf;
@@ -1031,12 +1033,12 @@ class Component extends DCLogic {
       const flat = weighted.map(b=>({ name:b.name, pct: b.wv/totalW*100 })).sort((a,b)=>b.pct-a.pct);
       impactTop = flat[0];
     }
-    const envEstimated = (v(47)===true) || /true/i.test((v(47)||'').toString());
-    const parseConf = (v(10)||'').toString();
+    const envEstimated = (v(map.envEstimated)===true) || /true/i.test((v(map.envEstimated)||'').toString());
+    const parseConf = (v(map.parseConfidence)||'').toString();
 
     // ---- Deterministic provenance / "why" per pillar ----
-    const circ = this.pj(v(41), {}) || {};
-    const sct = this.pj(v(42), {}) || {};
+    const circ = this.pj(v(map.circularitySignals), {}) || {};
+    const sct = this.pj(v(map.supplyChainTransparency), {}) || {};
     const tick = (b,label)=> (b ? '✓ ' : '✗ ') + label;
     const matReasons = [];
     matEntries.forEach(([k,val]) => matReasons.push('Composition: ' + this.r1(val) + '% ' + k));
@@ -1071,7 +1073,7 @@ class Component extends DCLogic {
       : (/medium/i.test(parseConf) ? 'Some product details were inferred (medium parse confidence).' : '');
 
     return {
-      key:u, url:u, scanId:(v(0)!=null?String(v(0)):null), brand, category:(v(4)||'').toString(), country, price, currency, priceStr, confidence,
+      key:u, url:u, scanId:(v(map.scanId)!=null?String(v(map.scanId)):null), brand, category:(v(map.category)||'').toString(), country, price, currency, priceStr, confidence,
       image, hasImage,
       score, scoreText:this.r1(score), scoreWidth: Math.max(0,Math.min(100,score)).toFixed(1)+'%',
       grade, gradeColor:this.gradeColor(grade),
@@ -1157,8 +1159,7 @@ class Component extends DCLogic {
   submitUrl(){
     const url = (this.state.urlInput||'').trim();
     if(!url){ this.setState({ submitStatus:'empty' }); return; }
-    const existing = this.state.items.find(i => i.url === url);
-    this._pendBaseline = existing ? existing.scanId : null;
+    this._pendingScanIds = new Set(this.state.items.filter(i => i.url === url).map(i => i.scanId));
     const hook = this.props.webhookUrl || 'https://n8n-production-9085e.up.railway.app/webhook/suschecker-test';
     this.setState({ submitStatus:'sending', urlInput:'', pendingUrl:url, pendingStatus:'sending', pendingKey:null });
     const begin = () => { this.setState({ pendingStatus:'waiting', submitStatus:'' }); this.startPoll(url); };
