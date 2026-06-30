@@ -52,10 +52,6 @@ button,input,select,textarea{border-radius:9px;}
     <button class="ss-navlink" onClick="{{ goMethodology }}" style="color:{{ navMethodologyColor }};">How it works</button>
     <button class="ss-navlink" onClick="{{ goAbout }}" style="color:{{ navAboutColor }};">About</button>
     <button class="ss-navlink" onClick="{{ goFaq }}" style="color:{{ navFaqColor }};">FAQ</button>
-    <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" title="Toggle dark mode" style="background:none;border:1.5px solid var(--ink);border-radius:999px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none;padding:0;transition:background .15s ease;" style-hover="background:var(--surface);">
-      <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path></svg></sc-if>
-      <sc-if value="{{ themeLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 13A8.3 8.3 0 1 1 11 3.5a6.6 6.6 0 0 0 9.5 9.5Z"></path></svg></sc-if>
-    </button>
   </nav>
 </div>
 
@@ -818,7 +814,6 @@ class Component extends DCLogic {
   ];
 
   componentDidMount(){
-    try{ if(localStorage.getItem('sus-theme')==='dark'){ this.setState({dark:true}); this.applyThemeBg(true); } }catch(_){}
     const r = this.parseHash();
     if(r.view !== 'hero') this.setState({ view:r.view, selectedId:r.selectedId, lastView:'dashboard' });
     this._onHash = () => this.onHashChange();
@@ -1162,8 +1157,7 @@ class Component extends DCLogic {
     }).catch(() => { this.startPoll(url); });
   }
 
-  applyThemeBg(d){ try{ const on = (d==null) ? this.state.dark : d; const c = on ? '#1b1f21' : ''; document.body.style.background=c; document.documentElement.style.background=c; }catch(_){} }
-  componentDidUpdate(_, ps){ if(ps && ps.dark !== this.state.dark) this.applyThemeBg(); }
+  componentDidUpdate(){}
 
   rootStyle(){
     const font = this.props.headingFont || 'Archivo';
@@ -1171,16 +1165,7 @@ class Component extends DCLogic {
     const fontStack = "'ABC Diatype', '"+font+"', 'Archivo', system-ui, -apple-system, sans-serif";
     const soft = 'color-mix(in srgb, '+accent+' 30%, #ffffff)';
     const track = 'color-mix(in srgb, '+accent+' 20%, #ffffff)';
-    const dark = !!this.state.dark;
-    const T = dark ? {
-      paper:'#1b1f21', surface:'#262b2d', ink:'#ece9e3', line:'#34393b', lineG:'#2f4a39',
-      m1:'#8f8f8a', m2:'#9a9a95', m3:'#a6a6a0', m4:'#b2b2ac', m5:'#bdbdb7', m6:'#c9c9c3', m7:'#d5d5cf', m8:'#e0e0da', m9:'#7d7d78', mb:'#74746f', mc:'#86867f',
-      g1:'#74cf8a', g2:'#8fd2a2', g3:'#7cc892'
-    } : {
-      paper:'#ffffff', surface:'#f3f3f0', ink:'#141414', line:'#e2e2dc', lineG:'#cfe6d5',
-      m1:'#999999', m2:'#888888', m3:'#777777', m4:'#666666', m5:'#555555', m6:'#444444', m7:'#333333', m8:'#222222', m9:'#aaaaaa', mb:'#bbbbbb', mc:'#9a9a96',
-      g1:'#3a8f4e', g2:'#1f3a26', g3:'#3a6b44'
-    };
+    const T = { paper:'#ffffff', surface:'#f3f3f0', ink:'#141414', line:'#e2e2dc', lineG:'#cfe6d5', m1:'#999999', m2:'#888888', m3:'#777777', m4:'#666666', m5:'#555555', m6:'#444444', m7:'#333333', m8:'#222222', m9:'#aaaaaa', mb:'#bbbbbb', mc:'#9a9a96', g1:'#3a8f4e', g2:'#1f3a26', g3:'#3a6b44' };
     let v = '--font:'+fontStack+';--title:'+fontStack+';--accent:'+accent+';--accent-soft:'+soft+';--track:'+track+';';
     v += '--paper:'+T.paper+';--surface:'+T.surface+';--ink:'+T.ink+';--line:'+T.line+';--line-g:'+T.lineG+';';
     v += '--m1:'+T.m1+';--m2:'+T.m2+';--m3:'+T.m3+';--m4:'+T.m4+';--m5:'+T.m5+';--m6:'+T.m6+';--m7:'+T.m7+';--m8:'+T.m8+';--m9:'+T.m9+';--mb:'+T.mb+';--mc:'+T.mc+';';
@@ -1371,8 +1356,6 @@ class Component extends DCLogic {
       pendingAltLabel,
 
       toggleMenu: () => this.setState(st => ({ menuOpen:!st.menuOpen })),
-      dark: s.dark, themeLight: !s.dark,
-      toggleTheme: () => this.setState(st => { const d = !st.dark; try{ localStorage.setItem('sus-theme', d ? 'dark' : 'light'); }catch(_){} return { dark:d }; }),
       goHero: () => { this.navHash('hero'); this.setState({ view:'hero', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
       goDashboard: () => { this.navHash('dashboard'); this.setState({ view:'dashboard', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
       goAbout: () => { this.navHash('about'); this.setState({ view:'about', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
