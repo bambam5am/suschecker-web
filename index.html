@@ -299,7 +299,7 @@ button,input,select,textarea{border-radius:9px;}
   <!-- ---- MAIN : filters + grid ---- -->
   <main style="margin-top:34px;">
       <div class="filter-bar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px;align-items:center;">
-        <input class="filter-search" value="{{ search }}" onChange="{{ onSearch }}" placeholder="search brand…" style="border:none;background:var(--accent-soft,#cfebd3);border-radius:9px;padding:11px 15px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;width:100%;min-width:0;color:var(--ink);">
+        <input class="filter-search" value="{{ search }}" onChange="{{ onSearch }}" placeholder="check brand…" style="border:none;background:var(--accent-soft,#cfebd3);border-radius:9px;padding:11px 15px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;width:100%;min-width:0;color:var(--ink);">
         <select class="filter-ctrl" value="{{ fCategory }}" onChange="{{ onCategory }}" style="background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-family:var(--font,'Archivo',sans-serif);font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;width:100%;min-width:0;">
           <option value="all">All categories</option>
           <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><option value="{{ c }}">{{ c }}</option></sc-for>
