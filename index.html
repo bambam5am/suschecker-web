@@ -258,6 +258,34 @@ button,input,select,textarea{border-radius:9px;}
     </div>
   </sc-if>
 
+  <sc-if value="{{ hasRecentItems }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:clamp(28px,4vh,48px);">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:16px;">
+        <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);">Most recent</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--m2);">Hover to expand</div>
+      </div>
+      <div style="display:flex;gap:10px;height:clamp(220px,32vh,300px);width:100%;">
+        <sc-for list="{{ dashRecent }}" as="it" hint-placeholder-count="6">
+          <button class="top-card" onClick="{{ it.open }}" style="position:relative;overflow:hidden;border-radius:16px;background:var(--surface);flex-basis:0;flex-shrink:1;min-width:0;height:100%;padding:0;cursor:pointer;text-align:left;">
+            <div style="position:absolute;top:0;left:0;bottom:0;width:60px;background:{{ it.gradeColor }};display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 0;">
+              <span style="font-weight:800;font-size:24px;color:#fff;line-height:1;">{{ it.grade }}</span>
+              <span style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;font-family:var(--font);">{{ it.brand }}</span>
+            </div>
+            <div style="position:absolute;top:0;left:60px;bottom:0;width:230px;padding:22px 20px;display:flex;flex-direction:column;justify-content:center;">
+              <div style="font-family:var(--title);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--g1);margin-bottom:10px;">{{ it.category }}</div>
+              <div style="font-family:var(--title);font-size:26px;font-weight:600;line-height:1.05;letter-spacing:-0.02em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.brand }}</div>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-top:10px;">
+                <span style="font-family:var(--title);font-size:46px;font-weight:600;line-height:0.9;letter-spacing:-0.025em;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
+                <span style="font-family:var(--title);color:var(--m2);font-size:15px;">/100</span>
+              </div>
+              <div style="margin-top:16px;font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);">View breakdown →</div>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
   <!-- ---- RANKING CHART ---- -->
   <sc-if value="{{ hasChart }}" hint-placeholder-val="{{ false }}">
     <div style="margin-top:clamp(36px,6vh,64px);">
@@ -1175,6 +1203,7 @@ class Component extends DCLogic {
 
     const marqueeItems = base.slice().reverse().slice(0,14).map(dec);
     const dashTop = base.filter(i => isFinite(i.score) && i.score > 0).sort((a,b) => b.score-a.score).slice(0,6).map(dec);
+    const dashRecent = base.slice().sort((a,b) => (b.rowIdx||0)-(a.rowIdx||0)).slice(0,6).map(dec);
     const cats = Array.from(new Set(base.map(i => i.category).filter(Boolean))).sort();
     const brands = Array.from(new Set(base.map(i => i.brand).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
     const materials = Array.from(new Set(base.flatMap(i => (i.materials && typeof i.materials==='object') ? Object.keys(i.materials) : []).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
@@ -1315,6 +1344,7 @@ class Component extends DCLogic {
       menuOpen: s.menuOpen,
       loading: s.loading, hasError: !!s.error, itemCount: base.length,
       dashTop, hasTopItems: dashTop.length > 0,
+      dashRecent, hasRecentItems: dashRecent.length > 0,
       dashItems, cats, brands, materials, grades:['A','B','C','D','E','F'],
       hasItems: base.length > 0,
       marqueeItems, hasMarquee: marqueeItems.length > 0,
