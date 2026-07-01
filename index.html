@@ -94,7 +94,7 @@ button,input,select,textarea{border-radius:9px;}
       <img src="assets/mascot.png" alt="Suschecker mascot" style="height:clamp(60px,9vw,116px);image-rendering:pixelated;">
     </div>
     <div style="margin-top:18px;display:flex;align-items:stretch;background:var(--accent-soft,#cfebd3);width:100%;border-radius:12px;overflow:hidden;">
-      <input value="{{ urlInput }}" onChange="{{ onUrlInput }}" onKeyDown="{{ onUrlKey }}" placeholder="paste a product url" style="flex:1;min-width:0;border:none;background:transparent;padding:20px 24px;font-family:var(--font,'Archivo',sans-serif);font-size:19px;color:var(--ink);">
+      <input value="{{ urlInput }}" onChange="{{ onUrlInput }}" onKeyDown="{{ onUrlKey }}" placeholder="paste a product url" style="flex:1;min-width:0;border:none;background:transparent;padding:20px 24px;font-family:var(--font,'Archivo',sans-serif);font-size:19px;color:var(--ink);outline:none;">
       <button onClick="{{ submitUrl }}" style="border:none;background:transparent;padding:0 30px;font-family:var(--font,'Archivo',sans-serif);font-weight:700;font-size:19px;cursor:pointer;color:var(--ink);white-space:nowrap;">{{ submitLabel }}</button>
     </div>
 
