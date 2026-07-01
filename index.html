@@ -490,7 +490,7 @@ button,input,select,textarea{border-radius:9px;}
             </sc-if>
             <sc-for list="{{ t.cats }}" as="c" hint-placeholder-count="3">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;">
-                <span style="flex:1;min-width:0;font-size:13px;color:var(--m6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ c.name }}</span>
+                <span style="flex:1;min-width:0;font-size:13px;color:var(--m6);word-break:break-word;">{{ c.name }}</span>
                 <div style="flex:0 0 96px;height:6px;background:var(--track,#d8efdc);border-radius:999px;"><div style="height:100%;width:{{ c.width }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
                 <span style="flex:0 0 42px;text-align:right;font-size:12px;font-weight:700;">{{ c.shareLabel }}</span>
               </div>
