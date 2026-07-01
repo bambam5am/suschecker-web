@@ -337,7 +337,12 @@ button,input,select,textarea{border-radius:9px;}
               <span style="font-family:var(--title);font-size:clamp(32px,3vw,46px);font-weight:600;line-height:0.9;letter-spacing:-0.02em;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
               <span style="font-family:var(--title);color:var(--m9);font-size:14px;font-weight:500;">/100</span>
             </div>
-            <div style="font-family:var(--title);font-size:13px;color:var(--mc);margin-top:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.materialsStr }}</div>
+            <sc-if value="{{ it.hasMats }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;align-items:center;">
+                <sc-for list="{{ it.matShown }}" as="m" hint-placeholder-count="2"><span style="font-family:var(--title);font-size:10px;font-weight:700;color:var(--m6);border:1px solid var(--line);background:transparent;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.03em;">{{ m }}</span></sc-for>
+                <sc-if value="{{ it.hasMatExtra }}" hint-placeholder-val="{{ false }}"><span style="font-family:var(--title);font-size:10px;font-weight:700;color:var(--mc);letter-spacing:0.03em;">+{{ it.matExtra }}</span></sc-if>
+              </div>
+            </sc-if>
             <sc-if value="{{ it.hasCerts }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;">
                 <sc-for list="{{ it.certShown }}" as="c" hint-placeholder-count="2"><span style="font-family:var(--title);font-size:10px;font-weight:700;color:var(--g1);border:1px solid var(--line-g);background:transparent;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.03em;">{{ c }}</span></sc-for>
@@ -1186,10 +1191,15 @@ class Component extends DCLogic {
     else d.reverse();
     const dashItems = d.map(it => {
       const certs = Array.isArray(it.certList) ? it.certList : [];
+      const mats = (it.materials && typeof it.materials==='object') ? Object.entries(it.materials).map(([k,val]) => this.r1(val)+'% '+k) : [];
       return Object.assign({}, dec(it), {
         certShown: certs.slice(0,3),
         certExtra: certs.length - 3,
         hasCertExtra: certs.length > 3,
+        matShown: mats.slice(0,3),
+        matExtra: mats.length - 3,
+        hasMatExtra: mats.length > 3,
+        hasMats: mats.length > 0,
       });
     });
 
