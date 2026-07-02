@@ -476,10 +476,10 @@ button,input,select,textarea{border-radius:9px;}
       <div style="margin-bottom:18px;">
         <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);margin-bottom:11px;">{{ selected.brand }} · {{ selected.category }}</div>
         <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
-          <span style="font-family:var(--title);font-size:clamp(46px,6.2vw,90px);font-weight:500;line-height:0.88;letter-spacing:-0.025em;color:var(--accent);">{{ selected.scoreText }}<span style="color:var(--m2);font-size:0.4em;font-weight:500;">/100</span></span>
-          <span style="font-family:var(--title);font-size:clamp(20px,2.3vw,30px);font-weight:500;letter-spacing:-0.01em;">Grade {{ selected.grade }}</span>
+          <span style="font-family:var(--title);font-size:clamp(46px,6.2vw,90px);font-weight:500;line-height:0.88;letter-spacing:-0.025em;color:{{ selected.gradeColor }};">{{ selected.scoreText }}<span style="color:var(--m2);font-size:0.4em;font-weight:500;">/100</span></span>
+          <span style="font-family:var(--title);font-size:clamp(20px,2.3vw,30px);font-weight:500;letter-spacing:-0.01em;color:{{ selected.gradeColor }};">Grade {{ selected.grade }}</span>
         </div>
-        <div style="height:20px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-top:18px;"><div style="height:100%;width:{{ selected.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+        <div style="height:20px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-top:18px;"><div style="height:100%;width:{{ selected.scoreWidth }};background:{{ selected.gradeColor }};border-radius:999px;"></div></div>
       </div>
 
       <div style="font-size:clamp(15px,1.5vw,18px);line-height:1.55;text-transform:uppercase;letter-spacing:0.02em;margin:24px 0 30px;">
