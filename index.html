@@ -325,6 +325,76 @@ button,input,select,textarea{border-radius:9px;}
     </div>
   </sc-if>
 
+  <!-- ---- BREAKDOWN CHARTS ---- -->
+  <sc-if value="{{ breakdown.hasData }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:clamp(36px,6vh,64px);">
+      <div style="border-top:1.5px solid var(--ink);padding-top:22px;margin-bottom:clamp(20px,3vh,32px);">
+        <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);margin-bottom:10px;">The breakdown</div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div style="font-family:var(--title);font-size:clamp(22px,2.6vw,32px);font-weight:500;letter-spacing:-0.015em;line-height:1.0;max-width:16ch;">What the catalogue tells us</div>
+          <div style="font-size:14px;color:var(--m4);max-width:340px;line-height:1.45;">Computed across all scanned products, regardless of active filters.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:20px;">
+
+        <!-- Card 1: Grade distribution donut -->
+        <div style="flex:1 1 380px;background:var(--surface);border-radius:16px;padding:clamp(20px,2.5vw,28px);">
+          <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:20px;">Grade distribution</div>
+          <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
+            <div style="flex:none;">
+              <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" style="width:180px;height:180px;display:block;">
+                <sc-for list="{{ breakdown.donutPaths }}" as="dp" hint-placeholder-count="4">
+                  <path d="{{ dp.path }}" fill="{{ dp.color }}"></path>
+                </sc-for>
+                <text x="110" y="103" text-anchor="middle" dominant-baseline="auto" font-family="Archivo,system-ui,sans-serif" font-size="36" font-weight="700" fill="{{ breakdown.avgGradeColor }}">{{ breakdown.avgScore }}</text>
+                <text x="110" y="122" text-anchor="middle" dominant-baseline="auto" font-family="Archivo,system-ui,sans-serif" font-size="10" font-weight="700" fill="#888" letter-spacing="1">AVG · GRADE {{ breakdown.avgGrade }}</text>
+              </svg>
+            </div>
+            <div style="flex:1;min-width:130px;display:flex;flex-direction:column;gap:9px;">
+              <sc-for list="{{ breakdown.gradeLegend }}" as="gl" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:9px;">
+                  <span style="width:26px;height:26px;border-radius:6px;background:{{ gl.color }};display:inline-flex;align-items:center;justify-content:center;flex:none;font-family:Archivo,sans-serif;font-size:12px;font-weight:800;color:#fff;letter-spacing:0;">{{ gl.grade }}</span>
+                  <span style="font-size:13px;color:#666;flex:1;">Grade {{ gl.grade }}</span>
+                  <span style="font-family:Archivo,sans-serif;font-size:13px;font-weight:700;color:var(--ink);">{{ gl.count }}</span>
+                  <span style="font-size:12px;color:#999;width:32px;text-align:right;">{{ gl.pct }}%</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Fibre ribbon -->
+        <sc-if value="{{ breakdown.hasFibre }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1 1 380px;background:var(--surface);border-radius:16px;padding:clamp(20px,2.5vw,28px);">
+            <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:20px;">What the catalogue is made of</div>
+            <div style="display:flex;height:54px;border-radius:11px;overflow:hidden;margin-bottom:12px;">
+              <sc-for list="{{ breakdown.fibreSegments }}" as="fs" hint-placeholder-count="5">
+                <div style="width:{{ fs.widthPct }};background:{{ fs.color }};display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none;">
+                  <sc-if value="{{ fs.showLabel }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-family:Archivo,sans-serif;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;">{{ fs.label }}</span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="font-size:13px;color:#666;margin-bottom:18px;line-height:1.5;">
+              <span style="color:var(--g1);font-weight:700;">{{ breakdown.goodPct }}%</span> lower-impact &nbsp;·&nbsp; <span style="font-weight:600;">{{ breakdown.badPct }}%</span> synthetic / conventional
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px 20px;">
+              <sc-for list="{{ breakdown.fibreSegments }}" as="fs" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                  <span style="width:11px;height:11px;border-radius:3px;background:{{ fs.color }};flex:none;"></span>
+                  <span style="font-size:12px;color:#666;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ fs.name }}</span>
+                  <span style="font-family:Archivo,sans-serif;font-size:12px;font-weight:700;color:var(--ink);flex:none;">{{ fs.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </sc-if>
+
   <!-- ---- MAIN : filters + grid ---- -->
   <main style="margin-top:34px;">
       <div class="filter-bar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px;align-items:center;">
@@ -1083,6 +1153,56 @@ class Component extends DCLogic {
 
   decorate(it){ return Object.assign({}, it, { open: () => this.openResult(it) }); }
 
+  buildBreakdown(base){
+    const items = base.filter(i => isFinite(i.score) && i.score > 0);
+    if(!items.length) return { hasData:false };
+    const GC = { A:'#5FBE71', B:'#8FCE5C', C:'#E6C84B', D:'#E59A45', E:'#E2713F', F:'#DB4F39' };
+    const ORDER = ['A','B','C','D','E','F'];
+    const gCount = {}; ORDER.forEach(g => gCount[g] = 0);
+    items.forEach(i => { const g = (i.grade||'').toUpperCase(); if(gCount[g]!=null) gCount[g]++; });
+    const total = items.length;
+    const avgScore = Math.round(items.reduce((s,i)=>s+i.score,0)/total);
+    const avgGrade = avgScore>=75?'A':avgScore>=65?'B':avgScore>=50?'C':avgScore>=40?'D':avgScore>=30?'E':'F';
+    const cx=110, cy=110, ro=94, ri=62, GAP=1.2;
+    const nonEmpty = ORDER.filter(g => gCount[g]>0);
+    let cur = -90;
+    const toRad = d => d*Math.PI/180;
+    const f = n => n.toFixed(2);
+    const donutPaths = nonEmpty.map(g => {
+      const sweep = (gCount[g]/total)*360 - GAP;
+      const s0 = cur + GAP/2;
+      const s1 = s0 + sweep;
+      cur += (gCount[g]/total)*360;
+      const [x1o,y1o]=[cx+ro*Math.cos(toRad(s0)),cy+ro*Math.sin(toRad(s0))];
+      const [x2o,y2o]=[cx+ro*Math.cos(toRad(s1)),cy+ro*Math.sin(toRad(s1))];
+      const [x1i,y1i]=[cx+ri*Math.cos(toRad(s1)),cy+ri*Math.sin(toRad(s1))];
+      const [x2i,y2i]=[cx+ri*Math.cos(toRad(s0)),cy+ri*Math.sin(toRad(s0))];
+      const laf = sweep>180?1:0;
+      return { grade:g, color:GC[g], path:`M${f(x1o)} ${f(y1o)} A${ro} ${ro} 0 ${laf} 1 ${f(x2o)} ${f(y2o)} L${f(x1i)} ${f(y1i)} A${ri} ${ri} 0 ${laf} 0 ${f(x2i)} ${f(y2i)}Z` };
+    });
+    const gradeLegend = nonEmpty.map(g => ({ grade:g, color:GC[g], count:gCount[g], pct:Math.round(gCount[g]/total*100) }));
+    const tally = {};
+    items.forEach(i => {
+      if(!i.materials||typeof i.materials!=='object') return;
+      Object.entries(i.materials).forEach(([name,pct]) => { tally[name]=(tally[name]||0)+Number(pct); });
+    });
+    const grand = Object.values(tally).reduce((a,b)=>a+b,0);
+    if(!grand) return { hasData:true, hasFibre:false, avgScore, avgGrade, avgGradeColor:GC[avgGrade], donutPaths, gradeLegend, total };
+    let entries = Object.entries(tally).map(([name,sum])=>({ name, share:sum/grand*100 })).sort((a,b)=>b.share-a.share);
+    if(entries.length>8){ const rest=entries.slice(7).reduce((a,b)=>a+b.share,0); entries=[...entries.slice(0,7),{name:'Other fibres',share:rest}]; }
+    const isGreen = n => n!=='Other fibres' && /organic|recycl|linen|hemp|tencel|lyocell|lenzing|cupro|wool|silk|jute|kapok/i.test(n);
+    const GP=['#3a8f4e','#5FBE71','#79C98A','#8FCE5C','#b9e0a0'];
+    const WP=['#DB4F39','#E2713F','#E59A45','#E6C84B','#d8b26a','#c9a06a'];
+    let gi=0, wi=0;
+    const fibreSegments = entries.map(e => {
+      const green = isGreen(e.name);
+      const color = e.name==='Other fibres'?'#b7b7ad':green?GP[gi++%GP.length]:WP[wi++%WP.length];
+      return { name:e.name, share:e.share, widthPct:e.share.toFixed(2)+'%', color, showLabel:e.share>=8, label:Math.round(e.share)+'%', isGreen:green };
+    });
+    const goodPct = Math.round(fibreSegments.filter(s=>s.isGreen).reduce((a,b)=>a+b.share,0));
+    return { hasData:true, hasFibre:true, avgScore, avgGrade, avgGradeColor:GC[avgGrade], donutPaths, gradeLegend, total, fibreSegments, goodPct, badPct:100-goodPct };
+  }
+
   buildChart(base){
     const items = base.filter(i => isFinite(i.score));
     const dec = it => this.decorate(it);
@@ -1235,6 +1355,7 @@ class Component extends DCLogic {
 
     const chartMode = s.chartMode || 'axis';
     const chart = (s.view==='dashboard') ? this.buildChart(base) : { yTicks:[], axisDots:[], catRows:[], gradeCols:[], count:0 };
+    const breakdown = (s.view==='dashboard') ? this.buildBreakdown(base) : { hasData:false };
     const segBg = on => on ? '#141414' : 'transparent';
     const segFg = on => on ? '#ffffff' : '#555';
 
@@ -1350,7 +1471,7 @@ class Component extends DCLogic {
       hasItems: base.length > 0,
       marqueeItems, hasMarquee: marqueeItems.length > 0,
 
-      chart, chartMode,
+      chart, chartMode, breakdown,
       hasChart: chart.count > 0,
       chartIsAxis: chartMode==='axis', chartIsCategory: chartMode==='category', chartIsGrade: chartMode==='grade',
       setChartAxis: () => this.setState({ chartMode:'axis' }),
