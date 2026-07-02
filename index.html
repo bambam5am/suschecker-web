@@ -1325,7 +1325,8 @@ class Component extends DCLogic {
     const marqueeItems = base.slice().reverse().slice(0,14).map(dec);
     const dashTop = base.filter(i => isFinite(i.score) && i.score > 0).sort((a,b) => b.score-a.score).slice(0,6).map(dec);
     const dashRecent = base.slice().sort((a,b) => (b.rowIdx||0)-(a.rowIdx||0)).slice(0,6).map(dec);
-    const cats = Array.from(new Set(base.map(i => i.category).filter(Boolean))).sort();
+    const IN_SCOPE = new Set(['tshirt','shirt','trousers','jeans','dress','jacket','sweater','sweatshirt','shorts','skirt','leggings','cardigan','hoodie','tank','bodysuit']);
+    const cats = Array.from(new Set(base.map(i => i.category).filter(c => c && IN_SCOPE.has(c)))).sort();
     const brands = Array.from(new Set(base.map(i => i.brand).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
     const materials = Array.from(new Set(base.flatMap(i => (i.materials && typeof i.materials==='object') ? Object.keys(i.materials) : []).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
 
