@@ -127,64 +127,46 @@ button,input,select,textarea{border-radius:9px;}
     </sc-if>
     <p style="font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--m5);margin:22px 0 0;max-width:640px;">Paste any clothing product link and get an honest 0–100 SustainScore — built from materials, labour and a full 16-category life-cycle assessment.</p>
     <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}">
-      <div style="margin:36px auto 0;max-width:980px;width:100%;animation:susfade .3s ease both;">
-        <div class="result-grid" style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(24px,4vw,48px);align-items:start;">
-          <div style="background:var(--surface);border-radius:22px;padding:clamp(28px,4vw,44px);">
+      <div style="margin:36px auto 0;max-width:620px;width:100%;display:flex;flex-direction:column;gap:14px;">
+        <sc-for list="{{ pendingCards }}" as="pc" hint-placeholder-count="1">
+          <div style="background:var(--surface);border-radius:22px;padding:clamp(28px,4vw,44px);animation:susfade .3s ease both;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
               <div style="display:flex;align-items:center;gap:16px;min-width:0;">
-                <sc-if value="{{ pendingSpinner }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ pc.spinner }}" hint-placeholder-val="{{ true }}">
                   <span style="width:30px;height:30px;border:3px solid rgba(20,20,20,0.15);border-top-color:var(--accent);border-radius:50%;animation:susspin .8s linear infinite;display:inline-block;flex:none;"></span>
                 </sc-if>
-                <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
+                <sc-if value="{{ pc.done }}" hint-placeholder-val="{{ false }}">
                   <span style="width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex:none;">✓</span>
                 </sc-if>
-                <div style="font-weight:600;font-size:clamp(24px,3.4vw,32px);line-height:1.15;min-width:0;">{{ pendingTitle }}</div>
+                <div style="font-weight:600;font-size:clamp(24px,3.4vw,32px);line-height:1.15;min-width:0;">{{ pc.title }}</div>
               </div>
-              <button onClick="{{ dismissPending }}" aria-label="Dismiss" style="flex:none;background:none;border:none;cursor:pointer;font-size:20px;line-height:1;color:var(--g2);padding:4px;">✕</button>
+              <button onClick="{{ pc.dismiss }}" aria-label="Dismiss" style="flex:none;background:none;border:none;cursor:pointer;font-size:20px;line-height:1;color:var(--g2);padding:4px;">✕</button>
             </div>
-            <div style="font-size:16px;color:var(--g3);line-height:1.4;margin-top:12px;">{{ pendingSub }}</div>
+            <div style="font-size:16px;color:var(--g3);line-height:1.4;margin-top:12px;">{{ pc.sub }}</div>
 
-            <sc-if value="{{ pendingTimeout }}" hint-placeholder-val="{{ false }}">
-              <button onClick="{{ retryPending }}" style="margin-top:20px;background:var(--ink);color:var(--paper);border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;">Check again</button>
+            <sc-if value="{{ pc.timeout }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ pc.retry }}" style="margin-top:20px;background:var(--ink);color:var(--paper);border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;">Check again</button>
             </sc-if>
 
-            <sc-if value="{{ pendingDone }}" hint-placeholder-val="{{ false }}">
-              <button onClick="{{ openPending }}" style="width:100%;text-align:left;background:none;border:none;border-radius:0;cursor:pointer;padding:22px 0 0;display:flex;flex-direction:column;gap:13px;animation:susfade .35s ease both;">
+            <sc-if value="{{ pc.done }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ pc.open }}" style="width:100%;text-align:left;background:none;border:none;border-radius:0;cursor:pointer;padding:22px 0 0;display:flex;flex-direction:column;gap:13px;animation:susfade .35s ease both;">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
                   <div style="min-width:0;">
-                    <div style="font-weight:500;font-size:22px;line-height:1.04;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ pending.brand }}</div>
-                    <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;">{{ pending.category }}</div>
+                    <div style="font-weight:500;font-size:22px;line-height:1.04;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ pc.item.brand }}</div>
+                    <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:3px;">{{ pc.item.category }}</div>
                   </div>
-                  <div style="width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;color:#fff;border-radius:6px;background:{{ pending.gradeColor }};">{{ pending.grade }}</div>
+                  <div style="width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;color:#fff;border-radius:6px;background:{{ pc.item.gradeColor }};">{{ pc.item.grade }}</div>
                 </div>
                 <div style="display:flex;align-items:baseline;gap:7px;">
-                  <span style="font-size:36px;font-weight:500;line-height:1;">{{ pending.scoreText }}</span>
+                  <span style="font-size:36px;font-weight:500;line-height:1;">{{ pc.item.scoreText }}</span>
                   <span style="color:var(--m1);font-size:14px;">/100</span>
                 </div>
-                <div style="height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ pending.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+                <div style="height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ pc.item.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
                 <div style="margin-top:2px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;">View full breakdown →</div>
               </button>
             </sc-if>
           </div>
-
-          <sc-if value="{{ hasPendingAlternatives }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-family:var(--title);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;font-size:12px;color:var(--g1);margin-bottom:12px;border-top:1.5px solid var(--ink);padding-top:12px;">{{ pendingAltLabel }}</div>
-              <sc-for list="{{ pendingAlternatives }}" as="it" hint-placeholder-count="3">
-                <button onClick="{{ it.open }}" style="width:100%;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:11px 0;border:none;border-bottom:1px solid var(--line);background:none;cursor:pointer;text-align:left;">
-                  <span style="flex:1;min-width:0;">
-                    <span style="display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ it.brand }}</span>
-                    <span style="display:block;font-size:11px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-top:2px;">{{ it.category }}</span>
-                  </span>
-                  <span style="display:flex;align-items:center;gap:9px;flex:none;">
-                    <span style="font-weight:700;font-size:15px;">{{ it.scoreText }}</span>
-                    <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;background:{{ it.gradeColor }};border-radius:6px;">{{ it.grade }}</span>
-                  </span>
-                </button>
-              </sc-for>
-            </div>
-          </sc-if>
-        </div>
+        </sc-for>
       </div>
     </sc-if>
 
@@ -875,12 +857,16 @@ class Component extends DCLogic {
     view:'hero', lastView:'hero', menuOpen:false, dark:false,
     items:[], loading:true, error:'',
     urlInput:'', submitStatus:'', howToOpen:false,
-    pendingUrl:'', pendingStatus:'', pendingKey:null,
+    pendings:[],
     selectedId:null, openWhy:{},
     analysis:{}, analysisLoading:false,
     fCategory:'all', fGrade:'all', fBrand:'all', fMaterial:'all', search:'', sort:'recent',
     chartMode:'axis',
   };
+
+  _pendingSeq = 0;
+  _polls = {};
+  _baselines = {};
 
   EF = {
     CCH:{n:'Climate change', nf:0.0001235, w:0.2106},
@@ -914,7 +900,7 @@ class Component extends DCLogic {
     window.addEventListener('hashchange', this._onHash);
     this.load();
   }
-  componentWillUnmount(){ if(this._onHash) window.removeEventListener('hashchange', this._onHash); this.stopPoll(); }
+  componentWillUnmount(){ if(this._onHash) window.removeEventListener('hashchange', this._onHash); this.stopAllPolls(); }
   parseHash(){
     try{
       const h = (location.hash || '').replace(/^#/, '');
@@ -995,27 +981,35 @@ class Component extends DCLogic {
     }catch(e){ this.setState({ error:String(e), loading:false }); }
   }
 
-  startPoll(url){
-    this.stopPoll();
-    this._pollN = 0;
-    this.setState({ pollN:0 });
-    this._poll = setInterval(async () => {
-      this._pollN++;
+  updatePending(id, patch){
+    this.setState(s => ({ pendings: s.pendings.map(p => p.id===id ? Object.assign({}, p, patch) : p) }));
+  }
+
+  startPoll(id, url){
+    this.stopPoll(id);
+    this._polls[id] = setInterval(async () => {
+      const cur = this.state.pendings.find(p => p.id===id);
+      if(!cur){ this.stopPoll(id); return; }
+      const n = (cur.pollN||0) + 1;
       let items;
-      try{ items = await this.fetchItems(); }catch(e){ this.setState({ pollN:this._pollN }); return; }
-      this.setState({ items, pollN:this._pollN });
-      const found = items.find(i => i.url === url && !this._pendingScanIds.has(i.scanId));
+      try{ items = await this.fetchItems(); }catch(e){ this.updatePending(id, { pollN:n }); return; }
+      this.setState({ items });
+      const baseline = this._baselines[id];
+      const found = items.find(i => i.url === url && i.scanId !== baseline);
       if(found){
-        this.stopPoll();
-        this.setState({ pendingStatus:'done', pendingKey:found.key });
+        this.stopPoll(id);
+        this.updatePending(id, { status:'done', key:found.key, pollN:n });
         this.ensureAnalysis(found);
-      } else if(this._pollN >= 40){
-        this.stopPoll();
-        this.setState({ pendingStatus:'timeout' });
+      } else if(n >= 40){
+        this.stopPoll(id);
+        this.updatePending(id, { status:'timeout', pollN:n });
+      } else {
+        this.updatePending(id, { pollN:n });
       }
     }, 4000);
   }
-  stopPoll(){ if(this._poll){ clearInterval(this._poll); this._poll = null; } }
+  stopPoll(id){ if(this._polls[id]){ clearInterval(this._polls[id]); delete this._polls[id]; } }
+  stopAllPolls(){ Object.keys(this._polls).forEach(id => this.stopPoll(id)); }
 
   mapItem(v, idx, u, brand, map){
     const breakdown = this.pj(v(map.scoreBreakdown), {}) || {};
@@ -1274,31 +1268,41 @@ class Component extends DCLogic {
   submitUrl(){
     const url = (this.state.urlInput||'').trim();
     if(!url){ this.setState({ submitStatus:'empty' }); return; }
-    this._pendingScanIds = new Set(this.state.items.filter(i => i.url === url).map(i => i.scanId));
+    const id = 'p' + (++this._pendingSeq);
+    const baselineItem = this.state.items.find(i => i.url === url);
+    this._baselines[id] = baselineItem ? baselineItem.scanId : null;
     const hook = this.props.webhookUrl || 'https://n8n-production-9085e.up.railway.app/webhook/suschecker-test';
-    this.setState({ submitStatus:'sending', urlInput:'', pendingUrl:url, pendingStatus:'sending', pendingKey:null });
-    const begin = () => { this.setState({ pendingStatus:'waiting', submitStatus:'' }); this.startPoll(url); };
-    if(!hook){ this.setState({ pendingStatus:'nohook', submitStatus:'' }); return; }
+    this.setState(s => ({
+      submitStatus:'sending', urlInput:'',
+      pendings: [{ id, url, status:'sending', key:null, pollN:0 }, ...s.pendings],
+    }));
+    const begin = () => { this.updatePending(id, { status:'waiting' }); this.setState({ submitStatus:'' }); this.startPoll(id, url); };
+    if(!hook){ this.updatePending(id, { status:'nohook' }); this.setState({ submitStatus:'' }); return; }
     fetch(hook, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url }) })
       .then(begin).catch(begin);
   }
 
-  dismissPending(){ this.stopPoll(); this.setState({ pendingUrl:'', pendingStatus:'', pendingKey:null, submitStatus:'' }); }
+  dismissPending(id){
+    this.stopPoll(id);
+    delete this._baselines[id];
+    this.setState(s => ({ pendings: s.pendings.filter(p => p.id !== id) }));
+  }
 
-  retryPending(){
-    const url = this.state.pendingUrl;
-    if(!url) return;
-    this.setState({ pendingStatus:'waiting' });
+  retryPending(id){
+    const p = this.state.pendings.find(p => p.id===id);
+    if(!p) return;
+    this.updatePending(id, { status:'waiting' });
     this.fetchItems().then(items => {
       this.setState({ items });
-      const found = items.find(i => i.url === url && !this._pendingScanIds.has(i.scanId));
+      const baseline = this._baselines[id];
+      const found = items.find(i => i.url === p.url && i.scanId !== baseline);
       if(found){
-        this.setState({ pendingStatus:'done', pendingKey:found.key });
+        this.updatePending(id, { status:'done', key:found.key });
         this.ensureAnalysis(found);
       } else {
-        this.startPoll(url);
+        this.startPoll(id, p.url);
       }
-    }).catch(() => { this.startPoll(url); });
+    }).catch(() => { this.startPoll(id, p.url); });
   }
 
   componentDidUpdate(){}
@@ -1421,39 +1425,42 @@ class Component extends DCLogic {
     }
 
     const submitLabels = { '':'Check', sending:'Sending…', empty:'Check', nohook:'Check' };
-    const pendingItem = s.pendingKey ? (base.find(i => i.key === s.pendingKey) || null) : null;
-    const pend = pendingItem ? dec(pendingItem) : null;
-    const ps = s.pendingStatus;
-    const pollSecs = (s.pollN||0) * 4;
-    let waitingTitle = 'Analysing your product…';
-    let waitingSub = 'Reading the product page…';
-    if(pollSecs >= 55){ waitingTitle = 'Still crunching the numbers…'; waitingSub = 'Crunching the environmental impact…'; }
-    else if(pollSecs >= 20){ waitingTitle = 'Profiling the brand…'; waitingSub = 'Profiling brand & certifications — new brands take a bit longer…'; }
-    const pendTitles = {
-      sending: 'Sending to the scanner…',
-      waiting: waitingTitle,
-      done: 'Scan complete',
-      timeout: 'Still processing',
-      nohook: 'Can’t start the scan',
-    };
-    const pendSubs = {
-      sending: 'Triggering the analysis',
-      waiting: waitingSub,
-      done: pend ? (pend.brand + ' · ' + pend.category) : 'Result ready',
-      timeout: 'This is taking longer than usual. The scan may still finish in the background — refresh or check again in a minute.',
-      nohook: 'No webhook configured — add the n8n endpoint in Tweaks.',
-    };
 
-    // ---- Pending sidebar: comparable / better-scoring products ----
-    let pendingAlternatives = [];
-    if(s.pendingUrl){
-      const pool = base.filter(i => i.url !== s.pendingUrl).map(dec);
-      const sameCat = (pend && pend.category) ? pool.filter(i => i.category === pend.category) : [];
-      let candidates = sameCat.length >= 3 ? sameCat : pool;
-      if(pend) candidates = candidates.filter(i => i.score > pend.score);
-      pendingAlternatives = candidates.slice().sort((a,b) => b.score-a.score).slice(0,4);
-    }
-    const pendingAltLabel = (pend && pend.category) ? ('Better-scoring '+pend.category+'s') : 'Top-scoring picks while you wait';
+    const pendingCards = s.pendings.map(p => {
+      const foundItem = p.key ? (base.find(i => i.key === p.key) || null) : null;
+      const item = foundItem ? dec(foundItem) : null;
+      const pollSecs = (p.pollN||0) * 4;
+      let waitingTitle = 'Analysing your product…';
+      let waitingSub = 'Reading the product page…';
+      if(pollSecs >= 55){ waitingTitle = 'Still crunching the numbers…'; waitingSub = 'Crunching the environmental impact…'; }
+      else if(pollSecs >= 20){ waitingTitle = 'Profiling the brand…'; waitingSub = 'Profiling brand & certifications — new brands take a bit longer…'; }
+      const titles = {
+        sending: 'Sending to the scanner…',
+        waiting: waitingTitle,
+        done: 'Scan complete',
+        timeout: 'Still processing',
+        nohook: 'Can’t start the scan',
+      };
+      const subs = {
+        sending: 'Triggering the analysis',
+        waiting: waitingSub,
+        done: item ? (item.brand + ' · ' + item.category) : 'Result ready',
+        timeout: 'This is taking longer than usual. The scan may still finish in the background — refresh or check again in a minute.',
+        nohook: 'No webhook configured — add the n8n endpoint in Tweaks.',
+      };
+      return {
+        id: p.id,
+        spinner: p.status==='sending' || p.status==='waiting',
+        done: p.status==='done' && !!item,
+        timeout: p.status==='timeout',
+        title: titles[p.status] || 'Working…',
+        sub: subs[p.status] || '',
+        item,
+        open: () => { if(item) item.open(); },
+        dismiss: () => this.dismissPending(p.id),
+        retry: () => this.retryPending(p.id),
+      };
+    });
 
     return {
       rootStyle: this.rootStyle(),
@@ -1490,21 +1497,9 @@ class Component extends DCLogic {
       howToOpen: s.howToOpen, howToCaret: s.howToOpen ? 'rotate(180deg)' : 'rotate(0deg)',
       toggleHowTo: () => this.setState(st => ({ howToOpen:!st.howToOpen })),
 
-      hasPending: !!s.pendingUrl,
-      pendingSpinner: ps==='sending' || ps==='waiting',
-      pendingDone: ps==='done' && !!pend,
-      pendingTimeout: ps==='timeout',
-      pendingTitle: pendTitles[ps] || 'Working…',
-      pendingSub: pendSubs[ps] || '',
-      pendingHeadBg: (ps==='done') ? 'var(--accent-soft,#cfebd3)' : (ps==='timeout'||ps==='nohook') ? '#f4efe2' : 'var(--accent-soft,#cfebd3)',
-      pending: pend,
-      openPending: () => { if(pend) pend.open(); },
-      dismissPending: () => this.dismissPending(),
-      retryPending: () => this.retryPending(),
-      showBrowse: !s.pendingUrl,
-      hasPendingAlternatives: pendingAlternatives.length > 0,
-      pendingAlternatives,
-      pendingAltLabel,
+      hasPending: pendingCards.length > 0,
+      pendingCards,
+      showBrowse: s.pendings.length === 0,
 
       toggleMenu: () => this.setState(st => ({ menuOpen:!st.menuOpen })),
       goHero: () => { this.navHash('hero'); this.setState({ view:'hero', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
