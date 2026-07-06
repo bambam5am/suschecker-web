@@ -212,6 +212,18 @@ button,input,select,textarea{border-radius:9px;}
       <div style="font-family:var(--title);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--m2);white-space:nowrap;">{{ itemCount }} scans</div>
     </div>
 
+  <!-- ---- SUMMARY STATS ---- -->
+  <sc-if value="{{ hasStats }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-wrap:wrap;margin-top:clamp(28px,4vh,48px);">
+      <sc-for list="{{ dashStats }}" as="st" hint-placeholder-count="4">
+        <div style="flex:1 1 180px;min-width:150px;border-left:1.5px solid var(--ink);margin-left:-1.5px;padding:22px 24px;display:flex;flex-direction:column;gap:12px;">
+          <div style="font-family:var(--title);font-weight:600;letter-spacing:-0.02em;line-height:0.9;font-size:clamp(44px,6vw,84px);color:{{ st.color }};">{{ st.value }}</div>
+          <div style="font-family:var(--title);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--m2);">{{ st.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
   <!-- ---- HIGHEST SCORING EXPANDING CARDS ---- -->
   <sc-if value="{{ hasTopItems }}" hint-placeholder-val="{{ false }}">
     <div style="margin-top:clamp(28px,4vh,48px);">
@@ -1334,6 +1346,16 @@ class Component extends DCLogic {
     const brands = Array.from(new Set(base.map(i => i.brand).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
     const materials = Array.from(new Set(base.flatMap(i => (i.materials && typeof i.materials==='object') ? Object.keys(i.materials) : []).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
 
+    const statScores = base.map(i => i.score).filter(n => isFinite(n));
+    const avgScore = statScores.length ? Math.round(statScores.reduce((a,b) => a+b, 0) / statScores.length) : 0;
+    const ratedAB = base.filter(i => i.grade==='A' || i.grade==='B').length;
+    const dashStats = [
+      { label:'Products scanned', value:String(base.length), color:'#5FBE71' },
+      { label:'Brands tracked', value:String(brands.length), color:'#8FCE5C' },
+      { label:'Average SustainScore', value:avgScore+'/100', color:'#E6C84B' },
+      { label:'Rated A or B', value:String(ratedAB), color:'#E59A45' },
+    ];
+
     let d = base.slice();
     if(s.fCategory !== 'all') d = d.filter(i => i.category === s.fCategory);
     if(s.fGrade !== 'all') d = d.filter(i => i.grade === s.fGrade);
@@ -1473,6 +1495,7 @@ class Component extends DCLogic {
       navFaqColor: s.view==='faq' ? 'var(--ink)' : 'var(--m2)',
       menuOpen: s.menuOpen,
       loading: s.loading, hasError: !!s.error, itemCount: base.length,
+      dashStats, hasStats: base.length > 0,
       dashTop, hasTopItems: dashTop.length > 0,
       dashRecent, hasRecentItems: dashRecent.length > 0,
       dashItems, cats, brands, materials, grades:['A','B','C','D','E','F'],
