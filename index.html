@@ -916,6 +916,7 @@ class Component extends DCLogic {
     this._onHash = () => this.onHashChange();
     window.addEventListener('hashchange', this._onHash);
     this.load();
+    requestAnimationFrame(() => { try{ window.scrollTo(0,0); }catch(_){} });
   }
   componentWillUnmount(){ if(this._onHash) window.removeEventListener('hashchange', this._onHash); this.stopAllPolls(); }
   parseHash(){
@@ -1322,7 +1323,11 @@ class Component extends DCLogic {
     }).catch(() => { this.startPoll(id, p.url); });
   }
 
-  componentDidUpdate(){}
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.view !== this.state.view){
+      requestAnimationFrame(() => { try{ window.scrollTo(0,0); }catch(_){} });
+    }
+  }
 
   rootStyle(){
     const font = this.props.headingFont || 'Archivo';
@@ -1531,11 +1536,11 @@ class Component extends DCLogic {
       showBrowse: s.pendings.length === 0,
 
       toggleMenu: () => this.setState(st => ({ menuOpen:!st.menuOpen })),
-      goHero: () => { this.navHash('hero'); this.setState({ view:'hero', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
-      goDashboard: () => { this.navHash('dashboard'); this.setState({ view:'dashboard', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
-      goAbout: () => { this.navHash('about'); this.setState({ view:'about', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
-      goMethodology: () => { this.navHash('methodology'); this.setState({ view:'methodology', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
-      goFaq: () => { this.navHash('faq'); this.setState({ view:'faq', menuOpen:false }); try{window.scrollTo(0,0);}catch(_){} },
+      goHero: () => { this.navHash('hero'); this.setState({ view:'hero', menuOpen:false }); },
+      goDashboard: () => { this.navHash('dashboard'); this.setState({ view:'dashboard', menuOpen:false }); },
+      goAbout: () => { this.navHash('about'); this.setState({ view:'about', menuOpen:false }); },
+      goMethodology: () => { this.navHash('methodology'); this.setState({ view:'methodology', menuOpen:false }); },
+      goFaq: () => { this.navHash('faq'); this.setState({ view:'faq', menuOpen:false }); },
       goBack: () => this.setState(st => { const v = st.lastView || 'dashboard'; this.navHash(v); return { view:v }; }),
 
       fCategory: s.fCategory, fGrade: s.fGrade, fBrand: s.fBrand, fMaterial: s.fMaterial, search: s.search, sort: s.sort,
