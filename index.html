@@ -554,10 +554,8 @@ button,input,select,textarea{border-radius:9px;}
         <!-- ---- benchmark strip : footprint vs typical ---- -->
         <sc-if value="{{ selectedFp.hasBench }}" hint-placeholder-val="{{ false }}">
           <div style="background:transparent;padding:16px 18px;margin-bottom:26px;">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:18px;">
-              <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;">Total footprint vs {{ selectedFp.cohortLabel }}</span>
-              <span style="font-weight:600;font-size:15px;color:{{ selectedFp.ecsDeltaColor }};white-space:nowrap;">{{ selectedFp.ecsDeltaText }}</span>
-            </div>
+            <div style="font-weight:700;font-size:clamp(26px,3vw,34px);line-height:1.1;color:{{ selectedFp.ecsDeltaColor }};margin-bottom:6px;">{{ selectedFp.ecsDeltaText }}</div>
+            <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;margin-bottom:18px;">Total footprint vs {{ selectedFp.cohortLabel }}</div>
             <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;margin:0 0 10px;">
               <div style="position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--ink);left:{{ selectedFp.ecsMedLeft }};"></div>
               <div style="position:absolute;top:50%;left:{{ selectedFp.ecsDotLeft }};width:20px;height:20px;background:var(--ink);border-radius:50%;transform:translate(-50%,-50%);"></div>
