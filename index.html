@@ -93,18 +93,18 @@ button,input,select,textarea{border-radius:9px;}
     </div>
   </sc-if>
 
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,7vh,96px) clamp(20px,8vw,8vw) clamp(48px,10vh,120px);max-width:1100px;margin:0 auto;width:100%;">
-    <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(16px,3vh,28px);">Independent fashion sustainability scores</div>
-    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
-      <h1 class="wordmark" style="font-family:var(--title);font-size:clamp(48px,12vw,174px);line-height:0.82;font-weight:500;letter-spacing:-0.045em;margin:0;">Suschecker</h1>
-      <img src="assets/mascot.png" alt="Suschecker mascot" style="height:clamp(60px,9vw,116px);image-rendering:pixelated;">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,6vh,80px) clamp(20px,5vw,64px);max-width:1280px;margin:0 auto;width:100%;">
+    <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(10px,1.6vh,18px);">Independent fashion sustainability scores</div>
+    <div style="position:relative;display:inline-flex;align-self:flex-start;white-space:nowrap;font-size:clamp(48px,12vw,174px);line-height:0.82;">
+      <h1 class="wordmark" style="font-family:var(--title);font-size:inherit;line-height:inherit;font-weight:500;letter-spacing:-0.045em;margin:0;">Suschecker</h1>
+      <img src="assets/mascot.png" alt="Suschecker mascot" style="position:absolute;top:-0.06em;right:-0.06em;height:0.27em;width:auto;image-rendering:pixelated;">
     </div>
-    <div style="margin-top:18px;display:flex;align-items:stretch;background:var(--accent-soft,#cfebd3);width:100%;border-radius:12px;overflow:hidden;">
+    <div style="margin-top:clamp(24px,3.2vh,36px);display:flex;align-items:stretch;background:var(--accent-soft,#cfebd3);width:100%;border-radius:12px;overflow:hidden;">
       <input value="{{ urlInput }}" onChange="{{ onUrlInput }}" onKeyDown="{{ onUrlKey }}" placeholder="paste a product url" style="flex:1;min-width:0;border:none;background:transparent;padding:20px 24px;font-family:var(--font,'Archivo',sans-serif);font-size:19px;color:var(--ink);outline:none;">
       <button onClick="{{ submitUrl }}" style="border:none;background:transparent;padding:0 30px;font-family:var(--font,'Archivo',sans-serif);font-weight:700;font-size:19px;cursor:pointer;color:var(--ink);white-space:nowrap;">{{ submitLabel }}</button>
     </div>
 
-    <button onClick="{{ toggleHowTo }}" style="margin-top:18px;align-self:flex-start;display:inline-flex;align-items:center;gap:9px;background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink);">
+    <button onClick="{{ toggleHowTo }}" style="margin-top:16px;align-self:flex-start;display:inline-flex;align-items:center;gap:9px;background:none;border:none;border-radius:0;padding:0;cursor:pointer;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink);">
       <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:2px solid var(--ink);border-radius:50%;font-size:12px;font-weight:800;">?</span>
       How it works
       <span style="font-size:11px;transform:{{ howToCaret }};transition:transform .2s;">▾</span>
@@ -130,7 +130,7 @@ button,input,select,textarea{border-radius:9px;}
         </div>
       </div>
     </sc-if>
-    <p style="font-size:13px;line-height:1.5;color:var(--m5);margin:22px 0 0;max-width:640px;">Paste any clothing product link and get an honest 0–100 SustainScore — built from materials, labour and a full 16-category life-cycle assessment.</p>
+    <p style="font-size:13px;line-height:1.5;color:var(--m5);margin:14px 0 0;max-width:640px;">Paste any clothing product link and get an honest 0–100 SustainScore — built from materials, labour and a full 16-category life-cycle assessment.</p>
     <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}">
       <div style="margin:36px auto 0;max-width:620px;width:100%;display:flex;flex-direction:column;gap:14px;">
         <sc-for list="{{ pendingCards }}" as="pc" hint-placeholder-count="1">
