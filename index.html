@@ -23,6 +23,11 @@ body{margin:0;background:var(--paper);}
 @keyframes susfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes suspop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes susmarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes susgrade{0%{background-position:0% 50%}28%{background-position:62% 50%}50%{background-position:100% 50%}72%{background-position:38% 50%}100%{background-position:0% 50%}}
+.wordmark{background:linear-gradient(90deg,#5FBE71,#8FCE5C,#E6C84B,#E59A45,#E2713F,#DB4F39,#E59A45,#8FCE5C,#5FBE71);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:susgrade var(--wm-dur,16s) ease-in-out infinite;}
+@media (prefers-reduced-motion: reduce){
+  .wordmark{animation:none;background-position:50% 50%;}
+}
 input::placeholder{color:var(--g3);}
 input:focus,select:focus,button:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
 select{cursor:pointer;}
@@ -91,7 +96,7 @@ button,input,select,textarea{border-radius:9px;}
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,7vh,96px) clamp(20px,8vw,8vw) clamp(48px,10vh,120px);max-width:1100px;margin:0 auto;width:100%;">
     <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink);margin-bottom:clamp(16px,3vh,28px);">Independent fashion sustainability scores</div>
     <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
-      <h1 style="font-family:var(--title);font-size:clamp(48px,10vw,128px);line-height:0.88;font-weight:500;letter-spacing:-0.025em;margin:0;">Suschecker</h1>
+      <h1 class="wordmark" style="font-family:var(--title);font-size:clamp(48px,12vw,174px);line-height:0.82;font-weight:500;letter-spacing:-0.045em;margin:0;">Suschecker</h1>
       <img src="assets/mascot.png" alt="Suschecker mascot" style="height:clamp(60px,9vw,116px);image-rendering:pixelated;">
     </div>
     <div style="margin-top:18px;display:flex;align-items:stretch;background:var(--accent-soft,#cfebd3);width:100%;border-radius:12px;overflow:hidden;">
@@ -1330,6 +1335,7 @@ class Component extends DCLogic {
     v += '--paper:'+T.paper+';--surface:'+T.surface+';--ink:'+T.ink+';--line:'+T.line+';--line-g:'+T.lineG+';';
     v += '--m1:'+T.m1+';--m2:'+T.m2+';--m3:'+T.m3+';--m4:'+T.m4+';--m5:'+T.m5+';--m6:'+T.m6+';--m7:'+T.m7+';--m8:'+T.m8+';--m9:'+T.m9+';--mb:'+T.mb+';--mc:'+T.mc+';';
     v += '--g1:'+T.g1+';--g2:'+T.g2+';--g3:'+T.g3+';';
+    v += '--wm-dur:16s;';
     return v;
   }
 
