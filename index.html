@@ -533,21 +533,21 @@ button,input,select,textarea{border-radius:9px;}
 
     <!-- ================= TIER 2 + 3 : PILLARS + IMPACT PROFILE ================= -->
     <div>
-      <h2 style="font-family:var(--title);font-size:24px;font-weight:600;letter-spacing:-0.01em;margin:0 0 4px;">The Four Pillars</h2>
-      <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:14px;">average across all scans shown as a tick on each bar</div>
+      <h2 style="font-family:var(--title);font-size:24px;font-weight:600;letter-spacing:-0.01em;margin:0 0 10px;">The Four Pillars</h2>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="width:2px;height:12px;background:var(--ink);display:inline-block;flex:none;"></span>
+        <span style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;">Average across all scans</span>
+      </div>
 
-      <div style="margin-bottom:clamp(36px,5vw,56px);">
+      <div style="margin-bottom:clamp(36px,5vw,56px);border-top:1px solid var(--line);">
         <sc-for list="{{ selectedProvenance }}" as="p" hint-placeholder-count="4">
           <div class="pillar-row">
-            <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:20px 0;display:flex;flex-direction:column;gap:12px;">
-              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;">
-                <span style="font-family:var(--title);font-size:clamp(20px,2.4vw,30px);font-weight:600;letter-spacing:-0.01em;">{{ p.label }}</span>
-                <span style="font-family:var(--title);font-size:clamp(20px,2.4vw,30px);font-weight:600;white-space:nowrap;">{{ p.valText }} / {{ p.max }}</span>
-              </div>
-              <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;width:100%;">
-                <div style="height:100%;width:{{ p.pctStr }};background:var(--accent,#79c98a);border-radius:999px;"></div>
-                <div style="position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);left:{{ p.medPctStr }};"></div>
-              </div>
+            <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;">
+              <span style="font-family:var(--title);font-size:clamp(22px,2.6vw,32px);font-weight:500;letter-spacing:-0.01em;line-height:1.15;">{{ p.label }}</span>
+              <span style="display:flex;align-items:baseline;gap:10px;white-space:nowrap;flex:none;">
+                <span style="font-family:var(--title);font-size:clamp(28px,3.4vw,42px);font-weight:600;letter-spacing:-0.02em;">{{ p.valText }}<span style="font-size:0.5em;font-weight:500;color:var(--m2);">/{{ p.max }}</span></span>
+                <span style="font-size:18px;color:var(--m3);">{{ p.toggleIcon }}</span>
+              </span>
             </button>
             <sc-if value="{{ p.isOpen }}" hint-placeholder-val="{{ false }}">
               <div style="padding:0 0 22px;font-size:14px;line-height:1.55;animation:susfade .25s ease both;">
