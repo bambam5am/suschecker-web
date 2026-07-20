@@ -239,20 +239,20 @@ button,input,select,textarea{border-radius:9px;}
       </div>
       <div style="display:flex;gap:10px;height:clamp(220px,32vh,300px);width:100%;">
         <sc-for list="{{ dashTop }}" as="it" hint-placeholder-count="6">
-          <button class="top-card" onClick="{{ it.open }}" style="position:relative;overflow:hidden;border-radius:16px;background:var(--surface);flex-basis:0;flex-shrink:1;min-width:0;height:100%;padding:0;cursor:pointer;text-align:left;display:flex;">
-            <div style="width:60px;flex:none;background:{{ it.gradeColor }};display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 0;">
+          <button class="top-card" onClick="{{ it.open }}" style="position:relative;overflow:hidden;border-radius:16px;background:var(--surface);flex-basis:0;flex-shrink:1;min-width:0;height:100%;padding:0;cursor:pointer;text-align:left;">
+            <div style="position:absolute;top:0;left:0;bottom:0;width:60px;background:{{ it.gradeColor }};display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 0;">
               <span style="font-weight:800;font-size:24px;color:#fff;line-height:1;">{{ it.grade }}</span>
               <span style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;font-family:var(--font);">{{ it.brand }}</span>
             </div>
-            <div style="flex:1;min-width:0;padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;justify-content:space-between;">
-              <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--g1);white-space:nowrap;overflow:hidden;">{{ it.category }}</div>
+            <div style="position:absolute;left:60px;top:0;bottom:0;width:230px;box-sizing:border-box;padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;">
+              <div style="font-family:var(--title);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--g1);white-space:nowrap;overflow:hidden;">{{ it.category }}</div>
               <div>
-                <div style="font-family:var(--title);font-size:clamp(22px,2.4vw,32px);font-weight:600;line-height:1.05;letter-spacing:-0.02em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:14px;">{{ it.brand }}</div>
-                <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:18px;">
-                  <span style="font-family:var(--title);font-size:clamp(38px,4.5vw,58px);font-weight:600;line-height:0.9;letter-spacing:-0.025em;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
+                <div style="display:block;font-family:var(--title);font-size:26px;font-weight:600;letter-spacing:-0.02em;line-height:1.05;color:var(--ink);white-space:nowrap;">{{ it.brand }}</div>
+                <div style="display:flex;align-items:baseline;gap:6px;margin-top:10px;">
+                  <span style="font-family:var(--title);font-size:46px;font-weight:600;line-height:0.9;letter-spacing:-0.025em;padding-bottom:4px;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
                   <span style="font-family:var(--title);color:var(--m2);font-size:15px;">/100</span>
                 </div>
-                <div style="font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);white-space:nowrap;">View breakdown →</div>
+                <div style="margin-top:16px;font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);white-space:nowrap;">View breakdown →</div>
               </div>
             </div>
           </button>
@@ -269,20 +269,20 @@ button,input,select,textarea{border-radius:9px;}
       </div>
       <div style="display:flex;gap:10px;height:clamp(220px,32vh,300px);width:100%;">
         <sc-for list="{{ dashRecent }}" as="it" hint-placeholder-count="6">
-          <button class="top-card" onClick="{{ it.open }}" style="position:relative;overflow:hidden;border-radius:16px;background:var(--surface);flex-basis:0;flex-shrink:1;min-width:0;height:100%;padding:0;cursor:pointer;text-align:left;display:flex;">
-            <div style="width:60px;flex:none;background:{{ it.gradeColor }};display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 0;">
+          <button class="top-card" onClick="{{ it.open }}" style="position:relative;overflow:hidden;border-radius:16px;background:var(--surface);flex-basis:0;flex-shrink:1;min-width:0;height:100%;padding:0;cursor:pointer;text-align:left;">
+            <div style="position:absolute;top:0;left:0;bottom:0;width:60px;background:{{ it.gradeColor }};display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:16px 0;">
               <span style="font-weight:800;font-size:24px;color:#fff;line-height:1;">{{ it.grade }}</span>
               <span style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);white-space:nowrap;overflow:hidden;font-family:var(--font);">{{ it.brand }}</span>
             </div>
-            <div style="flex:1;min-width:0;padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;justify-content:space-between;">
-              <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--g1);white-space:nowrap;overflow:hidden;">{{ it.category }}</div>
+            <div style="position:absolute;left:60px;top:0;bottom:0;width:230px;box-sizing:border-box;padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;">
+              <div style="font-family:var(--title);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--g1);white-space:nowrap;overflow:hidden;">{{ it.category }}</div>
               <div>
-                <div style="font-family:var(--title);font-size:clamp(22px,2.4vw,32px);font-weight:600;line-height:1.05;letter-spacing:-0.02em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:14px;">{{ it.brand }}</div>
-                <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:18px;">
-                  <span style="font-family:var(--title);font-size:clamp(38px,4.5vw,58px);font-weight:600;line-height:0.9;letter-spacing:-0.025em;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
+                <div style="display:block;font-family:var(--title);font-size:26px;font-weight:600;letter-spacing:-0.02em;line-height:1.05;color:var(--ink);white-space:nowrap;">{{ it.brand }}</div>
+                <div style="display:flex;align-items:baseline;gap:6px;margin-top:10px;">
+                  <span style="font-family:var(--title);font-size:46px;font-weight:600;line-height:0.9;letter-spacing:-0.025em;padding-bottom:4px;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
                   <span style="font-family:var(--title);color:var(--m2);font-size:15px;">/100</span>
                 </div>
-                <div style="font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);white-space:nowrap;">View breakdown →</div>
+                <div style="margin-top:16px;font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);white-space:nowrap;">View breakdown →</div>
               </div>
             </div>
           </button>
