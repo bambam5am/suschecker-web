@@ -36,12 +36,16 @@ button,input,select,textarea{border:none;}
 button,input,select,textarea{border-radius:9px;}
 .top-card{flex-grow:1;transition:flex-grow .55s cubic-bezier(.4,0,.2,1);}
 .top-card:hover{flex-grow:3.6;}
+.result-sticky{position:sticky;top:20px;align-self:start;}
+.pillar-row{cursor:pointer;border-bottom:1px solid var(--line);}
+.pillar-row:last-child{border-bottom:none;}
 .ss-topbar{position:fixed;top:0;left:0;right:0;height:72px;display:flex;align-items:center;gap:24px;padding:0 clamp(20px,5vw,40px);background:var(--paper);z-index:60;}
 .ss-toplinks{display:flex;align-items:center;gap:22px;flex:1;justify-content:flex-end;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .ss-content{padding-top:72px;}
 .ss-navlink{background:none;border:none;border-radius:8px;padding:8px 4px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;text-align:left;white-space:nowrap;flex:none;}
 @media (max-width:760px){
   .result-grid{grid-template-columns:1fr !important;}
+  .result-sticky{position:static !important;}
   .hero-lists{grid-template-columns:1fr !important;gap:30px !important;}
   .top-card{display:none;}
   .top-card:first-child{display:block;flex-grow:1 !important;}
@@ -247,7 +251,7 @@ button,input,select,textarea{border-radius:9px;}
                 <span style="font-family:var(--title);font-size:46px;font-weight:600;line-height:0.9;letter-spacing:-0.025em;padding-bottom:4px;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
                 <span style="font-family:var(--title);color:var(--m2);font-size:15px;">/100</span>
               </div>
-              <div style="margin-top:16px;font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);">View breakdown →</div>
+              <div style="font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);white-space:nowrap;">View breakdown →</div>
             </div>
           </button>
         </sc-for>
@@ -275,7 +279,7 @@ button,input,select,textarea{border-radius:9px;}
                 <span style="font-family:var(--title);font-size:46px;font-weight:600;line-height:0.9;letter-spacing:-0.025em;padding-bottom:4px;color:{{ it.gradeColor }};">{{ it.scoreText }}</span>
                 <span style="font-family:var(--title);color:var(--m2);font-size:15px;">/100</span>
               </div>
-              <div style="margin-top:16px;font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);">View breakdown →</div>
+              <div style="font-family:var(--title);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink);white-space:nowrap;">View breakdown →</div>
             </div>
           </button>
         </sc-for>
@@ -467,61 +471,86 @@ button,input,select,textarea{border-radius:9px;}
   <div style="max-width:1240px;margin:0 auto;width:100%;padding:6px clamp(20px,5vw,64px) 90px;">
     <button onClick="{{ goBack }}" style="background:none;border:none;padding:0;margin:clamp(8px,2vh,18px) 0 24px;cursor:pointer;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m2);">← Back</button>
 
-  <div class="result-grid" style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,84px);max-width:1240px;animation:susfade .35s ease both;">
-    <div>
-      <sc-if value="{{ selected.hasImage }}" hint-placeholder-val="{{ false }}">
-        <div data-img-box="" style="width:clamp(160px,22vw,240px);background:var(--surface);aspect-ratio:1;overflow:hidden;margin-bottom:22px;border-radius:14px;">
-          <img ref="{{ setSelImg }}" alt="{{ selected.brand }}" style="width:100%;height:100%;object-fit:cover;display:block;">
-        </div>
-      </sc-if>
-      <div style="margin-bottom:18px;">
-        <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);margin-bottom:11px;">{{ selected.brand }} · {{ selected.category }}</div>
-        <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
-          <span style="font-family:var(--title);font-size:clamp(46px,6.2vw,90px);font-weight:500;line-height:0.88;letter-spacing:-0.025em;color:{{ selected.gradeColor }};">{{ selected.scoreText }}<span style="color:var(--m2);font-size:0.4em;font-weight:500;">/100</span></span>
-          <span style="font-family:var(--title);font-size:clamp(20px,2.3vw,30px);font-weight:500;letter-spacing:-0.01em;color:{{ selected.gradeColor }};">Grade {{ selected.grade }}</span>
-        </div>
-        <div style="height:20px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-top:18px;"><div style="height:100%;width:{{ selected.scoreWidth }};background:{{ selected.gradeColor }};border-radius:999px;"></div></div>
-      </div>
+  <div class="result-grid" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(32px,6vw,84px);max-width:1240px;align-items:start;animation:susfade .35s ease both;">
 
-      <div style="font-size:clamp(15px,1.5vw,18px);line-height:1.55;text-transform:uppercase;letter-spacing:0.02em;margin:24px 0 30px;">
-        <div><span style="color:var(--m1);">Brand:</span> <strong>{{ selected.brand }}</strong></div>
-        <div><span style="color:var(--m1);">Category:</span> <strong>{{ selected.category }}</strong></div>
-        <div><span style="color:var(--m1);">Country:</span> <strong>{{ selected.country }}</strong></div>
-        <div><span style="color:var(--m1);">Price:</span> <strong>{{ selected.priceStr }}</strong></div>
-        <div><span style="color:var(--m1);">Data confidence:</span> <strong>{{ selected.confidence }}</strong></div>
-      </div>
+    <!-- ================= TIER 1 : SCORECARD ================= -->
+    <div class="result-sticky">
+      <div style="background:var(--surface);border-radius:20px;padding:clamp(20px,3vw,30px);">
+        <sc-if value="{{ selected.hasImage }}" hint-placeholder-val="{{ false }}">
+          <div data-img-box="" style="width:100%;max-width:280px;background:var(--paper);aspect-ratio:1;overflow:hidden;margin-bottom:20px;border-radius:14px;">
+            <img ref="{{ setSelImg }}" alt="{{ selected.brand }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+        </sc-if>
 
-      <sc-if value="{{ selected.hasUnverified }}" hint-placeholder-val="{{ false }}">
-        <div style="font-weight:600;font-size:18px;margin:0 0 10px;">Could not verify</div>
-        <ul style="margin:0 0 30px;padding:0;list-style:none;font-size:16px;line-height:1.5;color:var(--m4);">
-          <sc-for list="{{ selected.unverified }}" as="u" hint-placeholder-count="1"><li style="display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;"><span style="color:#c0573a;font-weight:700;flex:none;line-height:1.5;">✗</span><span>{{ u }}</span></li></sc-for>
+        <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);margin-bottom:6px;">{{ selected.category }}</div>
+        <h1 style="font-family:var(--title);font-size:clamp(26px,3vw,34px);font-weight:600;letter-spacing:-0.02em;line-height:1.05;margin:0 0 18px;">{{ selected.brand }}</h1>
+
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">
+          <span style="font-family:var(--title);font-size:clamp(46px,6vw,72px);font-weight:500;line-height:0.88;letter-spacing:-0.025em;color:{{ selected.gradeColor }};">{{ selected.scoreText }}<span style="color:var(--m2);font-size:0.4em;font-weight:500;">/100</span></span>
+          <span style="font-family:var(--title);font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-0.01em;color:{{ selected.gradeColor }};">Grade {{ selected.grade }}</span>
+        </div>
+        <div style="height:16px;background:var(--track-strong,#a8d4b2);border-radius:999px;width:100%;margin-top:16px;"><div style="height:100%;width:{{ selected.scoreWidth }};background:{{ selected.gradeColor }};border-radius:999px;"></div></div>
+
+        <div style="font-size:14px;line-height:1.9;margin:22px 0;">
+          <div><span style="color:var(--m1);">Brand:</span> <strong>{{ selected.brand }}</strong></div>
+          <div><span style="color:var(--m1);">Category:</span> <strong>{{ selected.category }}</strong></div>
+          <div><span style="color:var(--m1);">Country:</span> <strong>{{ selected.country }}</strong></div>
+          <div><span style="color:var(--m1);">Price:</span> <strong>{{ selected.priceStr }}</strong></div>
+          <div><span style="color:var(--m1);">Data confidence:</span> <strong>{{ selected.confidence }}</strong></div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--g1);border-radius:999px;font-size:12px;font-weight:600;color:var(--g1);">✓ {{ selected.verifiedCount }} verified</span>
+          <sc-if value="{{ selected.hasUnverified }}" hint-placeholder-val="{{ false }}">
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid #c0573a;border-radius:999px;font-size:12px;font-weight:600;color:#c0573a;">✗ {{ selected.unverifiedCount }} unclear</span>
+          </sc-if>
+          <sc-if value="{{ selected.hasPenalties }}" hint-placeholder-val="{{ false }}">
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid #9a7b2e;border-radius:999px;font-size:12px;font-weight:600;color:#9a7b2e;">⚠ {{ selected.penaltiesCount }} penalties</span>
+          </sc-if>
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--m2);border-radius:999px;font-size:12px;font-weight:600;color:var(--m6);">Confidence: {{ selected.confidence }}</span>
+        </div>
+
+        <div style="font-weight:600;font-size:16px;margin:0 0 10px;">Verified</div>
+        <ul style="margin:0 0 24px;padding:0;list-style:none;font-size:15px;line-height:1.5;">
+          <sc-for list="{{ selected.verified }}" as="v" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;"><span style="color:var(--g1);font-weight:700;flex:none;line-height:1.5;">✓</span><span>{{ v }}</span></li></sc-for>
         </ul>
-      </sc-if>
 
-      <div style="font-weight:600;font-size:18px;margin:0 0 10px;">Analysis</div>
-      <sc-if value="{{ selectedAnalysisLoading }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;gap:10px;color:var(--m6);font-size:15px;background:var(--accent-soft);padding:18px 20px;margin-bottom:30px;border-radius:12px;"><span style="width:16px;height:16px;border:2px solid rgba(20,20,20,0.25);border-top-color:var(--ink);border-radius:50%;animation:susspin .8s linear infinite;display:inline-block;"></span> Generating analysis…</div>
-      </sc-if>
-      <sc-if value="{{ selectedAnalysisText }}" hint-placeholder-val="">
-        <div style="white-space:pre-wrap;font-size:16px;line-height:1.55;background:var(--accent-soft);color:var(--ink);padding:20px 22px;margin-bottom:30px;border-radius:12px;">{{ selectedAnalysisText }}</div>
-      </sc-if>
+        <sc-if value="{{ selected.hasUnverified }}" hint-placeholder-val="{{ false }}">
+          <div style="font-weight:600;font-size:16px;margin:0 0 10px;">Could not verify</div>
+          <ul style="margin:0 0 24px;padding:0;list-style:none;font-size:15px;line-height:1.5;color:var(--m4);">
+            <sc-for list="{{ selected.unverified }}" as="u" hint-placeholder-count="1"><li style="display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;"><span style="color:#c0573a;font-weight:700;flex:none;line-height:1.5;">✗</span><span>{{ u }}</span></li></sc-for>
+          </ul>
+        </sc-if>
 
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
-        <div style="font-weight:600;font-size:18px;">Score breakdown</div>
-        <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;">tap a row for the why</div>
+        <sc-if value="{{ selected.hasPenalties }}" hint-placeholder-val="{{ false }}">
+          <div style="font-weight:600;font-size:16px;margin:0 0 10px;">Penalties</div>
+          <ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.6;">
+            <sc-for list="{{ selected.penalties }}" as="pen" hint-placeholder-count="1"><li>{{ pen.label }} <strong>{{ pen.text }}</strong></li></sc-for>
+          </ul>
+        </sc-if>
       </div>
-      <div style="border-top:none;margin-bottom:30px;">
+    </div>
+
+    <!-- ================= TIER 2 + 3 : PILLARS + IMPACT PROFILE ================= -->
+    <div>
+      <h2 style="font-family:var(--title);font-size:24px;font-weight:600;letter-spacing:-0.01em;margin:0 0 4px;">The Four Pillars</h2>
+      <div style="font-size:12px;color:var(--m1);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:14px;">average across all scans shown as a tick on each bar</div>
+
+      <div style="margin-bottom:clamp(36px,5vw,56px);">
         <sc-for list="{{ selectedProvenance }}" as="p" hint-placeholder-count="4">
-          <div style="border-bottom:none;">
-            <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:14px 0;display:flex;flex-direction:column;gap:8px;">
-              <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:16px;gap:12px;">
-                <span style="display:flex;align-items:center;gap:9px;font-weight:600;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:transparent;font-size:13px;font-weight:800;line-height:1;flex:none;">{{ p.toggleIcon }}</span>{{ p.label }}</span>
-                <span style="font-weight:600;white-space:nowrap;">{{ p.valText }} / {{ p.max }}</span>
+          <div class="pillar-row">
+            <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:20px 0;display:flex;flex-direction:column;gap:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;">
+                <span style="font-family:var(--title);font-size:clamp(20px,2.4vw,30px);font-weight:600;letter-spacing:-0.01em;">{{ p.label }}</span>
+                <span style="font-family:var(--title);font-size:clamp(20px,2.4vw,30px);font-weight:600;white-space:nowrap;">{{ p.valText }} / {{ p.max }}</span>
               </div>
-              <div style="height:8px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ p.pctStr }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+              <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;width:100%;">
+                <div style="height:100%;width:{{ p.pctStr }};background:var(--accent,#79c98a);border-radius:999px;"></div>
+                <div style="position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);left:{{ p.medPctStr }};"></div>
+              </div>
             </button>
             <sc-if value="{{ p.isOpen }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:2px 0 18px;font-size:14px;line-height:1.55;animation:susfade .25s ease both;">
+              <div style="padding:0 0 22px;font-size:14px;line-height:1.55;animation:susfade .25s ease both;">
                 <div style="color:var(--m5);margin-bottom:12px;">{{ p.def }}</div>
                 <div style="text-transform:uppercase;letter-spacing:0.05em;font-size:11px;font-weight:600;color:var(--m1);margin-bottom:7px;">Source · {{ p.source }}</div>
                 <ul style="margin:0;padding-left:18px;">
@@ -533,21 +562,7 @@ button,input,select,textarea{border-radius:9px;}
         </sc-for>
       </div>
 
-      <div style="font-weight:600;font-size:18px;margin:0 0 10px;">Verified</div>
-      <ul style="margin:0;padding:0;list-style:none;font-size:16px;line-height:1.5;">
-        <sc-for list="{{ selected.verified }}" as="v" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;"><span style="color:var(--g1);font-weight:700;flex:none;line-height:1.5;">✓</span><span>{{ v }}</span></li></sc-for>
-      </ul>
-
-      <sc-if value="{{ selected.hasPenalties }}" hint-placeholder-val="{{ false }}">
-        <div style="font-weight:600;font-size:18px;margin:26px 0 10px;">Penalties</div>
-        <ul style="margin:0;padding-left:22px;font-size:16px;line-height:1.6;">
-          <sc-for list="{{ selected.penalties }}" as="pen" hint-placeholder-count="1"><li>{{ pen.label }} <strong>{{ pen.text }}</strong></li></sc-for>
-        </ul>
-      </sc-if>
-    </div>
-
-    <div>
-      <h2 style="font-family:var(--title);font-size:clamp(28px,3vw,40px);font-weight:500;letter-spacing:-0.01em;margin:0 0 4px;">Impact Profile</h2>
+      <h2 style="font-family:var(--title);font-size:24px;font-weight:600;letter-spacing:-0.01em;margin:0 0 4px;">Impact Profile</h2>
 
       <sc-if value="{{ selected.hasImpact }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:14px;color:var(--m4);line-height:1.45;margin-bottom:18px;">Where this product's modelled environmental cost ({{ selected.ecsText }}) comes from, and how it stacks up against a typical {{ selected.category }} (EF 3.1, normalised &amp; weighted).</div>
@@ -930,9 +945,7 @@ class Component extends DCLogic {
   }
   onHashChange(){
     const r = this.parseHash();
-    this.setState(st => (st.view===r.view && st.selectedId===r.selectedId) ? null : { view:r.view, selectedId:r.selectedId, menuOpen:false }, () => {
-      if(r.view==='result' && r.selectedId){ const it = this.state.items.find(i=>i.key===r.selectedId); if(it) this.ensureAnalysis(it); }
-    });
+    this.setState(st => (st.view===r.view && st.selectedId===r.selectedId) ? null : { view:r.view, selectedId:r.selectedId, menuOpen:false });
   }
   navHash(view, key){
     let h = '';
@@ -993,9 +1006,7 @@ class Component extends DCLogic {
   async load(){
     try{
       const items = await this.fetchItems();
-      this.setState({ items, loading:false }, () => {
-        if(this.state.view==='result' && this.state.selectedId){ const it = items.find(i=>i.key===this.state.selectedId); if(it) this.ensureAnalysis(it); }
-      });
+      this.setState({ items, loading:false });
     }catch(e){ this.setState({ error:String(e), loading:false }); }
   }
 
@@ -1017,7 +1028,6 @@ class Component extends DCLogic {
       if(found){
         this.stopPoll(id);
         this.updatePending(id, { status:'done', key:found.key, pollN:n });
-        this.ensureAnalysis(found);
       } else if(n >= 40){
         this.stopPoll(id);
         this.updatePending(id, { status:'timeout', pollN:n });
@@ -1155,8 +1165,8 @@ class Component extends DCLogic {
       score, scoreText:this.r1(score), scoreWidth: Math.max(0,Math.min(100,score)).toFixed(1)+'%',
       grade, gradeColor:this.gradeColor(grade),
       materials, materialsStr, certList, certStr: certList.length?certList.join(', '):'None listed', hasCerts:certList.length>0,
-      verified, unverified, hasUnverified:unverified.length>0,
-      pillars, penalties, hasPenalties:penalties.length>0,
+      verified, unverified, hasUnverified:unverified.length>0, verifiedCount:verified.length, unverifiedCount:unverified.length,
+      pillars, penalties, hasPenalties:penalties.length>0, penaltiesCount:penalties.length,
       radarPoints, radarDots, rowIdx:idx,
       themes, themeShareByKey, hasImpact, ecsTotal, ecsText: ecsTotal>0 ? Math.round(ecsTotal).toLocaleString()+' mPt' : '—',
       envEstimated, parseConf, provenance, confNote, hasConfNote: !!confNote,
@@ -1259,7 +1269,6 @@ class Component extends DCLogic {
   openResult(it){
     this.setState(st => ({ view:'result', selectedId:it.key, menuOpen:false, openWhy:{}, lastView: st.view==='result'?st.lastView:st.view }));
     this.navHash('result', it.key);
-    this.ensureAnalysis(it);
   }
 
   ensureAnalysis(it){
@@ -1316,7 +1325,6 @@ class Component extends DCLogic {
       const found = items.find(i => i.url === p.url && i.scanId !== baseline);
       if(found){
         this.updatePending(id, { status:'done', key:found.key });
-        this.ensureAnalysis(found);
       } else {
         this.startPoll(id, p.url);
       }
@@ -1335,8 +1343,9 @@ class Component extends DCLogic {
     const fontStack = "'ABC Diatype', '"+font+"', 'Archivo', system-ui, -apple-system, sans-serif";
     const soft = 'color-mix(in srgb, '+accent+' 30%, #ffffff)';
     const track = '#DBEEDD';
+    const trackStrong = '#A8D4B2';
     const T = { paper:'#ffffff', surface:'#f3f3f0', ink:'#141414', line:'#e2e2dc', lineG:'#cfe6d5', m1:'#999999', m2:'#888888', m3:'#777777', m4:'#666666', m5:'#555555', m6:'#444444', m7:'#333333', m8:'#222222', m9:'#aaaaaa', mb:'#bbbbbb', mc:'#9a9a96', g1:'#3a8f4e', g2:'#1f3a26', g3:'#3a6b44' };
-    let v = '--font:'+fontStack+';--title:'+fontStack+';--accent:'+accent+';--accent-soft:'+soft+';--track:'+track+';';
+    let v = '--font:'+fontStack+';--title:'+fontStack+';--accent:'+accent+';--accent-soft:'+soft+';--track:'+track+';--track-strong:'+trackStrong+';';
     v += '--paper:'+T.paper+';--surface:'+T.surface+';--ink:'+T.ink+';--line:'+T.line+';--line-g:'+T.lineG+';';
     v += '--m1:'+T.m1+';--m2:'+T.m2+';--m3:'+T.m3+';--m4:'+T.m4+';--m5:'+T.m5+';--m6:'+T.m6+';--m7:'+T.m7+';--m8:'+T.m8+';--m9:'+T.m9+';--mb:'+T.mb+';--mc:'+T.mc+';';
     v += '--g1:'+T.g1+';--g2:'+T.g2+';--g3:'+T.g3+';';
@@ -1401,10 +1410,12 @@ class Component extends DCLogic {
     const selected = selectedBase ? dec(selectedBase) : null;
     let selectedProvenance = [];
     if(selected){
+      const pillarMedPct = [0,1,2,3].map(i => this.median(base.map(b => b.pillars[i].pct)));
       selectedProvenance = selected.provenance.map((p,i) => Object.assign({}, p, {
         isOpen: !!s.openWhy[i],
         toggleIcon: s.openWhy[i] ? '−' : '+',
         onToggle: () => this.setState(st => ({ openWhy: Object.assign({}, st.openWhy, { [i]: !st.openWhy[i] }) })),
+        medPctStr: Math.max(0,Math.min(100,pillarMedPct[i])).toFixed(1)+'%',
       }));
     }
     const selectedNoImpact = !!(selected && !selected.hasImpact);
@@ -1556,8 +1567,6 @@ class Component extends DCLogic {
       selected,
       setSelImg: (el) => { if(el){ if(selected && selected.hasImage){ el.src = selected.image; } else { el.removeAttribute('src'); } } },
       selectedFp,
-      selectedAnalysisText: selected ? (s.analysis[selected.key] || '') : '',
-      selectedAnalysisLoading: s.analysisLoading,
       selectedProvenance, selectedNoImpact,
     };
   }
