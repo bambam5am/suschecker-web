@@ -479,7 +479,7 @@ button,input,select,textarea{border-radius:9px;}
 
     <!-- ================= TIER 1 : SCORECARD ================= -->
     <div class="result-sticky">
-      <div style="background:var(--surface);border-radius:20px;padding:clamp(20px,3vw,30px);">
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:clamp(20px,3vw,30px);">
         <sc-if value="{{ selected.hasImage }}" hint-placeholder-val="{{ false }}">
           <div data-img-box="" style="width:100%;max-width:280px;background:var(--paper);aspect-ratio:1;overflow:hidden;margin-bottom:20px;border-radius:14px;">
             <img ref="{{ setSelImg }}" alt="{{ selected.brand }}" style="width:100%;height:100%;object-fit:cover;display:block;">
@@ -493,7 +493,7 @@ button,input,select,textarea{border-radius:9px;}
           <span style="font-family:var(--title);font-size:clamp(46px,6vw,72px);font-weight:500;line-height:0.88;letter-spacing:-0.025em;color:{{ selected.gradeColor }};">{{ selected.scoreText }}<span style="color:var(--m2);font-size:0.4em;font-weight:500;">/100</span></span>
           <span style="font-family:var(--title);font-size:clamp(18px,2vw,24px);font-weight:500;letter-spacing:-0.01em;color:{{ selected.gradeColor }};">Grade {{ selected.grade }}</span>
         </div>
-        <div style="height:16px;background:var(--track-strong,#a8d4b2);border-radius:999px;width:100%;margin-top:16px;"><div style="height:100%;width:{{ selected.scoreWidth }};background:{{ selected.gradeColor }};border-radius:999px;"></div></div>
+        <div style="height:16px;background:{{ selected.gradeTrack }};border-radius:999px;width:100%;margin-top:16px;"><div style="height:100%;width:{{ selected.scoreWidth }};background:{{ selected.gradeColor }};border-radius:999px;"></div></div>
 
         <div style="font-size:14px;line-height:1.9;margin:22px 0;">
           <div><span style="color:var(--m1);">Brand:</span> <strong>{{ selected.brand }}</strong></div>
@@ -1180,7 +1180,7 @@ class Component extends DCLogic {
       key:u, url:u, scanId:(v(map.scanId)!=null?String(v(map.scanId)):null), brand, category:(v(map.category)||'').toString(), country, price, currency, priceStr, confidence,
       image, hasImage,
       score, scoreText:this.r1(score), scoreWidth: Math.max(0,Math.min(100,score)).toFixed(1)+'%',
-      grade, gradeColor:this.gradeColor(grade),
+      grade, gradeColor:this.gradeColor(grade), gradeTrack:'color-mix(in srgb, '+this.gradeColor(grade)+' 30%, #ffffff)',
       materials, materialsStr, certList, certStr: certList.length?certList.join(', '):'None listed', hasCerts:certList.length>0,
       verified, unverified, hasUnverified:unverified.length>0, verifiedCount:verified.length, unverifiedCount:unverified.length,
       pillars, penalties, hasPenalties:penalties.length>0, penaltiesCount:penalties.length,
@@ -1360,9 +1360,8 @@ class Component extends DCLogic {
     const fontStack = "'ABC Diatype', '"+font+"', 'Archivo', system-ui, -apple-system, sans-serif";
     const soft = 'color-mix(in srgb, '+accent+' 30%, #ffffff)';
     const track = '#DBEEDD';
-    const trackStrong = '#A8D4B2';
     const T = { paper:'#ffffff', surface:'#f3f3f0', ink:'#141414', line:'#e2e2dc', lineG:'#cfe6d5', m1:'#999999', m2:'#888888', m3:'#777777', m4:'#666666', m5:'#555555', m6:'#444444', m7:'#333333', m8:'#222222', m9:'#aaaaaa', mb:'#bbbbbb', mc:'#9a9a96', g1:'#3a8f4e', g2:'#1f3a26', g3:'#3a6b44' };
-    let v = '--font:'+fontStack+';--title:'+fontStack+';--accent:'+accent+';--accent-soft:'+soft+';--track:'+track+';--track-strong:'+trackStrong+';';
+    let v = '--font:'+fontStack+';--title:'+fontStack+';--accent:'+accent+';--accent-soft:'+soft+';--track:'+track+';';
     v += '--paper:'+T.paper+';--surface:'+T.surface+';--ink:'+T.ink+';--line:'+T.line+';--line-g:'+T.lineG+';';
     v += '--m1:'+T.m1+';--m2:'+T.m2+';--m3:'+T.m3+';--m4:'+T.m4+';--m5:'+T.m5+';--m6:'+T.m6+';--m7:'+T.m7+';--m8:'+T.m8+';--m9:'+T.m9+';--mb:'+T.mb+';--mc:'+T.mc+';';
     v += '--g1:'+T.g1+';--g2:'+T.g2+';--g3:'+T.g3+';';
