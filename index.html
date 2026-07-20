@@ -534,21 +534,19 @@ button,input,select,textarea{border-radius:9px;}
       <div style="margin-bottom:clamp(36px,5vw,56px);border-top:1px solid var(--line);">
         <sc-for list="{{ selectedProvenance }}" as="p" hint-placeholder-count="4">
           <div class="pillar-row">
-            <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:22px 0;display:flex;flex-direction:column;gap:14px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
-                <span style="font-family:var(--title);font-size:clamp(22px,2.6vw,32px);font-weight:500;letter-spacing:-0.01em;line-height:1.15;">{{ p.label }}</span>
-                <span style="display:flex;align-items:baseline;gap:10px;white-space:nowrap;flex:none;">
-                  <span style="font-family:var(--title);font-size:clamp(28px,3.4vw,42px);font-weight:600;letter-spacing:-0.02em;">{{ p.valText }}<span style="font-size:0.5em;font-weight:500;color:var(--m2);">/{{ p.max }}</span></span>
-                  <span style="font-size:18px;color:var(--m3);">{{ p.toggleIcon }}</span>
-                </span>
-              </div>
-              <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;width:100%;">
-                <div style="height:100%;width:{{ p.pctStr }};background:var(--accent,#79c98a);border-radius:999px;"></div>
-                <div style="position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);left:{{ p.medPctStr }};"></div>
-              </div>
+            <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;">
+              <span style="font-family:var(--title);font-size:clamp(22px,2.6vw,32px);font-weight:500;letter-spacing:-0.01em;line-height:1.15;">{{ p.label }}</span>
+              <span style="display:flex;align-items:baseline;gap:10px;white-space:nowrap;flex:none;">
+                <span style="font-family:var(--title);font-size:clamp(28px,3.4vw,42px);font-weight:600;letter-spacing:-0.02em;">{{ p.valText }}<span style="font-size:0.5em;font-weight:500;color:var(--m2);">/{{ p.max }}</span></span>
+                <span style="font-size:18px;color:var(--m3);">{{ p.toggleIcon }}</span>
+              </span>
             </button>
             <sc-if value="{{ p.isOpen }}" hint-placeholder-val="{{ false }}">
               <div style="padding:0 0 22px;font-size:14px;line-height:1.55;animation:susfade .25s ease both;">
+                <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-bottom:16px;">
+                  <div style="height:100%;width:{{ p.pctStr }};background:var(--accent,#79c98a);border-radius:999px;"></div>
+                  <div style="position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);left:{{ p.medPctStr }};"></div>
+                </div>
                 <div style="color:var(--m5);margin-bottom:12px;">{{ p.def }}</div>
                 <div style="text-transform:uppercase;letter-spacing:0.05em;font-size:11px;font-weight:600;color:var(--m1);margin-bottom:7px;">Source · {{ p.source }}</div>
                 <ul style="margin:0;padding-left:18px;">
