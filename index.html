@@ -549,14 +549,14 @@ button,input,select,textarea{border-radius:9px;}
             <button onClick="{{ p.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;">
               <span style="font-family:var(--title);font-size:clamp(22px,2.6vw,32px);font-weight:500;letter-spacing:-0.01em;line-height:1.15;">{{ p.label }}</span>
               <span style="display:flex;align-items:baseline;gap:10px;white-space:nowrap;flex:none;">
-                <span style="font-family:var(--title);font-size:clamp(28px,3.4vw,42px);font-weight:600;letter-spacing:-0.02em;">{{ p.valText }}<span style="font-size:0.5em;font-weight:500;color:var(--m2);">/{{ p.max }}</span></span>
+                <span style="font-family:var(--title);font-size:clamp(28px,3.4vw,42px);font-weight:600;letter-spacing:-0.02em;color:{{ p.gradeColor }};">{{ p.valText }}<span style="font-size:0.5em;font-weight:500;color:var(--m2);">/{{ p.max }}</span></span>
                 <span style="font-size:18px;color:var(--m3);">{{ p.toggleIcon }}</span>
               </span>
             </button>
             <sc-if value="{{ p.isOpen }}" hint-placeholder-val="{{ false }}">
               <div style="padding:0 0 22px;font-size:14px;line-height:1.55;animation:susfade .25s ease both;">
-                <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-bottom:16px;">
-                  <div style="height:100%;width:{{ p.pctStr }};background:var(--accent,#79c98a);border-radius:999px;"></div>
+                <div style="position:relative;height:14px;background:{{ p.gradeTrack }};border-radius:999px;width:100%;margin-bottom:16px;">
+                  <div style="height:100%;width:{{ p.pctStr }};background:{{ p.gradeColor }};border-radius:999px;"></div>
                   <div style="position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);left:{{ p.medPctStr }};"></div>
                 </div>
                 <div style="color:var(--m5);margin-bottom:12px;">{{ p.def }}</div>
@@ -582,15 +582,15 @@ button,input,select,textarea{border-radius:9px;}
         <!-- ---- benchmark strip : footprint vs typical ---- -->
         <sc-if value="{{ selectedFp.hasBench }}" hint-placeholder-val="{{ false }}">
           <div style="background:transparent;padding:16px 18px;margin-bottom:26px;">
-            <div style="font-weight:700;font-size:clamp(26px,3vw,34px);line-height:1.1;color:{{ selectedFp.ecsDeltaColor }};margin-bottom:6px;">{{ selectedFp.ecsDeltaText }}</div>
+            <div style="font-weight:700;font-size:clamp(26px,3vw,34px);line-height:1.1;color:{{ selected.gradeColor }};margin-bottom:6px;">{{ selectedFp.ecsDeltaText }}</div>
             <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;margin-bottom:18px;">Total footprint vs {{ selectedFp.cohortLabel }}</div>
-            <div style="position:relative;height:14px;background:var(--track,#d8efdc);border-radius:999px;margin:0 0 10px;">
+            <div style="position:relative;height:14px;background:{{ selected.gradeTrack }};border-radius:999px;margin:0 0 10px;">
               <div style="position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--ink);left:{{ selectedFp.ecsMedLeft }};"></div>
-              <div style="position:absolute;top:50%;left:{{ selectedFp.ecsDotLeft }};width:20px;height:20px;background:var(--ink);border-radius:50%;transform:translate(-50%,-50%);"></div>
+              <div style="position:absolute;top:50%;left:{{ selectedFp.ecsDotLeft }};width:20px;height:20px;background:{{ selected.gradeColor }};border-radius:50%;transform:translate(-50%,-50%);"></div>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--m1);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:12px;"><span style="white-space:nowrap;">{{ selectedFp.ecsLoText }}</span><span style="white-space:nowrap;">{{ selectedFp.ecsHiText }}</span></div>
             <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--m5);align-items:center;">
-              <span style="display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;background:var(--ink);border-radius:50%;flex:none;"></span> this product · <strong>{{ selected.ecsText }}</strong></span>
+              <span style="display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;background:{{ selected.gradeColor }};border-radius:50%;flex:none;"></span> this product · <strong>{{ selected.ecsText }}</strong></span>
               <span style="display:flex;align-items:center;gap:6px;"><span style="width:3px;height:15px;background:var(--ink);flex:none;"></span> typical · <strong>{{ selectedFp.ecsMedText }}</strong></span>
               <span style="color:var(--m1);">{{ selectedFp.cohortN }} comparable scans</span>
             </div>
@@ -611,8 +611,8 @@ button,input,select,textarea{border-radius:9px;}
               </button>
               <sc-if value="{{ t.isOpen }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:0 0 20px;animation:susfade .25s ease both;">
-                  <div style="position:relative;height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;margin-bottom:6px;">
-                    <div style="height:100%;width:{{ t.barWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div>
+                  <div style="position:relative;height:11px;background:{{ t.gradeTrack }};border-radius:999px;width:100%;margin-bottom:6px;">
+                    <div style="height:100%;width:{{ t.barWidth }};background:{{ t.gradeColor }};border-radius:999px;"></div>
                     <sc-if value="{{ t.showStrip }}" hint-placeholder-val="{{ false }}">
                       <div style="position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);left:{{ t.medLeft }};"></div>
                     </sc-if>
@@ -623,7 +623,7 @@ button,input,select,textarea{border-radius:9px;}
                   <sc-for list="{{ t.cats }}" as="c" hint-placeholder-count="3">
                     <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;">
                       <span style="flex:1;min-width:0;font-size:13px;color:var(--m6);word-break:break-word;">{{ c.name }}</span>
-                      <div style="flex:0 0 96px;height:6px;background:var(--track,#d8efdc);border-radius:999px;"><div style="height:100%;width:{{ c.width }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+                      <div style="flex:0 0 96px;height:6px;background:{{ c.gradeTrack }};border-radius:999px;"><div style="height:100%;width:{{ c.width }};background:{{ c.gradeColor }};border-radius:999px;"></div></div>
                       <span style="flex:0 0 42px;text-align:right;font-size:12px;font-weight:700;">{{ c.shareLabel }}</span>
                     </div>
                   </sc-for>
@@ -995,6 +995,7 @@ class Component extends DCLogic {
     return { ok:true, dotLeft:pos(val).toFixed(1)+'%', medLeft:pos(med).toFixed(1)+'%', med, lo, hi, n:a.length };
   }
   gradeColor(g){ return ({A:'#5FBE71',B:'#8FCE5C',C:'#E6C84B',D:'#E59A45',E:'#E2713F',F:'#DB4F39'})[(g||'').toUpperCase()] || '#9aa0a6'; }
+  gradeFromPct(pct){ return pct>=85?'A':pct>=70?'B':pct>=55?'C':pct>=40?'D':pct>=25?'E':'F'; }
 
   async fetchItems(){
     const sheetId = this.props.sheetId || '1q4MqSkfLaoljDVZ9NtLo9Ry4B2EeeetPULkxh7rhUPk';
@@ -1085,7 +1086,8 @@ class Component extends DCLogic {
     const pillars = pillarDefs.map(([label,key,max]) => {
       const val = this.num(breakdown[key]);
       const pct = Math.max(0, Math.min(100, val/max*100));
-      return { label, max, val, valText:this.r1(val), pct, pctStr: pct.toFixed(1)+'%' };
+      const pillarGradeColor = this.gradeColor(this.gradeFromPct(pct));
+      return { label, max, val, valText:this.r1(val), pct, pctStr: pct.toFixed(1)+'%', gradeColor:pillarGradeColor, gradeTrack:'color-mix(in srgb, '+pillarGradeColor+' 30%, #ffffff)' };
     });
 
     const penDefs = [
@@ -1178,10 +1180,10 @@ class Component extends DCLogic {
     envReasons.push(...penaltyReasonsFor('Environmental Cost'));
 
     const provenance = [
-      { label:'Material Footprint', valText:pillars[0].valText, max:30, pctStr:pillars[0].pctStr, source:'Material composition → MAT_SCORES', def:'The impact of the fibres themselves — how the raw materials are grown or produced.', reasons:matReasons },
-      { label:'Product Circularity', valText:pillars[1].valText, max:20, pctStr:pillars[1].pctStr, source:'Circularity signals on the product page', def:'Whether the product is built to last and stay out of landfill — repair, resale, take-back, guarantees.', reasons:circReasons },
-      { label:'Supply Chain & Labour', valText:pillars[2].valText, max:20, pctStr:pillars[2].pctStr, source:'Brand profile + product certifications', def:'Labour conditions and transparency across the supply chain — audits, named factories, credible certifications.', reasons:laborReasons },
-      { label:'Environmental Cost', valText:pillars[3].valText, max:15, pctStr:pillars[3].pctStr, source: envEstimated ? 'Ecobalyse LCA (estimated)' : 'Ecobalyse LCA', def:'Modelled cradle-to-gate environmental cost from a full 16-category life-cycle assessment.', reasons:envReasons },
+      { label:'Material Footprint', valText:pillars[0].valText, max:30, pctStr:pillars[0].pctStr, gradeColor:pillars[0].gradeColor, gradeTrack:pillars[0].gradeTrack, source:'Material composition → MAT_SCORES', def:'The impact of the fibres themselves — how the raw materials are grown or produced.', reasons:matReasons },
+      { label:'Product Circularity', valText:pillars[1].valText, max:20, pctStr:pillars[1].pctStr, gradeColor:pillars[1].gradeColor, gradeTrack:pillars[1].gradeTrack, source:'Circularity signals on the product page', def:'Whether the product is built to last and stay out of landfill — repair, resale, take-back, guarantees.', reasons:circReasons },
+      { label:'Supply Chain & Labour', valText:pillars[2].valText, max:20, pctStr:pillars[2].pctStr, gradeColor:pillars[2].gradeColor, gradeTrack:pillars[2].gradeTrack, source:'Brand profile + product certifications', def:'Labour conditions and transparency across the supply chain — audits, named factories, credible certifications.', reasons:laborReasons },
+      { label:'Environmental Cost', valText:pillars[3].valText, max:15, pctStr:pillars[3].pctStr, gradeColor:pillars[3].gradeColor, gradeTrack:pillars[3].gradeTrack, source: envEstimated ? 'Ecobalyse LCA (estimated)' : 'Ecobalyse LCA', def:'Modelled cradle-to-gate environmental cost from a full 16-category life-cycle assessment.', reasons:envReasons },
     ];
     const confNote = envEstimated
       ? 'Environmental cost estimated from material defaults — treat the breakdown as indicative.'
@@ -1460,11 +1462,11 @@ class Component extends DCLogic {
       const hasBench = eb.ok;
       const dPct = eb.med > 0 ? (selected.ecsTotal - eb.med) / eb.med * 100 : 0;
       const ad = Math.abs(dPct);
-      let ecsDeltaText = '', ecsDeltaColor = '#888';
+      let ecsDeltaText = '';
       if(hasBench){
-        if(ad < 3){ ecsDeltaText = 'about typical'; ecsDeltaColor = '#888'; }
-        else if(dPct < 0){ ecsDeltaText = ad.toFixed(0)+'% lower'; ecsDeltaColor = '#3a8f4e'; }
-        else { ecsDeltaText = ad.toFixed(0)+'% higher'; ecsDeltaColor = '#c0573a'; }
+        if(ad < 3){ ecsDeltaText = 'about typical'; }
+        else if(dPct < 0){ ecsDeltaText = ad.toFixed(0)+'% lower'; }
+        else { ecsDeltaText = ad.toFixed(0)+'% higher'; }
       }
       const fmtN = x => Math.round(x).toLocaleString();
 
@@ -1472,6 +1474,8 @@ class Component extends DCLogic {
       selected.themes.forEach(t => t.cats.forEach(c => { if(c.share > maxCat) maxCat = c.share; }));
       if(maxCat <= 0) maxCat = 1;
 
+      const envGradeColor = selected.pillars[3].gradeColor;
+      const envGradeTrack = selected.pillars[3].gradeTrack;
       const themes = selected.themes.map(t => {
         const arr = cohort.map(i => (i.themeShareByKey[t.key] || 0));
         const med = this.median(arr);
@@ -1482,7 +1486,8 @@ class Component extends DCLogic {
           medLeft: Math.max(0, Math.min(100, med)).toFixed(1)+'%',
           showStrip: hasBench,
           benchText: 'typical ' + this.fmtPct(med),
-          cats: t.cats.map(c => ({ name:c.name, shareLabel:this.fmtPct(c.share), width: Math.max(2, c.share/maxCat*100).toFixed(1)+'%' })),
+          gradeColor: envGradeColor, gradeTrack: envGradeTrack,
+          cats: t.cats.map(c => ({ name:c.name, shareLabel:this.fmtPct(c.share), width: Math.max(2, c.share/maxCat*100).toFixed(1)+'%', gradeColor:envGradeColor, gradeTrack:envGradeTrack })),
           isOpen: !!s.openTheme[t.key],
           toggleIcon: s.openTheme[t.key] ? '−' : '+',
           onToggle: () => this.setState(st => ({ openTheme: Object.assign({}, st.openTheme, { [t.key]: !st.openTheme[t.key] }) })),
@@ -1493,7 +1498,7 @@ class Component extends DCLogic {
         hasBench, cohortLabel, cohortN: cohort.length,
         ecsDotLeft: eb.dotLeft, ecsMedLeft: eb.medLeft,
         ecsLoText: fmtN(eb.lo)+' mPt', ecsHiText: fmtN(eb.hi)+' mPt', ecsMedText: fmtN(eb.med)+' mPt',
-        ecsDeltaText, ecsDeltaColor,
+        ecsDeltaText,
         themes,
       };
     }
