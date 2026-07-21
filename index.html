@@ -1088,9 +1088,18 @@ class Component extends DCLogic {
       return { label, max, val, valText:this.r1(val), pct, pctStr: pct.toFixed(1)+'%' };
     });
 
-    const penDefs = [['fastFashionPenalty','Fast fashion penalty'],['blendPenalty','Blend penalty'],['syntheticPenalty','Synthetic penalty']];
-    const penalties = penDefs.map(([k,label]) => ({ label, val:this.num(breakdown[k]) }))
-      .filter(p => p.val > 0).map(p => ({ label:p.label, text:'−'+this.r1(p.val)+' pt' }));
+    const penDefs = [
+      ['fastFashionPenalty','Fast fashion penalty','Product Circularity','fast fashion business model'],
+      ['blendPenalty','Blend penalty','Material Footprint','blended material lowers recyclability'],
+      ['syntheticPenalty','Synthetic penalty','Material Footprint','high synthetic content'],
+    ];
+    const activePenalties = penDefs
+      .map(([key,label,pillar,phrase]) => ({ key, label, pillar, phrase, val:Math.abs(this.num(breakdown[key])) }))
+      .filter(p => p.val > 0);
+    const penalties = activePenalties.map(p => ({ label:p.label, text:'−'+this.r1(p.val)+' pt' }));
+    const penaltyReasonsFor = pillarLabel => activePenalties
+      .filter(p => p.pillar === pillarLabel)
+      .map(p => 'Penalty: ' + p.phrase + ' (−' + this.r1(p.val) + ' pts)');
 
     let priceStr = '—';
     if(price != null && price !== ''){ const isAlpha = /[A-Za-z]/.test(currency); priceStr = isAlpha ? (currency+' '+price) : ((currency||'')+price); }
@@ -1146,8 +1155,7 @@ class Component extends DCLogic {
     const tick = (b,label)=> (b ? '✓ ' : '✗ ') + label;
     const matReasons = [];
     matEntries.forEach(([k,val]) => matReasons.push('Composition: ' + this.r1(val) + '% ' + k));
-    if(this.num(breakdown.blendPenalty) > 0) matReasons.push('Fibre blend lowers recyclability (−' + this.r1(breakdown.blendPenalty) + ')');
-    if(this.num(breakdown.syntheticPenalty) > 0) matReasons.push('Synthetic content penalty (−' + this.r1(breakdown.syntheticPenalty) + ')');
+    matReasons.push(...penaltyReasonsFor('Material Footprint'));
     const circReasons = [
       tick(circ.hasTakeBack, 'Take-back / recycling scheme'),
       tick(circ.hasRepairService, 'Repair service'),
@@ -1155,16 +1163,19 @@ class Component extends DCLogic {
       tick(circ.hasLifetimeGuarantee, 'Lifetime guarantee'),
     ];
     if(this.num(breakdown.circularityBoost) > 0) circReasons.push('+' + this.r1(breakdown.circularityBoost) + ' circularity boost applied');
+    circReasons.push(...penaltyReasonsFor('Product Circularity'));
     const laborReasons = [];
     laborReasons.push(certList.length ? ('Certifications: ' + certList.join(', ')) : 'No third-party certifications found');
     laborReasons.push(tick(sct.factoryNameMentioned, 'Factory named'));
     laborReasons.push(tick(sct.auditReportMentioned, 'Audit report referenced'));
     laborReasons.push(tick(sct.supplierListMentioned, 'Supplier list published'));
     if(this.num(breakdown.supplyChainBoost) > 0) laborReasons.push('+' + this.r1(breakdown.supplyChainBoost) + ' transparency boost applied');
+    laborReasons.push(...penaltyReasonsFor('Supply Chain & Labour'));
     const envReasons = [];
     if(ecsTotal > 0) envReasons.push('Ecobalyse environmental cost: ' + Math.round(ecsTotal).toLocaleString() + ' mPt');
     envReasons.push(envEstimated ? 'Estimated from material / category defaults (no exact match)' : 'Modelled from product material, category & country');
     if(impactTop) envReasons.push('Largest single impact: ' + impactTop.name);
+    envReasons.push(...penaltyReasonsFor('Environmental Cost'));
 
     const provenance = [
       { label:'Material Footprint', valText:pillars[0].valText, max:30, pctStr:pillars[0].pctStr, source:'Material composition → MAT_SCORES', def:'The impact of the fibres themselves — how the raw materials are grown or produced.', reasons:matReasons },
