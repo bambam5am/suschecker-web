@@ -479,7 +479,7 @@ button,input,select,textarea{border-radius:9px;}
 
     <!-- ================= TIER 1 : SCORECARD ================= -->
     <div class="result-sticky">
-      <div style="background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:clamp(20px,3vw,30px);">
+      <div style="background:{{ selected.gradeCardBg }};border:1px solid var(--line);border-radius:20px;padding:clamp(20px,3vw,30px);">
         <sc-if value="{{ selected.hasImage }}" hint-placeholder-val="{{ false }}">
           <div data-img-box="" style="width:100%;max-width:280px;background:var(--paper);aspect-ratio:1;overflow:hidden;margin-bottom:20px;border-radius:14px;">
             <img ref="{{ setSelImg }}" alt="{{ selected.brand }}" style="width:100%;height:100%;object-fit:cover;display:block;">
@@ -504,14 +504,14 @@ button,input,select,textarea{border-radius:9px;}
         </div>
 
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
-          <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--g1);border-radius:999px;font-size:12px;font-weight:600;color:var(--g1);">✓ {{ selected.verifiedCount }} verified</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--g1);border-radius:999px;font-size:12px;font-weight:600;color:var(--g1);background:#fff;">✓ {{ selected.verifiedCount }} verified</span>
           <sc-if value="{{ selected.hasUnverified }}" hint-placeholder-val="{{ false }}">
-            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid #c0573a;border-radius:999px;font-size:12px;font-weight:600;color:#c0573a;">✗ {{ selected.unverifiedCount }} unclear</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid #c0573a;border-radius:999px;font-size:12px;font-weight:600;color:#c0573a;background:#fff;">✗ {{ selected.unverifiedCount }} unclear</span>
           </sc-if>
           <sc-if value="{{ selected.hasPenalties }}" hint-placeholder-val="{{ false }}">
-            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid #9a7b2e;border-radius:999px;font-size:12px;font-weight:600;color:#9a7b2e;">⚠ {{ selected.penaltiesCount }} penalties</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid #9a7b2e;border-radius:999px;font-size:12px;font-weight:600;color:#9a7b2e;background:#fff;">⚠ {{ selected.penaltiesCount }} penalties</span>
           </sc-if>
-          <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--m2);border-radius:999px;font-size:12px;font-weight:600;color:var(--m6);">Confidence: {{ selected.confidence }}</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--m2);border-radius:999px;font-size:12px;font-weight:600;color:var(--m6);background:#fff;">Confidence: {{ selected.confidence }}</span>
         </div>
 
         <div style="font-weight:600;font-size:16px;margin:0 0 10px;">Verified</div>
@@ -1193,7 +1193,7 @@ class Component extends DCLogic {
       key:u, url:u, scanId:(v(map.scanId)!=null?String(v(map.scanId)):null), brand, category:(v(map.category)||'').toString(), country, price, currency, priceStr, confidence,
       image, hasImage,
       score, scoreText:this.r1(score), scoreWidth: Math.max(0,Math.min(100,score)).toFixed(1)+'%',
-      grade, gradeColor:this.gradeColor(grade), gradeTrack:'color-mix(in srgb, '+this.gradeColor(grade)+' 30%, #ffffff)',
+      grade, gradeColor:this.gradeColor(grade), gradeTrack:'color-mix(in srgb, '+this.gradeColor(grade)+' 30%, #ffffff)', gradeCardBg:'color-mix(in srgb, '+this.gradeColor(grade)+' 3%, #ffffff)',
       materials, materialsStr, certList, certStr: certList.length?certList.join(', '):'None listed', hasCerts:certList.length>0,
       verified, unverified, hasUnverified:unverified.length>0, verifiedCount:verified.length, unverifiedCount:unverified.length,
       pillars, penalties, hasPenalties:penalties.length>0, penaltiesCount:penalties.length,
