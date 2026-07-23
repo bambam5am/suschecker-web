@@ -612,7 +612,7 @@ button,input,select,textarea{border-radius:9px;}
               <button onClick="{{ t.onToggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;">
                 <span style="font-weight:600;font-size:16px;">{{ t.name }}</span>
                 <span style="display:flex;align-items:baseline;gap:10px;white-space:nowrap;flex:none;">
-                  <span style="font-weight:500;font-size:23px;line-height:1;">{{ t.shareLabel }}</span>
+                  <span style="font-weight:500;font-size:23px;line-height:1;color:{{ t.pctColor }};">{{ t.shareLabel }}</span>
                   <span style="font-size:18px;color:var(--m3);">{{ t.toggleIcon }}</span>
                 </span>
               </button>
@@ -631,7 +631,7 @@ button,input,select,textarea{border-radius:9px;}
                     <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;">
                       <span style="flex:1;min-width:0;font-size:13px;color:var(--m6);word-break:break-word;">{{ c.name }}</span>
                       <div style="flex:0 0 96px;height:6px;background:{{ c.gradeTrack }};border-radius:999px;"><div style="height:100%;width:{{ c.width }};background:{{ c.gradeColor }};border-radius:999px;"></div></div>
-                      <span style="flex:0 0 42px;text-align:right;font-size:12px;font-weight:700;">{{ c.shareLabel }}</span>
+                      <span style="flex:0 0 42px;text-align:right;font-size:12px;font-weight:700;color:{{ c.pctColor }};">{{ c.shareLabel }}</span>
                     </div>
                   </sc-for>
                 </div>
@@ -1570,12 +1570,13 @@ class Component extends DCLogic {
         return {
           name: t.name,
           shareLabel: this.fmtPct(t.share),
+          pctColor: this.gradeColor(this.gradeFromPct(t.share)),
           barWidth: Math.max(0.5, Math.min(100, t.share)).toFixed(1)+'%',
           medLeft: Math.max(0, Math.min(100, med)).toFixed(1)+'%',
           showStrip: hasBench,
           benchText: 'typical ' + this.fmtPct(med),
           gradeColor: envGradeColor, gradeTrack: envGradeTrack,
-          cats: t.cats.map(c => ({ name:c.name, shareLabel:this.fmtPct(c.share), width: Math.max(2, c.share/maxCat*100).toFixed(1)+'%', gradeColor:envGradeColor, gradeTrack:envGradeTrack })),
+          cats: t.cats.map(c => ({ name:c.name, shareLabel:this.fmtPct(c.share), pctColor:this.gradeColor(this.gradeFromPct(c.share)), width: Math.max(2, c.share/maxCat*100).toFixed(1)+'%', gradeColor:envGradeColor, gradeTrack:envGradeTrack })),
           isOpen: !!s.openTheme[t.key],
           toggleIcon: s.openTheme[t.key] ? '−' : '+',
           onToggle: () => this.setState(st => ({ openTheme: Object.assign({}, st.openTheme, { [t.key]: !st.openTheme[t.key] }) })),
