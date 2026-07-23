@@ -24,7 +24,7 @@ body{margin:0;background:var(--paper);}
 @keyframes suspop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes susmarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes susgrade{0%{background-position:0% 50%}28%{background-position:62% 50%}50%{background-position:100% 50%}72%{background-position:38% 50%}100%{background-position:0% 50%}}
-.wordmark{background:linear-gradient(90deg,#DB4F39,#E2713F,#E59A45,#E6C84B,#8FCE5C,#5FBE71,#8FCE5C,#E6C84B,#DB4F39);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:susgrade var(--wm-dur,16s) ease-in-out infinite;}
+.wordmark{background:linear-gradient(90deg,#DB4F39,#E2713F,#E59A45,#E6C84B,#8FCE5C,#5FBE71,#8FCE5C,#E6C84B,#DB4F39);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:susgrade var(--wm-dur,18.4s) ease-in-out infinite;}
 @media (prefers-reduced-motion: reduce){
   .wordmark{animation:none;background-position:50% 50%;}
 }
@@ -1464,7 +1464,7 @@ class Component extends DCLogic {
     v += '--paper:'+T.paper+';--surface:'+T.surface+';--ink:'+T.ink+';--line:'+T.line+';--line-g:'+T.lineG+';';
     v += '--m1:'+T.m1+';--m2:'+T.m2+';--m3:'+T.m3+';--m4:'+T.m4+';--m5:'+T.m5+';--m6:'+T.m6+';--m7:'+T.m7+';--m8:'+T.m8+';--m9:'+T.m9+';--mb:'+T.mb+';--mc:'+T.mc+';';
     v += '--g1:'+T.g1+';--g2:'+T.g2+';--g3:'+T.g3+';';
-    v += '--wm-dur:16s;';
+    v += '--wm-dur:18.4s;';
     return v;
   }
 
