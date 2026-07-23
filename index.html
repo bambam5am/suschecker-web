@@ -151,10 +151,10 @@ button,input,select,textarea{border-radius:9px;}
             <div style="font-size:16px;color:var(--g3);line-height:1.4;margin-top:12px;">{{ pc.sub }}</div>
 
             <sc-if value="{{ pc.timeout }}" hint-placeholder-val="{{ false }}">
-              <button onClick="{{ pc.retry }}" style="margin-top:20px;background:var(--ink);color:var(--paper);border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;">Check again</button>
+              <button onClick="{{ pc.retry }}" style="margin-top:20px;background:var(--ink);color:var(--paper);border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;">Try again</button>
             </sc-if>
 
-            <sc-if value="{{ pc.done }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ pc.doneScored }}" hint-placeholder-val="{{ false }}">
               <button onClick="{{ pc.open }}" style="width:100%;text-align:left;background:none;border:none;border-radius:0;cursor:pointer;padding:22px 0 0;display:flex;flex-direction:column;gap:13px;animation:susfade .35s ease both;">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
                   <div style="min-width:0;">
@@ -167,8 +167,14 @@ button,input,select,textarea{border-radius:9px;}
                   <span style="font-size:36px;font-weight:500;line-height:1;">{{ pc.item.scoreText }}</span>
                   <span style="color:var(--m1);font-size:14px;">/100</span>
                 </div>
-                <div style="height:11px;background:var(--track,#d8efdc);border-radius:999px;width:100%;"><div style="height:100%;width:{{ pc.item.scoreWidth }};background:var(--accent,#79c98a);border-radius:999px;"></div></div>
+                <div style="height:11px;background:{{ pc.item.gradeTrack }};border-radius:999px;width:100%;"><div style="height:100%;width:{{ pc.item.scoreWidth }};background:{{ pc.item.gradeColor }};border-radius:999px;"></div></div>
                 <div style="margin-top:2px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;">View full breakdown →</div>
+              </button>
+            </sc-if>
+
+            <sc-if value="{{ pc.doneUnscored }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ pc.open }}" style="width:100%;text-align:left;background:none;border:none;border-radius:0;cursor:pointer;padding:18px 0 0;">
+                <div style="font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.04em;color:var(--ink);">View details →</div>
               </button>
             </sc-if>
           </div>
@@ -475,6 +481,7 @@ button,input,select,textarea{border-radius:9px;}
   <div style="max-width:1240px;margin:0 auto;width:100%;padding:6px clamp(20px,5vw,64px) 90px;">
     <button onClick="{{ goBack }}" style="background:none;border:none;padding:0;margin:clamp(8px,2vh,18px) 0 24px;cursor:pointer;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--m2);">← Back</button>
 
+  <sc-if value="{{ selected.hasScore }}" hint-placeholder-val="{{ false }}">
   <div class="result-grid" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(32px,6vw,84px);max-width:1240px;align-items:start;animation:susfade .35s ease both;">
 
     <!-- ================= TIER 1 : SCORECARD ================= -->
@@ -650,7 +657,41 @@ button,input,select,textarea{border-radius:9px;}
 
     </div>
   </div>
+  </sc-if>
+
+  <!-- ================= NO-SCORE VARIANT : insufficient / out-of-scope / unknown ================= -->
+  <sc-if value="{{ selectedNoScore }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:640px;margin:0 auto;width:100%;animation:susfade .35s ease both;">
+    <div style="background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:clamp(20px,3vw,30px);">
+      <sc-if value="{{ selected.hasImage }}" hint-placeholder-val="{{ false }}">
+        <div data-img-box="" style="width:100%;max-width:200px;background:var(--surface);aspect-ratio:1;overflow:hidden;margin-bottom:20px;border-radius:14px;">
+          <img ref="{{ setSelImg }}" alt="{{ selected.brand }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ selected.category }}" hint-placeholder-val="">
+        <div style="font-family:var(--title);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--g1);margin-bottom:6px;">{{ selected.category }}</div>
+      </sc-if>
+      <sc-if value="{{ selected.brand }}" hint-placeholder-val="">
+        <h1 style="font-family:var(--title);font-size:clamp(24px,3vw,30px);font-weight:600;letter-spacing:-0.02em;line-height:1.05;margin:0 0 18px;">{{ selected.brand }}</h1>
+      </sc-if>
+
+      <div style="font-family:var(--title);font-size:clamp(21px,2.4vw,26px);font-weight:600;letter-spacing:-0.01em;line-height:1.2;margin-bottom:12px;">{{ selected.noScoreHeadline }}</div>
+      <div style="font-size:16px;line-height:1.55;color:var(--m5);margin-bottom:24px;">{{ selected.noScoreBody }}</div>
+
+      <div style="font-size:15px;line-height:1.6;">
+        <sc-if value="{{ selected.brand }}" hint-placeholder-val="">
+          <div><span style="color:var(--m1);">Brand:</span> <strong>{{ selected.brand }}</strong></div>
+        </sc-if>
+        <sc-if value="{{ selected.category }}" hint-placeholder-val="">
+          <div><span style="color:var(--m1);">Category:</span> <strong>{{ selected.category }}</strong></div>
+        </sc-if>
+        <div><span style="color:var(--m1);">Country:</span> <strong>{{ selected.country }}</strong></div>
+        <div><span style="color:var(--m1);">Price:</span> <strong>{{ selected.priceStr }}</strong></div>
+      </div>
+    </div>
   </div>
+  </sc-if>
 
 </div>
 </sc-if>
@@ -1013,8 +1054,8 @@ class Component extends DCLogic {
       const c = row.c || [];
       const v = i => (i==null || i<0 || !c[i] || c[i].v == null) ? null : c[i].v;
       const u = v(map.userUrl); const brand = v(map.brand);
-      if(!u || !brand) return;
-      mapped.push(this.mapItem(v, idx, u, brand, map));
+      if(!u) return;
+      mapped.push(this.mapItem(v, idx, u, brand || '', map));
     });
     const byUrl = new Map();
     mapped.forEach(it => byUrl.set(it.url, it));
@@ -1032,29 +1073,40 @@ class Component extends DCLogic {
     this.setState(s => ({ pendings: s.pendings.map(p => p.id===id ? Object.assign({}, p, patch) : p) }));
   }
 
+  // Polls for up to ~150s: every 4s early on (so fast "insufficient" results
+  // surface quickly), backing off to every 10s after 30s to avoid hammering
+  // the sheet. Elapsed time is tracked via closure, not stored in state.
   startPoll(id, url){
     this.stopPoll(id);
-    this._polls[id] = setInterval(async () => {
+    const startedAt = Date.now();
+    const POLL_TIMEOUT_MS = 150000;
+    const tick = async () => {
       const cur = this.state.pendings.find(p => p.id===id);
-      if(!cur){ this.stopPoll(id); return; }
-      const n = (cur.pollN||0) + 1;
-      let items;
-      try{ items = await this.fetchItems(); }catch(e){ this.updatePending(id, { pollN:n }); return; }
-      this.setState({ items });
-      const baseline = this._baselines[id];
-      const found = items.find(i => i.url === url && i.scanId !== baseline);
-      if(found){
-        this.stopPoll(id);
-        this.updatePending(id, { status:'done', key:found.key, pollN:n });
-      } else if(n >= 40){
-        this.stopPoll(id);
-        this.updatePending(id, { status:'timeout', pollN:n });
-      } else {
-        this.updatePending(id, { pollN:n });
+      if(!cur) return;
+      let items = null;
+      try{ items = await this.fetchItems(); }catch(e){ /* transient — retry next tick */ }
+      if(items){
+        this.setState({ items });
+        const baseline = this._baselines[id];
+        const found = items.find(i => i.url === url && i.scanId !== baseline);
+        if(found){
+          this.stopPoll(id);
+          this.updatePending(id, { status:'done', key:found.key });
+          return;
+        }
       }
-    }, 4000);
+      const elapsed = Date.now() - startedAt;
+      if(elapsed >= POLL_TIMEOUT_MS){
+        this.stopPoll(id);
+        this.updatePending(id, { status:'timeout' });
+        return;
+      }
+      const delay = elapsed < 30000 ? 4000 : 10000;
+      this._polls[id] = setTimeout(tick, delay);
+    };
+    this._polls[id] = setTimeout(tick, 4000);
   }
-  stopPoll(id){ if(this._polls[id]){ clearInterval(this._polls[id]); delete this._polls[id]; } }
+  stopPoll(id){ if(this._polls[id]){ clearTimeout(this._polls[id]); delete this._polls[id]; } }
   stopAllPolls(){ Object.keys(this._polls).forEach(id => this.stopPoll(id)); }
 
   mapItem(v, idx, u, brand, map){
@@ -1068,6 +1120,32 @@ class Component extends DCLogic {
     const country = v(map.country) || '—';
     const price = v(map.price); const currency = (v(map.currency)||'').toString();
     const confidence = (v(map.confidence) || v(map.parseConfidence) || '—').toString();
+
+    // ---- status contract: 'ok' | 'insufficient' | 'out_of_scope' (blank on legacy rows) ----
+    const statusRaw = (v(map.status) || '').toString().trim().toLowerCase();
+    const rawScore = v(map.score);
+    const hasNumericScore = rawScore != null && rawScore !== '' && isFinite(Number(rawScore));
+    let status = statusRaw;
+    if(status !== 'ok' && status !== 'insufficient' && status !== 'out_of_scope'){
+      status = statusRaw ? 'unknown' : (hasNumericScore ? 'ok' : 'insufficient');
+    }
+    const hasScore = status === 'ok' && isFinite(score);
+    const telegramPlain = (v(map.telegramMessage) || '').toString().replace(/[*_`]/g, '').trim();
+    const NO_SCORE_COPY = {
+      insufficient: {
+        headline: 'Not enough disclosed data to score',
+        body: "This product page doesn't state the fibre composition. Without disclosed materials, an honest score isn't possible — and non-disclosure is itself worth knowing about.",
+      },
+      out_of_scope: {
+        headline: 'Not a clothing item',
+        body: 'This looks like a non-clothing item — Suschecker only scores fashion products.',
+      },
+      unknown: {
+        headline: 'Scan didn’t produce a score',
+        body: telegramPlain || 'This scan finished without producing a score.',
+      },
+    };
+    const noScoreCopy = NO_SCORE_COPY[status] || null;
 
     const sheetImage = (this._imgIdx!=null && this._imgIdx>=0) ? v(this._imgIdx) : null;
     const image = (sheetImage && /^https?:\/\//i.test(String(sheetImage))) ? sheetImage : (this.IMG_OVERRIDES[u] || null);
@@ -1192,6 +1270,8 @@ class Component extends DCLogic {
     return {
       key:u, url:u, scanId:(v(map.scanId)!=null?String(v(map.scanId)):null), brand, category:(v(map.category)||'').toString(), country, price, currency, priceStr, confidence,
       image, hasImage,
+      status, hasScore, isInsufficient:status==='insufficient', isOutOfScope:status==='out_of_scope',
+      noScoreHeadline: noScoreCopy ? noScoreCopy.headline : '', noScoreBody: noScoreCopy ? noScoreCopy.body : '',
       score, scoreText:this.r1(score), scoreWidth: Math.max(0,Math.min(100,score)).toFixed(1)+'%',
       grade, gradeColor:this.gradeColor(grade), gradeTrack:'color-mix(in srgb, '+this.gradeColor(grade)+' 30%, #ffffff)', gradeCardBg:'color-mix(in srgb, '+this.gradeColor(grade)+' 3%, #ffffff)',
       materials, materialsStr, certList, certStr: certList.length?certList.join(', '):'None listed', hasCerts:certList.length>0,
@@ -1206,7 +1286,7 @@ class Component extends DCLogic {
   decorate(it){ return Object.assign({}, it, { open: () => this.openResult(it) }); }
 
   buildBreakdown(base){
-    const items = base.filter(i => isFinite(i.score) && i.score > 0);
+    const items = base.filter(i => i.status==='ok' && isFinite(i.score) && i.score > 0);
     if(!items.length) return { hasData:false };
     const GC = { A:'#5FBE71', B:'#8FCE5C', C:'#E6C84B', D:'#E59A45', E:'#E2713F', F:'#DB4F39' };
     const ORDER = ['A','B','C','D','E','F'];
@@ -1256,7 +1336,7 @@ class Component extends DCLogic {
   }
 
   buildChart(base){
-    const items = base.filter(i => isFinite(i.score));
+    const items = base.filter(i => i.status==='ok' && isFinite(i.score));
     const dec = it => this.decorate(it);
     const clampL = sc => Math.max(2.5, Math.min(97.5, sc));
 
@@ -1322,21 +1402,28 @@ class Component extends DCLogic {
     });
   }
 
+  // Fires the (opaque, no-cors) webhook POST and always proceeds to polling —
+  // the response tells us nothing, so success and failure are handled the same.
+  triggerScan(id, url){
+    const hook = this.props.webhookUrl || 'https://n8n-production-9085e.up.railway.app/webhook/suschecker-test';
+    const begin = () => { this.updatePending(id, { status:'waiting' }); this.startPoll(id, url); };
+    if(!hook){ this.updatePending(id, { status:'nohook' }); return; }
+    fetch(hook, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url }) })
+      .then(begin).catch(begin);
+  }
+
   submitUrl(){
     const url = (this.state.urlInput||'').trim();
     if(!url){ this.setState({ submitStatus:'empty' }); return; }
     const id = 'p' + (++this._pendingSeq);
     const baselineItem = this.state.items.find(i => i.url === url);
     this._baselines[id] = baselineItem ? baselineItem.scanId : null;
-    const hook = this.props.webhookUrl || 'https://n8n-production-9085e.up.railway.app/webhook/suschecker-test';
     this.setState(s => ({
       submitStatus:'sending', urlInput:'',
-      pendings: [{ id, url, status:'sending', key:null, pollN:0 }, ...s.pendings],
+      pendings: [{ id, url, status:'sending', key:null }, ...s.pendings],
     }));
-    const begin = () => { this.updatePending(id, { status:'waiting' }); this.setState({ submitStatus:'' }); this.startPoll(id, url); };
-    if(!hook){ this.updatePending(id, { status:'nohook' }); this.setState({ submitStatus:'' }); return; }
-    fetch(hook, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url }) })
-      .then(begin).catch(begin);
+    this.setState({ submitStatus:'' });
+    this.triggerScan(id, url);
   }
 
   dismissPending(id){
@@ -1345,20 +1432,19 @@ class Component extends DCLogic {
     this.setState(s => ({ pendings: s.pendings.filter(p => p.id !== id) }));
   }
 
+  // Retry resubmits the same URL to the webhook (a crashed workflow writes no
+  // row at all, so re-polling alone would just time out again).
   retryPending(id){
     const p = this.state.pendings.find(p => p.id===id);
     if(!p) return;
-    this.updatePending(id, { status:'waiting' });
     this.fetchItems().then(items => {
       this.setState({ items });
-      const baseline = this._baselines[id];
-      const found = items.find(i => i.url === p.url && i.scanId !== baseline);
-      if(found){
-        this.updatePending(id, { status:'done', key:found.key });
-      } else {
-        this.startPoll(id, p.url);
-      }
-    }).catch(() => { this.startPoll(id, p.url); });
+      const baselineItem = items.find(i => i.url === p.url);
+      this._baselines[id] = baselineItem ? baselineItem.scanId : null;
+    }).catch(() => {}).then(() => {
+      this.updatePending(id, { status:'sending', key:null });
+      this.triggerScan(id, p.url);
+    });
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -1387,15 +1473,16 @@ class Component extends DCLogic {
     const base = s.items;
     const dec = it => this.decorate(it);
 
-    const marqueeItems = base.slice().reverse().slice(0,14).map(dec);
-    const dashTop = base.filter(i => isFinite(i.score) && i.score > 0).sort((a,b) => b.score-a.score).slice(0,6).map(dec);
-    const dashRecent = base.slice().sort((a,b) => (b.rowIdx||0)-(a.rowIdx||0)).slice(0,6).map(dec);
+    const scored = base.filter(i => i.status==='ok');
+    const marqueeItems = scored.slice().reverse().slice(0,14).map(dec);
+    const dashTop = scored.filter(i => isFinite(i.score) && i.score > 0).sort((a,b) => b.score-a.score).slice(0,6).map(dec);
+    const dashRecent = scored.slice().sort((a,b) => (b.rowIdx||0)-(a.rowIdx||0)).slice(0,6).map(dec);
     const IN_SCOPE = new Set(['tshirt','shirt','trousers','jeans','dress','jacket','sweater','sweatshirt','shorts','skirt','leggings','cardigan','hoodie','tank','bodysuit']);
-    const cats = Array.from(new Set(base.map(i => i.category).filter(c => c && IN_SCOPE.has(c)))).sort();
-    const brands = Array.from(new Set(base.map(i => i.brand).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
-    const materials = Array.from(new Set(base.flatMap(i => (i.materials && typeof i.materials==='object') ? Object.keys(i.materials) : []).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+    const cats = Array.from(new Set(scored.map(i => i.category).filter(c => c && IN_SCOPE.has(c)))).sort();
+    const brands = Array.from(new Set(scored.map(i => i.brand).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+    const materials = Array.from(new Set(scored.flatMap(i => (i.materials && typeof i.materials==='object') ? Object.keys(i.materials) : []).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
 
-    const statScores = base.map(i => i.score).filter(n => isFinite(n));
+    const statScores = scored.map(i => i.score).filter(n => isFinite(n));
     const avgScore = statScores.length ? Math.round(statScores.reduce((a,b) => a+b, 0) / statScores.length) : 0;
     const ratedAB = base.filter(i => i.grade==='A' || i.grade==='B').length;
     const dashStats = [
@@ -1405,7 +1492,7 @@ class Component extends DCLogic {
       { label:'Rated A or B', value:String(ratedAB), color:'#E59A45' },
     ];
 
-    let d = base.slice();
+    let d = scored.slice();
     if(s.fCategory !== 'all') d = d.filter(i => i.category === s.fCategory);
     if(s.fGrade !== 'all') d = d.filter(i => i.grade === s.fGrade);
     if(s.fBrand !== 'all') d = d.filter(i => i.brand === s.fBrand);
@@ -1438,8 +1525,8 @@ class Component extends DCLogic {
     const selectedBase = base.find(i => i.key === s.selectedId) || null;
     const selected = selectedBase ? dec(selectedBase) : null;
     let selectedProvenance = [];
-    if(selected){
-      const pillarMedPct = [0,1,2,3].map(i => this.median(base.map(b => b.pillars[i].pct)));
+    if(selected && selected.hasScore){
+      const pillarMedPct = [0,1,2,3].map(i => this.median(scored.map(b => b.pillars[i].pct)));
       selectedProvenance = selected.provenance.map((p,i) => Object.assign({}, p, {
         isOpen: !!s.openWhy[i],
         toggleIcon: s.openWhy[i] ? '−' : '+',
@@ -1447,7 +1534,8 @@ class Component extends DCLogic {
         medPctStr: Math.max(0,Math.min(100,pillarMedPct[i])).toFixed(1)+'%',
       }));
     }
-    const selectedNoImpact = !!(selected && !selected.hasImpact);
+    const selectedNoImpact = !!(selected && selected.hasScore && !selected.hasImpact);
+    const selectedNoScore = !!(selected && !selected.hasScore);
 
     // ---- Impact Profile : benchmark strip + themed groups ----
     let selectedFp = { hasBench:false, themes:[] };
@@ -1508,29 +1596,27 @@ class Component extends DCLogic {
     const pendingCards = s.pendings.map(p => {
       const foundItem = p.key ? (base.find(i => i.key === p.key) || null) : null;
       const item = foundItem ? dec(foundItem) : null;
-      const pollSecs = (p.pollN||0) * 4;
-      let waitingTitle = 'Analysing your product…';
-      let waitingSub = 'Reading the product page…';
-      if(pollSecs >= 55){ waitingTitle = 'Still crunching the numbers…'; waitingSub = 'Crunching the environmental impact…'; }
-      else if(pollSecs >= 20){ waitingTitle = 'Profiling the brand…'; waitingSub = 'Profiling brand & certifications — new brands take a bit longer…'; }
+      const isScored = !!(item && item.hasScore);
       const titles = {
         sending: 'Sending to the scanner…',
-        waiting: waitingTitle,
-        done: 'Scan complete',
-        timeout: 'Still processing',
+        waiting: 'Analysing product page…',
+        done: item ? (isScored ? 'Scan complete' : (item.noScoreHeadline || 'Scan finished')) : 'Scan finished',
+        timeout: 'Something went wrong',
         nohook: 'Can’t start the scan',
       };
       const subs = {
         sending: 'Triggering the analysis',
-        waiting: waitingSub,
-        done: item ? (item.brand + ' · ' + item.category) : 'Result ready',
-        timeout: 'This is taking longer than usual. The scan may still finish in the background — refresh or check again in a minute.',
+        waiting: 'This can take a little while — the result will appear here the moment it lands.',
+        done: isScored ? (item.brand + ' · ' + item.category) : (item ? item.noScoreBody : ''),
+        timeout: 'Something went wrong and the scan didn’t complete. Try again.',
         nohook: 'No webhook configured — add the n8n endpoint in Tweaks.',
       };
       return {
         id: p.id,
         spinner: p.status==='sending' || p.status==='waiting',
         done: p.status==='done' && !!item,
+        doneScored: p.status==='done' && isScored,
+        doneUnscored: p.status==='done' && !!item && !isScored,
         timeout: p.status==='timeout',
         title: titles[p.status] || 'Working…',
         sub: subs[p.status] || '',
@@ -1602,7 +1688,7 @@ class Component extends DCLogic {
       selected,
       setSelImg: (el) => { if(el){ if(selected && selected.hasImage){ el.src = selected.image; } else { el.removeAttribute('src'); } } },
       selectedFp,
-      selectedProvenance, selectedNoImpact,
+      selectedProvenance, selectedNoImpact, selectedNoScore,
     };
   }
 }
