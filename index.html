@@ -1053,8 +1053,8 @@ class Component extends DCLogic {
     rows.forEach((row, idx) => {
       const c = row.c || [];
       const v = i => (i==null || i<0 || !c[i] || c[i].v == null) ? null : c[i].v;
-      const u = v(map.userUrl); const brand = v(map.brand);
-      if(!u) return;
+      const u = v(map.userUrl); const brand = v(map.brand); const scanId = v(map.scanId);
+      if(!u || (!brand && !scanId)) return;
       mapped.push(this.mapItem(v, idx, u, brand || '', map));
     });
     const byUrl = new Map();
